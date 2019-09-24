@@ -14,8 +14,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Component
-public class RegistrationListener implements
-        ApplicationListener<OnRegistrationCompleteEvent> {
+public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
     private static final int EXPIRATION = 3; //60 * 24;
 
     @Autowired
