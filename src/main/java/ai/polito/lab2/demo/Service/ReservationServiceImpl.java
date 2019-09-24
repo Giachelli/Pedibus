@@ -1,6 +1,6 @@
 package ai.polito.lab2.demo.Service;
 
-import ai.polito.lab2.demo.Person;
+import ai.polito.lab2.demo.viewmodels.PersonVM;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Reservation;
@@ -34,13 +34,13 @@ public class ReservationServiceImpl implements ReservationService {
         String json = ow.writeValueAsString(r);*/
     }
 
-    public Map<String, List<Person>> findReservationAndata (int linea, long data){
+    public Map<String, List<PersonVM>> findReservationAndata (int linea, long data){
         int i =0;
         Query query = new Query();
         query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("andata"));
         query.with(new Sort(Sort.Direction.ASC, "fermata"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
-        Map<String, List<Person>> mappa = new HashMap<>();
+        Map<String, List<PersonVM>> mappa = new HashMap<>();
         String id_prec="";
         List<String> passeggeri= new LinkedList<>();
         for ( Reservation r: res){
@@ -51,7 +51,7 @@ public class ReservationServiceImpl implements ReservationService {
             String s =stop.getNome();
             String id=r.getFermata().toString();
             if(!mappa.containsKey(s)){
-                mappa.put(s, new LinkedList<Person>());
+                mappa.put(s, new LinkedList<PersonVM>());
             }
             mappa.get(s).add(r.getAlunno());
 
@@ -62,13 +62,13 @@ public class ReservationServiceImpl implements ReservationService {
         return mappa;
     }
 
-    public Map<String, List<Person>> findReservationRitorno (int linea, long data){
+    public Map<String, List<PersonVM>> findReservationRitorno (int linea, long data){
         int i =0;
         Query query = new Query();
         query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("ritorno"));
         query.with(new Sort(Sort.Direction.ASC, "fermata"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
-        Map<String, List<Person>> mappa = new HashMap<>();
+        Map<String, List<PersonVM>> mappa = new HashMap<>();
         String id_prec="";
         List<String> passeggeri= new LinkedList<>();
         for ( Reservation r: res){
@@ -79,7 +79,7 @@ public class ReservationServiceImpl implements ReservationService {
             String s =stop.getNome();
             String id=r.getFermata().toString();
             if(!mappa.containsKey(s)){
-                mappa.put(s, new LinkedList<Person>());
+                mappa.put(s, new LinkedList<PersonVM>());
             }
             mappa.get(s).add(r.getAlunno());
 

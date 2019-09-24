@@ -51,28 +51,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure (HttpSecurity http) throws Exception{
-        http
-                .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("*").permitAll()
-                /*.antMatchers("/login").permitAll()
-                .antMatchers("/confirm/{randomUUID}").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/recover").permitAll()
-                .antMatchers("/recover/{randomUUID}").permitAll()
-                .antMatchers("/users/**").hasAnyRole("SYSTEM_ADMIN","ADMIN")
-                .anyRequest().authenticated()
-                /*.and()
-                // If user isn't authorised to access a path...
-                .exceptionHandling()
-                // ...redirect them to /403
-                .accessDeniedPage("/403")*/
-                .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));
+            http
+                    .httpBasic().disable()
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers(HttpMethod.POST,"/login").permitAll().
+                    and().
+                    authorizeRequests()
+                    .antMatchers("/register").permitAll()
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers("/confirm/*").permitAll()
+                    .and().
+                    authorizeRequests().
+                    anyRequest().authenticated()
+                    /*.and()
+                    // If user isn't authorised to access a path...
+                    .exceptionHandling()
+                    // ...redirect them to /403
+                    .accessDeniedPage("/403")*/
+                    .and()
+                    .apply(new JwtConfigurer(jwtTokenProvider));
+
     }
 
 }

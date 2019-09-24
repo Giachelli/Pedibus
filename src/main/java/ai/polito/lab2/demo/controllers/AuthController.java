@@ -1,13 +1,15 @@
 package ai.polito.lab2.demo.controllers;
 
+import ai.polito.lab2.demo.Dto.UserDTO;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.OnRegistrationCompleteEvent;
 import ai.polito.lab2.demo.Repositories.UserRepo;
-import ai.polito.lab2.demo.Service.EmailServiceImpl;
 import ai.polito.lab2.demo.Service.IUserService;
-import ai.polito.lab2.demo.User;
+import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
+import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
 import ai.polito.lab2.demo.viewmodels.RecoverVM;
+import ai.polito.lab2.demo.viewmodels.RegisterVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,9 @@ public class AuthController {
     private UserRepo userRepo;
 
     @Autowired
+    private RoleRepo roleRepo;
+
+    @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
@@ -49,39 +54,26 @@ public class AuthController {
     @Autowired
     private IUserService service;
 
-    @Autowired
-    RoleRepo roleRepo;
 
     String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User registerUser(@RequestBody Register register, WebRequest request) {
-        User u = userRepo.findByUsername(register.getUsername());
-        if (u != null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already registered"); //vabene così tanto non ci ha chiesto di restituirgli qualcosa, l'importante è che non si registri
-        if (!register.getPassword().equals(register.getConfirmPassword()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password and confirm password are different");
-        if (!register.getPassword().matches(regex))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password too weak");
+    public UserDTO registerUser(@RequestBody RegisterVM register, WebRequest request) {
 
-        u = this.userRepo.save(User.builder()
-                .username(register.getUsername())
-                .password(this.passwordEncoder.encode(register.getPassword()))
-                .roles(Arrays.asList(roleRepo.findByRole("ROLE_USER")))
-                .isEnabled(false) //quando l'utente conclude la registrazione via mail questo deve passare a true
-                .build()
-        );
+        UserDTO user = UserDTO.builder().
+                    email(register.getEmail()).
+                    roles(Arrays.asList(roleRepo.findByRole(register.getRole()))).build();
+
 
         try {
             String appUrl = request.getContextPath();
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent
-                    (u, request.getLocale(), appUrl));
-            return u;
+                    (user, request.getLocale(), appUrl));
+            return user;
         } catch (Exception me) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Some problems occurred when sending the email", me);
         }
 
-        //TODO decidere come agire se l'email non viene inviata,perchè al momento l'utente è registrato ma non è verificato
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -101,24 +93,14 @@ public class AuthController {
         }
     }
 
-    @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.GET)
-    public void confirm(@PathVariable String randomUUID) {
-        User user = service.getUserByUUID(randomUUID);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
+    @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
+    public void confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
+        if(service.manageUser(randomUUID,userVM))
+        {
+        throw new ResponseStatusException(HttpStatus.OK, "OK");}
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND," NOT FOUND");
         }
-        if (user.isEnabled()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already active");
-        }
-        Calendar cal = Calendar.getInstance();
-        if ((user.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expired token");
-        }
-
-        user.setEnabled(true);
-        userRepo.save(user);
-        throw new ResponseStatusException(HttpStatus.OK, "OK");
     }
 
     @RequestMapping(value = "/recover", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -129,7 +111,7 @@ public class AuthController {
             //do something
         }
         String token = UUID.randomUUID().toString();
-        service.createPasswordResetTokenForUser(user, token);
+        //service.createPasswordResetTokenForUser(user, token);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

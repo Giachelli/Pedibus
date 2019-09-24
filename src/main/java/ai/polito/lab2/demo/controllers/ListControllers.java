@@ -3,13 +3,14 @@ package ai.polito.lab2.demo.controllers;
 //import ai.polito.lab2.demo.AppConfig;
 
 import ai.polito.lab2.demo.*;
+import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
-import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
+import ai.polito.lab2.demo.viewmodels.PersonVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -18,15 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import java.util.Random;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -127,19 +123,19 @@ public class ListControllers {
     public ResponseEntity getPeople(@PathVariable String nome_linea, @PathVariable long data) throws JsonProcessingException, ParseException {
 
         Route route = routeService.getRoutesByName(nome_linea);
-        ArrayList<Person> notBookedA = new ArrayList<>();
-        ArrayList<Person> notBookedR = new ArrayList<>();
+        ArrayList<PersonVM> notBookedA = new ArrayList<>();
+        ArrayList<PersonVM> notBookedR = new ArrayList<>();
         ArrayList<Child> allChildren = (ArrayList<Child>) childRepo.findAll();
         ArrayList<Child> children = new ArrayList<>();
         children.addAll(allChildren);
 
-        Map<String, List<Person>> salire = reservationService.findReservationAndata(route.getId(), data);
+        Map<String, List<PersonVM>> salire = reservationService.findReservationAndata(route.getId(), data);
         ArrayList<Line_Registration> andata = new ArrayList<>();
-        ArrayList<Person> passeggeri = new ArrayList<>();
+        ArrayList<PersonVM> passeggeri = new ArrayList<>();
 
         if (salire.size() == 0)
             for (Child c : children)
-                notBookedA.add(new Person(c.getIdChild().toString(), c.getNameChild()));
+                notBookedA.add(new PersonVM(c.getIdChild().toString(), c.getNameChild()));
 
         for (Stop stop : route.getStopListA()) {
             if (salire.size() == 0) {
@@ -153,7 +149,7 @@ public class ListControllers {
                 if (salire.get(stop.getNome()) != null) {
 
                     passeggeri.addAll(salire.get(stop.getNome()));
-                    for (Person p : passeggeri)
+                    for (PersonVM p : passeggeri)
                     {
                         int i = 0;
                         for(Child c : allChildren)
@@ -169,7 +165,7 @@ public class ListControllers {
                     }
 
                     for (Child c : children)
-                        notBookedA.add(new Person(c.getIdChild().toString(), c.getNameChild()));
+                        notBookedA.add(new PersonVM(c.getIdChild().toString(), c.getNameChild()));
                 }
 
                 andata.add(Line_Registration.builder()
@@ -183,14 +179,14 @@ public class ListControllers {
             }
         }
 
-        Map<String, List<Person>> scendere = reservationService.findReservationRitorno(route.getId(), data);
+        Map<String, List<PersonVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
         ArrayList<Line_Registration> ritorno = new ArrayList<>();
         children.clear();
         children.addAll(allChildren);
 
         if (scendere.size() == 0)
             for (Child c : children)
-                notBookedR.add(new Person(c.getIdChild().toString(), c.getNameChild()));
+                notBookedR.add(new PersonVM(c.getIdChild().toString(), c.getNameChild()));
 
         for (Stop stop : route.getStopListB()) {
             if (scendere.size() == 0) {
@@ -205,7 +201,7 @@ public class ListControllers {
 
                 if (scendere.get(stop.getNome()) != null) {
                     passeggeri.addAll(scendere.get(stop.getNome()));
-                    for (Person p : passeggeri)
+                    for (PersonVM p : passeggeri)
                     {
                         for(Child c : allChildren)
                         {
@@ -215,7 +211,7 @@ public class ListControllers {
                     }
 
                     for (Child c : children)
-                        notBookedR.add(new Person(c.getIdChild().toString(), c.getNameChild()));
+                        notBookedR.add(new PersonVM(c.getIdChild().toString(), c.getNameChild()));
                 }
                 ritorno.add(Line_Registration.builder()
                         .idStop(stop.get_id().toString())
@@ -249,7 +245,7 @@ public class ListControllers {
             updatedReservation.setData(reservation.getData());
         }
 
-        // TODO per il lab 5 non serve ma controllare qui la corrispondenza tra Person e il Child
+        // TODO per il lab 5 non serve ma controllare qui la corrispondenza tra PersonVM e il Child
         if (!reservation.getAlunno().getNameA().isEmpty()) {
             updatedReservation.setAlunno(reservation.getAlunno());
         }

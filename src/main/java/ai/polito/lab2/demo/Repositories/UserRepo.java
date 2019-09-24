@@ -1,14 +1,11 @@
 package ai.polito.lab2.demo.Repositories;
 
-import ai.polito.lab2.demo.User;
+import ai.polito.lab2.demo.Entity.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Optional;
 
 @Repository
 public interface UserRepo extends MongoRepository<User, ObjectId> {

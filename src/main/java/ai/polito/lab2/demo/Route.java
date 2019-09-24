@@ -13,7 +13,6 @@ import java.util.List;
 public class Route {
     @Id
     private int id;
-
     private String nameR;
     private List<String> usernamesAdmin;
     private ArrayList<Stop> stopListA;

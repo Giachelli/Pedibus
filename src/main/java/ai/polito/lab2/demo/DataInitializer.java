@@ -1,5 +1,7 @@
 package ai.polito.lab2.demo;
 
+import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;

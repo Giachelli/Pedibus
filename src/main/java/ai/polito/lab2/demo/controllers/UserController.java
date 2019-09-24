@@ -5,11 +5,10 @@ import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Route;
-import ai.polito.lab2.demo.User;
+import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @RestController
 public class UserController {

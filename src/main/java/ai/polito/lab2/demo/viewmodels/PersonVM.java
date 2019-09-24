@@ -1,11 +1,11 @@
-package ai.polito.lab2.demo;
+package ai.polito.lab2.demo.viewmodels;
 
 import lombok.Data;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
+// View Model del bambino per passare ad angular le informazioni necessarie
 @Data
-public class Person {
+public class PersonVM {
 
     private String nameA;
     @Id
@@ -13,15 +13,15 @@ public class Person {
     private boolean present = false;
     private boolean booked = false;
 
-    public Person(){
+    public PersonVM(){
 
     }
 
-   public Person(String alunno){
+   public PersonVM(String alunno){
         this.nameA = alunno;
     }
 
-    public Person(String id, String nameChild) {
+    public PersonVM(String id, String nameChild) {
         nameA = nameChild;
         this.id = id;
 

@@ -1,6 +1,7 @@
-package ai.polito.lab2.demo;
+package ai.polito.lab2.demo.Entity;
 
 
+import ai.polito.lab2.demo.Role;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -27,11 +28,13 @@ public class User implements UserDetails {
 
     private String username;
 
+    private String family_name;
+
     private String password;
 
     private String token;  //capire se salva il token del jwt e se serve
 
-   // private List<String> pass_token = new ArrayList<>();
+   //private List<String> pass_token = new ArrayList<>();
 
     private String passtoken;
 
@@ -45,18 +48,6 @@ public class User implements UserDetails {
     @DBRef
     private List<Role> roles = new ArrayList<>();
 
-    public void addRole(Role userRole) {
-        if(!this.getRolesString().contains(userRole.getRole()))
-            this.roles.add(userRole);
-
-    }
-
-    public Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
-    }
 
    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,7 +74,20 @@ public class User implements UserDetails {
         return isEnabled;
     }
 
+    public void addRole(Role userRole) {
+        if(!this.getRolesString().contains(userRole.getRole()))
+            this.roles.add(userRole);
+
+    }
+
     public List<String> getRolesString() {
         return this.roles.stream().map((Role role) -> role.getRole()).collect(toList());
+    }
+
+    public Date calculateExpiryDate(int expiryTimeInMinutes) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+        return new Date(cal.getTime().getTime());
     }
 }

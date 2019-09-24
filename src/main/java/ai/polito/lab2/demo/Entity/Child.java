@@ -1,4 +1,4 @@
-package ai.polito.lab2.demo;
+package ai.polito.lab2.demo.Entity;
 
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +12,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Child {
     @Id
     ObjectId idChild;
-
     private String nameChild;
 }

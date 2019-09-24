@@ -1,13 +1,11 @@
 package ai.polito.lab2.demo;
 
+import ai.polito.lab2.demo.viewmodels.PersonVM;
 import lombok.Data;
 import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 
 @Document(collection = "reservation")
@@ -17,7 +15,7 @@ import java.util.Date;
         @ToString.Exclude
         private ObjectId id;
 
-         private Person alunno;
+         private PersonVM alunno;
          private ObjectId fermata;
          private int linea;
          private String direzione;
@@ -25,7 +23,7 @@ import java.util.Date;
          private long data;
 
     /*public Reservation(String nameA, ObjectId fermata, int linea, String direzione, *//*boolean salire,*//* String data) {
-        this.alunno = new Person(nameA, false, false);
+        this.alunno = new PersonVM(nameA, false, false);
         this.fermata = fermata;
         this.linea = linea;
         this.direzione = direzione;

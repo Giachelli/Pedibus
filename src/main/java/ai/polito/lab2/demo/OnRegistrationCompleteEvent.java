@@ -1,5 +1,6 @@
 package ai.polito.lab2.demo;
 
+import ai.polito.lab2.demo.Dto.UserDTO;
 import lombok.Data;
 import org.springframework.context.ApplicationEvent;
 
@@ -9,10 +10,10 @@ import java.util.Locale;
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private String appUrl;
         private Locale locale;
-        private User user;
+        private UserDTO user;
 
         public OnRegistrationCompleteEvent(
-                User user, Locale locale, String appUrl) {
+                UserDTO user, Locale locale, String appUrl) {
             super(user);
 
             this.user = user;
