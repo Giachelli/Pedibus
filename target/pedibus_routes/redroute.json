@@ -1,0 +1,59 @@
+
+{
+  "id": 1,
+  "nameR": "Linearossa",
+  "stopListA":
+  [
+    {
+    "nome": "f1",
+    "num_s": 1,
+    "time": "8:00"
+    },
+    {
+      "nome": "bruchi rossi",
+      "num_s": 2,
+      "time": "8:05"
+    },
+    {
+      "nome": "bruchi verdi",
+      "num_s": 3,
+      "time": "8:10"
+    },
+    {
+      "nome": "f4",
+      "num_s": 4,
+      "time": "8:20"
+    },
+    {
+      "nome": "f5",
+      "num_s": 5,
+      "time": "8:25"
+    }
+  ],
+  "stopListB": [
+    {
+      "nome": "f5",
+      "num_s": 1,
+      "time": "16:00"
+    },
+    {
+      "nome": "f4",
+      "num_s": 2,
+      "time": "16:05"
+    },
+    {
+      "nome": "f3",
+      "num_s": 3,
+      "time": "16:10"
+    },
+    {
+      "nome": "f2",
+      "num_s": 4,
+      "time": "16:20"
+    },
+    {
+      "nome": "f1",
+      "num_s": 5,
+      "time": "16:25"
+    }]
+}

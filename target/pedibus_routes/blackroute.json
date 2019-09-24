@@ -1,0 +1,60 @@
+
+{
+  "id": 6,
+  "nameR": "Lineanera",
+  "stopListA":
+  [
+    {
+    "nome": "f112",
+    "num_s": 1,
+    "time": "8:00"
+    },
+    {
+      "nome": "f113",
+      "num_s": 2,
+      "time": "8:05"
+    },
+    {
+      "nome": "f114",
+      "num_s": 3,
+      "time": "8:10"
+    },
+    {
+
+      "nome": "f115",
+      "num_s": 4,
+      "time": "8:20"
+    },
+    {
+      "nome": "f116",
+      "num_s": 5,
+      "time": "8:25"
+    }
+  ],
+  "stopListB": [
+    {
+      "nome": "f117",
+      "num_s": 1,
+      "time": "16:00"
+    },
+    {
+      "nome": "f118",
+      "num_s": 2,
+      "time": "16:05"
+    },
+    {
+      "nome": "f119",
+      "num_s": 3,
+      "time": "16:10"
+    },
+    {
+      "nome": "f120",
+      "num_s": 4,
+      "time": "16:20"
+    },
+    {
+      "nome": "f121",
+      "num_s": 5,
+      "time": "16:25"
+    }]
+}

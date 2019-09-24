@@ -1,0 +1,59 @@
+
+{
+  "id": 4,
+  "nameR": "Lineagialla",
+  "stopListA":
+  [
+    {
+    "nome": "f125",
+    "num_s": 1,
+    "time": "8:00"
+    },
+    {
+      "nome": "f126",
+      "num_s": 2,
+      "time": "8:05"
+    },
+    {
+      "nome": "f127",
+      "num_s": 3,
+      "time": "8:10"
+    },
+    {
+      "nome": "f128",
+      "num_s": 4,
+      "time": "8:20"
+    },
+    {
+      "nome": "f129",
+      "num_s": 5,
+      "time": "8:25"
+    }
+  ],
+  "stopListB": [
+    {
+      "nome": "f130",
+      "num_s": 1,
+      "time": "16:00"
+    },
+    {
+      "nome": "f131",
+      "num_s": 2,
+      "time": "16:05"
+    },
+    {
+      "nome": "f132",
+      "num_s": 3,
+      "time": "16:10"
+    },
+    {
+      "nome": "f133",
+      "num_s": 4,
+      "time": "16:20"
+    },
+    {
+      "nome": "f1",
+      "num_s": 5,
+      "time": "16:25"
+    }]
+}

@@ -1,0 +1,59 @@
+
+{
+  "id": 2,
+  "nameR": "Lineabianca",
+  "stopListA":
+  [
+    {
+    "nome": "Corso Mediterraneo vicino alla fermata Bus",
+    "num_s": 1,
+    "time": "8:00"
+    },
+    {
+      "nome": "Corso Peschiera-incrocio Corso Inghilterra",
+      "num_s": 2,
+      "time": "8:05"
+    },
+    {
+      "nome": "Vicino alla segreteria del Poli",
+      "num_s": 3,
+      "time": "8:10"
+    },
+    {
+      "nome": "Corso Stati uniti Rotonda con il treno",
+      "num_s": 4,
+      "time": "8:20"
+    },
+    {
+      "nome": "corso Stati Uniti-incrocio Corso Duca",
+      "num_s": 5,
+      "time": "8:25"
+    }
+  ],
+  "stopListB": [
+    {
+      "nome": "corso Stati Uniti-incrocio Corso Duca",
+      "num_s": 1,
+      "time": "16:00"
+    },
+    {
+      "nome": "Corso Stati uniti Rotonda con il treno",
+      "num_s": 2,
+      "time": "16:05"
+    },
+    {
+      "nome": "Vicino alla segreteria del Poli",
+      "num_s": 3,
+      "time": "16:10"
+    },
+    {
+      "nome": "Corso Peschiera-incrocio Corso Inghilterra",
+      "num_s": 4,
+      "time": "16:20"
+    },
+    {
+      "nome": "Corso Mediterraneo vicino alla fermata Bus",
+      "num_s": 5,
+      "time": "16:25"
+    }]
+}
