@@ -1,11 +1,13 @@
 package ai.polito.lab2.demo;
 
 import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.RouteService;
+import ai.polito.lab2.demo.controllers.RouteController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,10 +26,10 @@ public class DataInitializer implements CommandLineRunner {
     private UserRepo users;
 
     @Autowired
-    RouteService routeService;
+    private RouteController routeController;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private RoleRepo roleRepository;
@@ -38,8 +40,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        ArrayList<Route> r = routeService.PopulateDb();
-        routeService.save(r);
+        routeController.PopulateDb();
         setRoleDb();
         if (users.findByUsername("admin@info.it") != null) {
             //do nothing

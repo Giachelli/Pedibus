@@ -4,12 +4,14 @@ import ai.polito.lab2.demo.Dto.UserDTO;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -56,6 +58,13 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserDTO getUserBy_id(ObjectId userID) {
+        User u = userRepo.findUserBy_id(userID);
+        UserDTO userDTO = u.convertToDTO();
+        return userDTO;
+    }
+
+    @Override
     public void changePassword(User user, String password){
 
         user.setPassword(passwordEncoder.encode(password));
@@ -82,6 +91,25 @@ public class UserService implements IUserService {
         user.setEnabled(true);
         userRepo.save(user);
         return true;
+    }
+
+    @Override
+    public UserDTO getUserByUsername(String name) {
+        User u = userRepo.findUserByUsername(name);
+        UserDTO userDTO = u.convertToDTO();
+        return userDTO;
+    }
+
+    @Override
+    public ArrayList<UserDTO> findAll() {
+        ArrayList<User> users = userRepo.findAll();
+        ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
+        for(User user : users)
+        {
+            UserDTO userDTO = user.convertToDTO();
+            userDTOArrayList.add(userDTO);
+        }
+        return userDTOArrayList;
     }
 
     /*public void createPasswordResetTokenForUser(User user, String token) {

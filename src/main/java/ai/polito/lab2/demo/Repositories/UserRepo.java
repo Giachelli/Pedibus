@@ -20,4 +20,5 @@ public interface UserRepo extends MongoRepository<User, ObjectId> {
 
     User findByPasstoken(String token);
 
+    User findUserByUsername(String name);
 }
