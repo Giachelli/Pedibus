@@ -6,4 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface StopRepo extends MongoRepository<Stop, Integer> {
     Stop findStopBy_id(ObjectId id);
+    Stop findStopByNome(String nome);
 }

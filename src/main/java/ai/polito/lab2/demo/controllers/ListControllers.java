@@ -3,6 +3,7 @@ package ai.polito.lab2.demo.controllers;
 //import ai.polito.lab2.demo.AppConfig;
 
 import ai.polito.lab2.demo.*;
+import ai.polito.lab2.demo.Dto.ReservationDTO;
 import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.Stop;
@@ -13,6 +14,7 @@ import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.PersonVM;
+import ai.polito.lab2.demo.viewmodels.ReservationVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -76,39 +78,51 @@ public class ListControllers {
     }
 
     @RequestMapping(value = "/lines/{nome_linea}", method = RequestMethod.GET)
-    public String getAllStopsForLine(@PathVariable String nome_linea) throws JsonProcessingException {
-
-        String s = new String("[");
+    public Route getAllStopsForLine(@PathVariable String nome_linea) throws JsonProcessingException {
         Route route = routeService.getRoutesByName(nome_linea);
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = ow.writeValueAsString(route.getStopListA());
-        json = json + ow.writeValueAsString(route.getStopListB());
-        return json;
+        return route;
     }
 
 
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Reservation create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody Reservation reservation) throws JsonProcessingException, ParseException {
-        reservation.setLinea(routeRepo.findRouteByNameR(nome_linea).getId());
-        reservation.getAlunno().setId(childRepo.findChildByNameChild(reservation.getAlunno().getNameA()).getIdChild().toString());
-        reservation.setData(data);
-        reservation.getAlunno().setBooked(true);
+    public Reservation create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+        ReservationDTO reservationDTO= ReservationDTO.builder()
+                                       .alunno(reservationVM.getAlunno())
+                                       .nomeFermata(reservationVM.getNomeFermata())
+                                       .nome_linea(nome_linea)
+                                       .direzione(reservationVM.getDirezione())
+                                       .data(data)
+                                       .build();
+        reservationDTO.setRoute(routeService.getRoutesByName(reservationDTO.getNome_linea()).getId());
+        //questo childRepo non dovrebbe essere utilizzato
+        reservationDTO.getAlunno().setId(childRepo.findChildByNameChild(reservationDTO.getAlunno().getNameA()).getIdChild().toString());
+        reservationDTO.getAlunno().setBooked(true);
 
-        Reservation r = reservationService.createReservation(reservation);
+        Reservation r = reservationService.createReservation(reservationDTO);
         String idReservation = r.getId().toString();
         return r;
     }
 
 
     @RequestMapping(value = "/reservations/add/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Reservation createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody Reservation reservation) throws JsonProcessingException, ParseException {
-        reservation.setLinea(routeRepo.findRouteByNameR(nome_linea).getId());
-        reservation.getAlunno().setId(childRepo.findChildByNameChild(reservation.getAlunno().getNameA()).getIdChild().toString());
-        reservation.setData(data);
-        reservation.getAlunno().setBooked(false);
-        reservation.getAlunno().setPresent(!reservation.getAlunno().isPresent());
+    public Reservation createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+        ReservationDTO reservationDTO= ReservationDTO.builder()
+                .alunno(reservationVM.getAlunno())
+                .nomeFermata(reservationVM.getNomeFermata())
+                .nome_linea(nome_linea)
+                .direzione(reservationVM.getDirezione())
+                .data(data)
+                .build();
 
-        Reservation r = reservationService.createReservation(reservation);
+        reservationDTO.setRoute(routeService.getRoutesByName(reservationDTO.getNome_linea()).getId());
+        //questo childRepo non dovrebbe essere utilizzato
+        reservationDTO.getAlunno().setId(childRepo.findChildByNameChild(reservationDTO.getAlunno().getNameA()).getIdChild().toString());
+        reservationDTO.getAlunno().setBooked(false);
+
+        reservationDTO.getAlunno().setPresent(!reservationDTO.getAlunno().isPresent());
+
+
+        Reservation r = reservationService.createReservation(reservationDTO);
         String idReservation = r.getId().toString();
         return r;
     }
@@ -117,9 +131,12 @@ public class ListControllers {
     public Reservation confirmPresence(@PathVariable final ObjectId id_fermata, @PathVariable long data, @RequestBody final String idPerson) throws JsonProcessingException, ParseException {
         Reservation r = reservationService.findReservationByNomeLineaAndDataAndIdPerson(id_fermata, data, idPerson);
         r.getAlunno().setPresent(!r.getAlunno().isPresent());
-        reservationRepo.save(r);
+        reservationService.save(r);
         return r;
     }
+
+
+      //TODO -----------------------------------CAPIRE RICHIESTA------------------------------------
 
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.GET)
     public ResponseEntity getPeople(@PathVariable String nome_linea, @PathVariable long data) throws JsonProcessingException, ParseException {
@@ -238,7 +255,6 @@ public class ListControllers {
         return ok(model);
     }
 
-
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Reservation update(@RequestBody Reservation reservation, @PathVariable final ObjectId reservation_id) {
         Reservation updatedReservation = reservationRepo.findReservationById(reservation_id);
@@ -279,5 +295,14 @@ public class ListControllers {
         String json = ow.writeValueAsString(request);
         return json;
     }
+
+    @RequestMapping(value = "/reservations/{nome_linea}/{reservation_id}", method = RequestMethod.GET)
+    public String getPerson(@PathVariable ObjectId reservation_id) throws JsonProcessingException {
+        Reservation request = reservationService.findReservationById(reservation_id);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String json = ow.writeValueAsString(request);
+        return json;
+    }
+
 
 }

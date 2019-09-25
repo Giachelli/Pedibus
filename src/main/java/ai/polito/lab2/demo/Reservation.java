@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo;
 
 import ai.polito.lab2.demo.viewmodels.PersonVM;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import org.bson.types.ObjectId;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "reservation")
     @Data
+    @Builder
     public class Reservation {
         @Id
         @ToString.Exclude
@@ -18,6 +20,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
          private PersonVM alunno;
          private ObjectId fermata;
          private int linea;
+         private String nome_linea;
          private String direzione;
          //private boolean salire;
          private long data;
