@@ -1,5 +1,7 @@
 package ai.polito.lab2.demo.Service;
 
+import ai.polito.lab2.demo.Dto.ReservationDTO;
+import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.viewmodels.PersonVM;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
@@ -20,6 +22,9 @@ import java.util.*;
 public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
+    private RouteRepo routeRepo;
+
+    @Autowired
     private ReservationRepo reservationRepo;
 
     @Autowired
@@ -28,10 +33,17 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private StopRepo stopRepo;
 
-    public Reservation createReservation(Reservation r) throws JsonProcessingException {
-      return  reservationRepo.save(r);
-/*        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = ow.writeValueAsString(r);*/
+    public Reservation createReservation(ReservationDTO r) throws JsonProcessingException {
+
+        Reservation res= Reservation.builder()
+                .alunno(r.getAlunno())
+                .data(r.getData())
+                .direzione(r.getDirezione())
+                .fermata(stopRepo.findStopByNome(r.getNomeFermata()).get_id())
+                .nome_linea(r.getNome_linea())
+                .linea(r.getRoute())
+                .build();
+        return  reservationRepo.save(res);
     }
 
     public Map<String, List<PersonVM>> findReservationAndata (int linea, long data){
@@ -99,6 +111,16 @@ public class ReservationServiceImpl implements ReservationService {
             query.addCriteria(Criteria.where("id").is(reservatio_id));
             mongoTemplate.remove(query, Reservation.class);
      }
+
+     public void save(Reservation r){
+            reservationRepo.save(r);
+     }
+
+     public Reservation findReservationById(ObjectId reservation_id){
+        return reservationRepo.findReservationById(reservation_id);
+     }
+
+
 
     public Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, String idPerson) {
         Query query = new Query();

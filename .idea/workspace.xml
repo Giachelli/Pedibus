@@ -2,57 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="64d3b5fa-28aa-4d3d-90e8-4f8ea5745580" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/RouteDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/RouteVM.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/UserVM.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/ReservationDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/ReservationVM.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/ReadRoute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/RouteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/RouteRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/RouteRepo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/StopRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/StopRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/UserRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/UserRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Route.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Route.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/IUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Reservation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Stop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Stop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/ListControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/ListControllers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/security/jwt/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/security/jwt/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Child$ChildBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Child.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/DataInitializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/DataInitializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/OnRegistrationCompleteEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/OnRegistrationCompleteEvent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Person.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/ReadRoute.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/RegistrationListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/RegistrationListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/ChildRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/ChildRepo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/RouteRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/RouteRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/ReservationRepo.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/StopRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/StopRepo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/UserRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Repositories/UserRepo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Reservation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Reservation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Route.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/IUserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/IUserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/ReservationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/ReservationService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/ReservationServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/ReservationServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/RouteService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/RouteService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/RouteServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/RouteServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Stop.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/User$UserBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/Line_Registration$Line_RegistrationBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/Line_Registration$Line_RegistrationBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/Line_Registration.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/Line_Registration.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/ListControllers.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/ListControllers.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/Register.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/security/CustomUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/security/CustomUserDetailsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Reservation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/ReservationService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/Service/ReservationServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/controllers/ListControllers.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/security/jwt/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ai/polito/lab2/demo/security/jwt/SecurityConfig.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -62,25 +26,72 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DefaultGradleProjectSettings">
-    <option name="isMigrated" value="true" />
-  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/RouteController.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/ListControllers.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+            <state relative-caret-position="4035">
+              <caret line="296" column="5" selection-start-line="296" selection-start-column="5" selection-end-line="296" selection-end-column="5" />
+              <folding>
+                <element signature="e#12044#12045#0" expanded="true" />
+                <element signature="e#12101#12102#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="42" column="24" selection-start-line="42" selection-start-column="24" selection-end-line="42" selection-end-column="24" />
+            <state relative-caret-position="774">
+              <caret line="87" column="29" selection-start-line="87" selection-start-column="29" selection-end-line="87" selection-end-column="29" />
+              <folding>
+                <element signature="e#4208#4209#0" expanded="true" />
+                <element signature="e#4252#4253#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Reservation.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" column="25" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="25" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/ReservationVM.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/PersonVM.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -88,42 +99,15 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-217">
-              <caret line="72" column="60" selection-start-line="72" selection-start-column="60" selection-end-line="72" selection-end-column="60" />
+            <state relative-caret-position="266">
+              <caret line="41" column="23" selection-start-line="41" selection-start-column="23" selection-end-line="41" selection-end-column="23" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2730#2731#0" expanded="true" />
-                <element signature="e#2793#2794#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/security/jwt/SecurityConfig.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/target/pedibus_routes/blackroute.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-15">
-              <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/RouteDTO.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="38" column="26" selection-start-line="38" selection-start-column="26" selection-end-line="38" selection-end-column="26" />
-              <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#990#991#0" expanded="true" />
+                <element signature="e#1016#1017#0" expanded="true" />
+                <element signature="e#1051#1052#0" expanded="true" />
+                <element signature="e#1081#1082#0" expanded="true" />
+                <element signature="e#2461#2462#0" expanded="true" />
+                <element signature="e#2524#2525#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -138,6 +122,17 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>appUrl</find>
+      <find>Reservation</find>
+      <find>reservat</find>
+    </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels</dir>
+      <dir>$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo</dir>
+    </dirStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -150,37 +145,23 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/RegistrationListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Stop.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/RouteVM.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/UserRepo.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/UserService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/IUserService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/UserVM.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/UserDTO.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/User.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/UserController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/RouteController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteServiceImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/ListControllers.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Route.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/RouteDTO.java" />
-        <option value="$PROJECT_DIR$/target/pedibus_routes/blackroute.json" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/RouteRepo.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/StopRepo.java" />
         <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/security/jwt/SecurityConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/PersonVM.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Reservation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/ReservationVM.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/ReservationDTO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/ListControllers.java" />
       </list>
     </option>
   </component>
-  <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="importAutomatically" value="true" />
-      </MavenImportingSettings>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="y" value="23" />
     <option name="width" value="1280" />
-    <option name="height" value="800" />
+    <option name="height" value="653" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -188,6 +169,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -227,6 +209,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
               <item name="controllers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -235,6 +218,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
               <item name="Dto" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -243,30 +227,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Entity" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="demo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Pedibus" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Repositories" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="demo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Pedibus" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jwt" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="demo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Pedibus" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
               <item name="Service" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -275,6 +236,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
               <item name="viewmodels" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -292,7 +254,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -301,17 +262,12 @@
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
     <property name="RequestMappingsPanelWidth1" value="75" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1569428580709" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="ai.polito.lab2.demo.viewmodels" />
-    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -344,44 +300,43 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1569330502265</updated>
-      <workItem from="1569330507134" duration="360000" />
-      <workItem from="1569395438273" duration="1854000" />
-      <workItem from="1569399758876" duration="7021000" />
+      <workItem from="1569330507134" duration="12899000" />
+      <workItem from="1569425466710" duration="2725000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9235000" />
+    <option name="totallyTimeSpent" value="15624000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="45" y="25" width="1321" height="743" extended-state="6" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2580392" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2536349" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
-      <window_info id="UI Designer" order="3" />
-      <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info id="Capture Tool" order="5" />
-      <window_info id="Web" order="6" side_tool="true" />
-      <window_info id="Image Layers" order="7" />
-      <window_info anchor="bottom" id="Messages" weight="0.3293718" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Capture Tool" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info id="Web" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.16298811" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39898133" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32876712" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Spring" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3293718" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Java Enterprise" order="10" />
-      <window_info anchor="bottom" id="Database Changes" order="11" />
-      <window_info anchor="bottom" id="Version Control" order="12" />
-      <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info active="true" anchor="bottom" id="Messages" order="11" visible="true" weight="0.32876712" />
+      <window_info anchor="bottom" id="Java Enterprise" order="12" />
+      <window_info anchor="bottom" id="Database Changes" order="13" />
+      <window_info anchor="bottom" id="Version Control" order="14" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.24941176" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Maven" order="3" />
       <window_info anchor="right" id="Palette" order="4" />
@@ -390,37 +345,23 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info anchor="right" id="Bean Validation" order="9" />
-      <window_info anchor="right" id="Mongo Explorer" order="10" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteServiceImpl.java</url>
-          <line>98</line>
-          <properties />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
-  <component name="antWorkspaceConfiguration">
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
-    <option name="FILTER_TARGETS" value="false" />
-  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/MyService.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/OnRegistrationCompleteEvent.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DemoApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        <state relative-caret-position="30">
+          <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/MyService.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/SetSystemAdmin.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Role.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -429,193 +370,263 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Reservation.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Person.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Stop.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/EmailServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+        <state relative-caret-position="75">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/UserController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-337">
+          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/OnRegistrationCompleteEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/RegistrationListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/Register.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/Line_Registration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/User.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Person.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/RegistrationListener.java">
+    <entry file="file://$PROJECT_DIR$/demo.iml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/target/pedibus_routes/blackroute.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/ReadRoute.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24">
-          <caret line="14" column="44" lean-forward="true" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
+        <state relative-caret-position="141">
+          <caret line="42" column="37" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/RouteVM.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Route.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/User.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="51" selection-start-line="5" selection-start-column="51" selection-end-line="5" selection-end-column="51" />
+        <state relative-caret-position="120">
+          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/UserDTO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="16" column="8" lean-forward="true" selection-start-line="15" selection-end-line="16" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/UserVM.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/AuthController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="78" column="29" selection-start-line="78" selection-start-column="29" selection-end-line="78" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/RouteDTO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/ChildRepo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/RouteRepo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Route.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Stop.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/StopRepo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="8" column="23" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/security/jwt/SecurityConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="434">
+          <caret line="77" column="50" selection-start-line="77" selection-start-column="50" selection-end-line="77" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/security/jwt/JwtTokenFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="34" selection-start-line="34" selection-end-line="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/IUserService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/ReservationRepo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/UserRepo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/UserService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-593">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="22" column="60" selection-start-line="22" selection-start-column="37" selection-end-line="22" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="41" column="23" selection-start-line="41" selection-start-column="23" selection-end-line="41" selection-end-column="23" />
+          <folding>
+            <element signature="e#990#991#0" expanded="true" />
+            <element signature="e#1016#1017#0" expanded="true" />
+            <element signature="e#1051#1052#0" expanded="true" />
+            <element signature="e#1081#1082#0" expanded="true" />
+            <element signature="e#2461#2462#0" expanded="true" />
+            <element signature="e#2524#2525#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/ReservationServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        <state relative-caret-position="774">
+          <caret line="87" column="29" selection-start-line="87" selection-start-column="29" selection-end-line="87" selection-end-column="29" />
+          <folding>
+            <element signature="e#4208#4209#0" expanded="true" />
+            <element signature="e#4252#4253#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Stop.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Reservation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="17" column="22" lean-forward="true" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/pedibus_routes/redroute.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Repositories/UserRepo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/User.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="97" column="15" selection-start-line="97" selection-start-column="15" selection-end-line="97" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/UserDTO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="45" column="51" selection-start-line="45" selection-start-column="51" selection-end-line="45" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/IUserService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/UserService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="112" column="5" selection-start-line="112" selection-start-column="5" selection-end-line="112" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/UserVM.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
+        <state relative-caret-position="285">
+          <caret line="19" column="25" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/UserController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/ReservationVM.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="70">
-          <caret line="46" column="108" selection-start-line="46" selection-start-column="108" selection-end-line="46" selection-end-column="108" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DemoApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="24" column="26" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="26" />
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/ReservationDTO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+        <state relative-caret-position="135">
+          <caret line="9" column="20" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/target/pedibus_routes/whiteroute.json">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/viewmodels/PersonVM.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/ListControllers.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="91" column="73" selection-start-line="91" selection-start-column="73" selection-end-line="91" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.1.4.RELEASE/spring-boot-2.1.4.RELEASE.jar!/org/springframework/boot/SpringApplication.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="521" selection-start-line="521" selection-end-line="521" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/Route.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="42" column="24" selection-start-line="42" selection-start-column="24" selection-end-line="42" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Dto/RouteDTO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="38" column="26" selection-start-line="38" selection-start-column="26" selection-end-line="38" selection-end-column="26" />
+        <state relative-caret-position="4035">
+          <caret line="296" column="5" selection-start-line="296" selection-start-column="5" selection-end-line="296" selection-end-column="5" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#12044#12045#0" expanded="true" />
+            <element signature="e#12101#12102#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/controllers/RouteController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/pedibus_routes/blackroute.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-15">
-          <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Service/RouteServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-217">
-          <caret line="72" column="60" selection-start-line="72" selection-start-column="60" selection-end-line="72" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2730#2731#0" expanded="true" />
-            <element signature="e#2793#2794#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/security/jwt/SecurityConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
         </state>
       </provider>
     </entry>
