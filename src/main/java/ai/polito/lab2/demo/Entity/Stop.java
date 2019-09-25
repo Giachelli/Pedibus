@@ -1,4 +1,4 @@
-package ai.polito.lab2.demo;
+package ai.polito.lab2.demo.Entity;
 
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -16,8 +16,6 @@ public class Stop {
     private String nome;
     private int num_s;
     private String time;
-    //private int id_R;
-    //private char Direzione ;//A= andata, e R=ritorno;
 
     @Override
     public String toString(){

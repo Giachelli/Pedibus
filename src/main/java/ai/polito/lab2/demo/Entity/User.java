@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo.Entity;
 
 
+import ai.polito.lab2.demo.Dto.UserDTO;
 import ai.polito.lab2.demo.Role;
 import lombok.Builder;
 import lombok.Data;
@@ -89,5 +90,12 @@ public class User implements UserDetails {
         cal.setTime(new Timestamp(cal.getTime().getTime()));
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
+    }
+
+    public UserDTO convertToDTO() {
+       return UserDTO.builder()
+               .email(this.getUsername()).roles(this.getRoles())
+               .family_name(this.getFamily_name())
+               .token(this.getToken()).expiryDate(this.getExpiryDate()).build();
     }
 }

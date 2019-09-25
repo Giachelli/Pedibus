@@ -1,5 +1,6 @@
 package ai.polito.lab2.demo.Dto;
 
+import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Role;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class UserDTO {
     @Email
     private String email;
+    private String family_name;
     private List<Role> roles;
     private String token;  //capire se salva il token del jwt e se serve
     private Date expiryDate;
@@ -36,6 +38,17 @@ public class UserDTO {
         cal.setTime(new Timestamp(cal.getTime().getTime()));
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
+    }
+
+    public User converToUser(){
+        return User.builder()
+                .username(this.getEmail())
+                .family_name(this.getFamily_name())
+                .roles(this.getRoles())
+                .token(this.getToken())
+                .expiryDate(this.getExpiryDate())
+                .build();
+
     }
 
 }

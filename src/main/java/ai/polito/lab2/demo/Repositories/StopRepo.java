@@ -1,6 +1,6 @@
 package ai.polito.lab2.demo.Repositories;
 
-import ai.polito.lab2.demo.Stop;
+import ai.polito.lab2.demo.Entity.Stop;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

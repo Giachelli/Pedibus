@@ -4,6 +4,8 @@ package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.*;
 import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Entity.Route;
+import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
