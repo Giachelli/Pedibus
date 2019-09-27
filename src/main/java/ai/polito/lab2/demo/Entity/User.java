@@ -29,6 +29,8 @@ public class User implements UserDetails {
 
     private String username;
 
+    //private Family family;
+
     private String family_name;
 
     private String password;

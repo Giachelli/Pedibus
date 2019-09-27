@@ -10,6 +10,7 @@ import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
+import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
@@ -38,6 +39,9 @@ public class ListControllers {
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private StopRepo stopRepo;
 
     //@Autowired
     //private EmailSenderService emailSenderService;
@@ -83,20 +87,22 @@ public class ListControllers {
         return route;
     }
 
-
+    //sarebbe da metterci il DTO dentro a reservation
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Reservation create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ReservationDTO reservationDTO= ReservationDTO.builder()
-                                       .alunno(reservationVM.getAlunno())
-                                       .nomeFermata(reservationVM.getNomeFermata())
+                                       .child(childRepo.findChildByNameChildAndIdFamily(reservationVM.getName_alunno(),reservationVM.getFamily().getFamily_id()))
+                                       .nomeFermata(stopRepo.findStopByNome(reservationVM.getNomeFermata()))
                                        .nome_linea(nome_linea)
                                        .direzione(reservationVM.getDirezione())
                                        .data(data)
                                        .build();
         reservationDTO.setRoute(routeService.getRoutesByName(reservationDTO.getNome_linea()).getId());
         //questo childRepo non dovrebbe essere utilizzato
-        reservationDTO.getAlunno().setId(childRepo.findChildByNameChild(reservationDTO.getAlunno().getNameA()).getIdChild().toString());
-        reservationDTO.getAlunno().setBooked(true);
+        // reservationDTO.getName_alunno().setId(childRepo.findChildByNameChild(reservationDTO.getAlunno().getNameA()).getIdChild().toString());
+        childRepo.findChildByIdChild(reservationDTO.getChild().getIdChild()).setBooked(true);
+
+        //reservationDTO.getAlunno().setBooked(true);
 
         Reservation r = reservationService.createReservation(reservationDTO);
         String idReservation = r.getId().toString();
@@ -104,7 +110,7 @@ public class ListControllers {
     }
 
 
-    @RequestMapping(value = "/reservations/add/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+   /* @RequestMapping(value = "/reservations/add/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Reservation createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ReservationDTO reservationDTO= ReservationDTO.builder()
                 .alunno(reservationVM.getAlunno())
@@ -125,15 +131,15 @@ public class ListControllers {
         Reservation r = reservationService.createReservation(reservationDTO);
         String idReservation = r.getId().toString();
         return r;
-    }
+    }*/
 
-    @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
+/*    @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
     public Reservation confirmPresence(@PathVariable final ObjectId id_fermata, @PathVariable long data, @RequestBody final String idPerson) throws JsonProcessingException, ParseException {
         Reservation r = reservationService.findReservationByNomeLineaAndDataAndIdPerson(id_fermata, data, idPerson);
         r.getAlunno().setPresent(!r.getAlunno().isPresent());
         reservationService.save(r);
         return r;
-    }
+    }*/
 
 
       //TODO -----------------------------------CAPIRE RICHIESTA------------------------------------
@@ -255,7 +261,7 @@ public class ListControllers {
         return ok(model);
     }
 
-    @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+   /* @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Reservation update(@RequestBody Reservation reservation, @PathVariable final ObjectId reservation_id) {
         Reservation updatedReservation = reservationRepo.findReservationById(reservation_id);
 
@@ -281,7 +287,7 @@ public class ListControllers {
         reservationRepo.save(updatedReservation);
 
         return updatedReservation;
-    }
+    }*/
 
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable ObjectId reservation_id) {

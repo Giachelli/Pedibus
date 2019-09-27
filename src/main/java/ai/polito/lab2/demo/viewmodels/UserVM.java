@@ -1,5 +1,6 @@
 package ai.polito.lab2.demo.viewmodels;
 
+import ai.polito.lab2.demo.Entity.Family;
 import lombok.Builder;
 import lombok.Data;
 

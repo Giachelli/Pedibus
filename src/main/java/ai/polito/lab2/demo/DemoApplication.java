@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo;
 
 import ai.polito.lab2.demo.Repositories.RouteRepo;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,10 @@ public class DemoApplication {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(DemoApplication.class, args);

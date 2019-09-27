@@ -4,6 +4,7 @@ import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
+import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.RouteService;
@@ -24,6 +25,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private UserRepo users;
+
+    @Autowired
+    private ReservationRepo reservationRepo;
 
     @Autowired
     private RouteController routeController;

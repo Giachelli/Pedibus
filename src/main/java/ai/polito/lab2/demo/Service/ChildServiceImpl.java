@@ -2,6 +2,7 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.ChildDTO;
 import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,14 @@ public class ChildServiceImpl implements ChildService {
 
     // salva un child sul db, trasformando prima il DTO in Entity
     @Override
-    public void saveChild(ChildDTO childDTO, ObjectId familyID) {
-        Child c = childDTO.convert(familyID);
+    public void saveChild(ChildDTO childDTO, User user) {
+        Child c = childDTO.convert(user);
         childRepo.save(c);
 
+    }
+
+    public ChildDTO findChildByNameChildAndIdFamily (String nameChild, ObjectId idFamily){
+        Child c= childRepo.findChildByNameChildAndIdFamily(nameChild,idFamily);
+        return c.convertDTO();
     }
 }

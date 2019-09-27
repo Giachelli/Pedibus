@@ -1,5 +1,6 @@
 package ai.polito.lab2.demo.Dto;
 
+import ai.polito.lab2.demo.Entity.Family;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Role;
 import lombok.Builder;
@@ -43,7 +44,7 @@ public class UserDTO {
     public User converToUser(){
         return User.builder()
                 .username(this.getEmail())
-                .family_name(this.getFamily_name())
+                .family_name(this.getFamily_name())  //da rivedere
                 .roles(this.getRoles())
                 .token(this.getToken())
                 .expiryDate(this.getExpiryDate())
