@@ -55,35 +55,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .httpBasic().disable()
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and().authorizeRequests()
+                    .antMatchers("/login").permitAll()
                     .and()
                     .authorizeRequests()
-                    .antMatchers(HttpMethod.POST,"/login").permitAll().
-                    and().
-                    authorizeRequests()
-                    .antMatchers("/register").permitAll()
+                    .antMatchers("/register").permitAll() //.hasRole("SYSTEM_ADMIN")
                     .and()
                     .authorizeRequests()
                     .antMatchers("/confirm/*").permitAll()
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/users").permitAll()
-                    .and().
-                    authorizeRequests()
-                    .antMatchers("/lines").permitAll()
-                    .and().
-                    authorizeRequests()
-                    .antMatchers("/lines/*").permitAll()
-                    .and().
-                    authorizeRequests()
-                    .antMatchers("/reservations/**").permitAll()
-                    .and().
-                    authorizeRequests().
-                    anyRequest().authenticated()
-                    /*.and()
-                    // If user isn't authorised to access a path...
-                    .exceptionHandling()
-                    // ...redirect them to /403
-                    .accessDeniedPage("/403")*/
+                    .antMatchers("/users", "/users/*").hasAnyRole("ADMIN","SYSTEM_ADMIN")
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers("/lines", "/lines/*").hasAnyRole("ADMIN","SYSTEM_ADMIN")
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers("/reservations/**").hasRole("USER")
+                    .and()
+                    .authorizeRequests()
+                    .anyRequest().authenticated()
                     .and()
                     .apply(new JwtConfigurer(jwtTokenProvider));
 

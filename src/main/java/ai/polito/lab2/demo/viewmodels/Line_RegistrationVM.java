@@ -1,4 +1,4 @@
-package ai.polito.lab2.demo.controllers;
+package ai.polito.lab2.demo.viewmodels;
 
 import ai.polito.lab2.demo.viewmodels.PersonVM;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 @Data
 @Builder
-public class Line_Registration {
+public class Line_RegistrationVM {
     private String idStop;
     private String nameStop;
     private String time;

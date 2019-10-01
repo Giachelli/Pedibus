@@ -1,7 +1,7 @@
 package ai.polito.lab2.demo.Dto;
 
 import ai.polito.lab2.demo.Entity.User;
-import ai.polito.lab2.demo.Role;
+import ai.polito.lab2.demo.Entity.Role;
 import lombok.Builder;
 import lombok.Data;
 

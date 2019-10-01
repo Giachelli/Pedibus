@@ -2,7 +2,6 @@ package ai.polito.lab2.demo.Entity;
 
 
 import ai.polito.lab2.demo.Dto.UserDTO;
-import ai.polito.lab2.demo.Role;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -13,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.validation.constraints.Email;
 import java.sql.Timestamp;
 import java.util.*;
 

@@ -5,7 +5,7 @@ import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.viewmodels.PersonVM;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
-import ai.polito.lab2.demo.Reservation;
+import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Stop;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.bson.types.ObjectId;

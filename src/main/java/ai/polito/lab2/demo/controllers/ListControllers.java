@@ -2,9 +2,9 @@ package ai.polito.lab2.demo.controllers;
 
 //import ai.polito.lab2.demo.AppConfig;
 
-import ai.polito.lab2.demo.*;
 import ai.polito.lab2.demo.Dto.ReservationDTO;
 import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
@@ -13,6 +13,7 @@ import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
+import ai.polito.lab2.demo.viewmodels.Line_RegistrationVM;
 import ai.polito.lab2.demo.viewmodels.PersonVM;
 import ai.polito.lab2.demo.viewmodels.ReservationVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,6 +23,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +65,7 @@ public class ListControllers {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-
+    @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/lines", method = RequestMethod.GET)
     public ResponseEntity getAllRoutesInJson() throws JsonProcessingException {
         List<Route> routes = routeService.getAllRoutes();
@@ -149,7 +151,7 @@ public class ListControllers {
         children.addAll(allChildren);
 
         Map<String, List<PersonVM>> salire = reservationService.findReservationAndata(route.getId(), data);
-        ArrayList<Line_Registration> andata = new ArrayList<>();
+        ArrayList<Line_RegistrationVM> andata = new ArrayList<>();
         ArrayList<PersonVM> passeggeri = new ArrayList<>();
 
         if (salire.size() == 0)
@@ -158,7 +160,7 @@ public class ListControllers {
 
         for (Stop stop : route.getStopListA()) {
             if (salire.size() == 0) {
-                andata.add(Line_Registration.builder()
+                andata.add(Line_RegistrationVM.builder()
                         .idStop(stop.get_id().toString())
                         .nameStop(stop.getNome())
                         .time(stop.getTime())
@@ -187,7 +189,7 @@ public class ListControllers {
                         notBookedA.add(new PersonVM(c.getIdChild().toString(), c.getNameChild()));
                 }
 
-                andata.add(Line_Registration.builder()
+                andata.add(Line_RegistrationVM.builder()
                         .idStop(stop.get_id().toString())
                         .nameStop(stop.getNome())
                         .time(stop.getTime())
@@ -199,7 +201,7 @@ public class ListControllers {
         }
 
         Map<String, List<PersonVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
-        ArrayList<Line_Registration> ritorno = new ArrayList<>();
+        ArrayList<Line_RegistrationVM> ritorno = new ArrayList<>();
         children.clear();
         children.addAll(allChildren);
 
@@ -209,7 +211,7 @@ public class ListControllers {
 
         for (Stop stop : route.getStopListB()) {
             if (scendere.size() == 0) {
-                ritorno.add(Line_Registration.builder()
+                ritorno.add(Line_RegistrationVM.builder()
                         .idStop(stop.get_id().toString())
                         .nameStop(stop.getNome())
                         .time(stop.getTime())
@@ -232,7 +234,7 @@ public class ListControllers {
                     for (Child c : children)
                         notBookedR.add(new PersonVM(c.getIdChild().toString(), c.getNameChild()));
                 }
-                ritorno.add(Line_Registration.builder()
+                ritorno.add(Line_RegistrationVM.builder()
                         .idStop(stop.get_id().toString())
                         .nameStop(stop.getNome())
                         .time(stop.getTime())

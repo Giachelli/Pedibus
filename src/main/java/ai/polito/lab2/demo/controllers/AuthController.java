@@ -7,6 +7,7 @@ import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.IUserService;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
+import ai.polito.lab2.demo.viewmodels.AuthenticationRequestVM;
 import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
 import ai.polito.lab2.demo.viewmodels.RecoverVM;
 import ai.polito.lab2.demo.viewmodels.RegisterVM;
@@ -32,6 +33,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @CrossOrigin
 public class AuthController {
+
 
     @Autowired
     private UserRepo userRepo;
@@ -77,7 +79,7 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity signin(@RequestBody AuthenticationRequest data) {
+    public ResponseEntity signin(@RequestBody AuthenticationRequestVM data) {
 
         try {
             String username = data.getUsername();
@@ -87,14 +89,17 @@ public class AuthController {
             Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
             model.put("token", token);
+            System.out.println("User: "+username+" is logged");
             return ok(model);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied"); //deve restituire 401 Unauthorized, lo vedo io
         }
     }
-
+    //TODO fare la get da inviare tramite mail
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
     public void confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
+        if(!userVM.getPassword().equals(userVM.getConfirmPassword()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password are differents");
         if(service.manageUser(randomUUID,userVM))
         {
         throw new ResponseStatusException(HttpStatus.OK, "OK");}
