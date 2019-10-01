@@ -1,4 +1,4 @@
-package ai.polito.lab2.demo;
+package ai.polito.lab2.demo.Entity;
 
 import ai.polito.lab2.demo.viewmodels.PersonVM;
 import lombok.Builder;

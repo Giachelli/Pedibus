@@ -2,7 +2,7 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.ReservationDTO;
 import ai.polito.lab2.demo.viewmodels.PersonVM;
-import ai.polito.lab2.demo.Reservation;
+import ai.polito.lab2.demo.Entity.Reservation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.bson.types.ObjectId;
 

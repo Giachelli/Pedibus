@@ -1,12 +1,11 @@
 package ai.polito.lab2.demo;
 
 import ai.polito.lab2.demo.Entity.Child;
-import ai.polito.lab2.demo.Entity.Route;
+import ai.polito.lab2.demo.Entity.Role;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
-import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.controllers.RouteController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @Component

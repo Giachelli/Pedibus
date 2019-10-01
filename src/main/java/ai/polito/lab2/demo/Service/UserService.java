@@ -76,7 +76,7 @@ public class UserService implements IUserService {
         User user = this.getUserByUUID(randomUUID);
 
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: User not found");
         }
         if (user.isEnabled()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already active");
@@ -88,6 +88,7 @@ public class UserService implements IUserService {
         }
 
         user.setFamily_name(userVM.getFamily_name());
+        user.setPassword(userVM.getPassword());
         user.setEnabled(true);
         userRepo.save(user);
         return true;

@@ -1,4 +1,4 @@
-package ai.polito.lab2.demo.controllers;
+package ai.polito.lab2.demo.viewmodels;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Data
 @Builder
-public class AuthenticationRequest {
+public class AuthenticationRequestVM {
     private String username;
     private String password;
 }

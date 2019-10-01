@@ -1,6 +1,5 @@
 package ai.polito.lab2.demo.viewmodels;
 
-import ai.polito.lab2.demo.Role;
 import lombok.Data;
 
 import javax.validation.constraints.Email;

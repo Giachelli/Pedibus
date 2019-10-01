@@ -7,7 +7,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/DataInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ai/polito/lab2/demo/Entity/User.java" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
