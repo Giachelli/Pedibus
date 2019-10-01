@@ -8,17 +8,17 @@ import org.bson.types.ObjectId;
 @Data
 @Builder
 public class ChildDTO {
-    private ObjectId idChild;
+    private ObjectId childID;
     private String familyName;
     private String nameChild;
 
 
-    public Child convert(ObjectId familyID) {
+    public Child convert(ObjectId userID) {
         return Child.builder()
                 .nameChild(this.getNameChild())
                 .familyName(this.getFamilyName())
-                .idChild(this.getIdChild())
-                .idFamily(familyID)
+                .childID(this.getChildID())
+                .userID(userID)
                 .build();
     }
 }

@@ -12,14 +12,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "child")
 public class Child {
     @Id
-    private ObjectId idChild;
-    private ObjectId idFamily;
+    private ObjectId childID;
+    private ObjectId userID;
     private String familyName;
     private String nameChild;
 
     public ChildDTO convertDTO() {
         return ChildDTO.builder()
-                .idChild(this.getIdChild())
+                .childID(this.getChildID())
                 .nameChild(this.getNameChild())
                 .familyName(this.getFamilyName())
                 .build();
