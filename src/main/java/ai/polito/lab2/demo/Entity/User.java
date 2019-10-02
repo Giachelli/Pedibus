@@ -31,13 +31,15 @@ public class User implements UserDetails {
 
     private ArrayList<ObjectId> childsID;
 
+    private ArrayList<Integer> adminRoutesID;
+
+    private ArrayList<Integer> muleRoutesID;
+
     private String password;
 
-    private String token;  //capire se salva il token del jwt e se serve
+    private String token; //per registrazione
 
-   //private List<String> pass_token = new ArrayList<>();
-
-    private String passtoken;
+    private String passtoken; // per recupero password
 
     private Date expiry_passToken;
 
@@ -97,5 +99,15 @@ public class User implements UserDetails {
                .email(this.getUsername()).roles(this.getRoles())
                .family_name(this.getFamily_name())
                .token(this.getToken()).expiryDate(this.getExpiryDate()).build();
+    }
+
+    // TODO eliminare i duplicati se esistono
+
+    public void addAdminRoutesID(ArrayList<Integer> adminRouteID) {
+       this.adminRoutesID.addAll(adminRouteID);
+    }
+
+    public void addMuleRoutesID(ArrayList<Integer> muleRouteID) {
+       this.muleRoutesID.addAll(muleRouteID);
     }
 }

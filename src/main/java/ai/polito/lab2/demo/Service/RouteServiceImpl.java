@@ -100,6 +100,11 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public void saveRoute(Route r) {
+        routeRepo.save(r);
+    }
+
+    @Override
     public void readAll() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         final File folder = new File("target/pedibus_routes");

@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 @Builder
 public class ChildReservationVM {
 
-    private String name_child;
+    private String nameChild;
     private String name_family;
     private ObjectId childID;
     private boolean present = false;

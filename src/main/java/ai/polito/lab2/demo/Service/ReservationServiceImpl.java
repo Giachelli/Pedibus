@@ -66,7 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
                 id_prec = "";
             }
             Stop stop = stopRepo.findStopBy_id(r.getStopID());
-            Child c= childRepo.findChildByIdChild(r.getChildID());
+            Child c= childRepo.findChildByChildID(r.getChildID());
             String s =stop.getNome();
             String id=r.getStopID().toString();
             if(!mappa.containsKey(s)){
@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
             mappa.get(s).add(ChildReservationVM.builder()
                     .childID(c.getChildID())
                     .name_family(c.getName_family())
-                    .name_child(c.getName_child())
+                    .nameChild(c.getNameChild())
                     .build());
         }
         for (String key : mappa.keySet()) {
@@ -98,7 +98,7 @@ public class ReservationServiceImpl implements ReservationService {
                 id_prec = "";
             }
             Stop stop = stopRepo.findStopBy_id(r.getStopID());
-            Child c= childRepo.findChildByIdChild(r.getChildID());
+            Child c= childRepo.findChildByChildID(r.getChildID());
 
             String s =stop.getNome();
             String id=r.getStopID().toString();
@@ -108,7 +108,7 @@ public class ReservationServiceImpl implements ReservationService {
             mappa.get(s).add(ChildReservationVM.builder()
                     .childID(c.getChildID())
                     .name_family(c.getName_family())
-                    .name_child(c.getName_child())
+                    .nameChild(c.getNameChild())
                     .build());
 
         }

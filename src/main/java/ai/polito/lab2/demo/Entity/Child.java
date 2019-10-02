@@ -15,7 +15,7 @@ public class Child {
     private ObjectId childID;
     private ObjectId userID;
     private String name_family;
-    private String name_child;
+    private String nameChild;
 /*
     public ChildDTO convertDTO() {
         return ChildDTO.builder()

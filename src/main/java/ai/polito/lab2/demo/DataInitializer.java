@@ -62,8 +62,8 @@ public class DataInitializer implements CommandLineRunner {
 
     private void insertChildIntoDB() {
         this.childRepo.save(
-                Child.builder()
-                        .nameChild("Luigi").build()
+                Child.builder().
+                            nameChild("Luigi").build()
         );
         this.childRepo.save(
                 Child.builder()

@@ -7,9 +7,10 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 
 public interface ChildService {
-    ChildDTO findChildbyID(ObjectId childId);
+    ChildDTO findChildDTObyID(ObjectId childId);
+    Child findChildbyID(ObjectId childId);
 
-    ArrayList<ChildDTO> findChildbyFamilyID(ObjectId familyId);
+    ArrayList<ChildDTO> findChildbyUserID(ObjectId userId);
 
     ChildDTO findChildbyFamilyName(String familyName);
 

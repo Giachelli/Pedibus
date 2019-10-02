@@ -4,6 +4,7 @@ package ai.polito.lab2.demo.Entity;
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import lombok.Builder;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,7 +18,8 @@ public class Route {
     @Id
     private int id;
     private String nameR;
-    private List<String> usernamesAdmin;
+    private List<String> usernameAdmin;
+    private List<String> usernameMule;
     private ArrayList<Stop> stopListA;
     private ArrayList<Stop> stopListB;
     private long lastModified;
@@ -32,8 +34,16 @@ public class Route {
         return RouteDTO.builder().nameR(this.getNameR())
                 .stopListA(this.getStopListA())
                 .stopListB(this.getStopListB())
-                .usernamesAdmin(this.getUsernamesAdmin())
+                .usernamesAdmin(this.getUsernameAdmin())
                 .lastModified(this.getLastModified()).build();
     }
 
+    public void addAdmin(String username) {
+        this.addAdmin(username);
+    }
+
+
+    public void addMule(String username) {
+        this.addMule(username);
+    }
 }

@@ -18,7 +18,7 @@ import java.util.Calendar;
 @Service
 public class UserService implements IUserService {
 
-    private static final int EXPIRATION = 3;
+    private static final int EXPIRATION = 30000;
 
     @Autowired
     private UserRepo userRepo;
@@ -58,10 +58,16 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO getUserBy_id(ObjectId userID) {
+    public UserDTO getUserDTOBy_id(ObjectId userID) {
         User u = userRepo.findUserBy_id(userID);
         UserDTO userDTO = u.convertToDTO();
         return userDTO;
+    }
+
+    @Override
+    public User getUserBy_id(ObjectId userID) {
+        User u = userRepo.findUserBy_id(userID);
+        return u;
     }
 
     @Override
@@ -69,6 +75,16 @@ public class UserService implements IUserService {
 
         user.setPassword(passwordEncoder.encode(password));
         userRepo.save(user);
+    }
+
+    @Override
+    public boolean userEnabled(String username) {
+        return userRepo.findByUsername(username).isEnabled();
+    }
+
+    @Override
+    public void saveUser(User u) {
+        userRepo.save(u);
     }
 
     @Override
@@ -88,7 +104,9 @@ public class UserService implements IUserService {
         }
 
         user.setFamily_name(userVM.getFamily_name());
-        user.setPassword(userVM.getPassword());
+        user.setPassword(this.passwordEncoder.encode(userVM.getPassword()));
+        user.setToken(null);
+        user.setExpiryDate(null);
         user.setEnabled(true);
         userRepo.save(user);
         return true;
@@ -111,6 +129,12 @@ public class UserService implements IUserService {
             userDTOArrayList.add(userDTO);
         }
         return userDTOArrayList;
+    }
+
+    @Override
+    public boolean deleteUserbyID(ObjectId userID) {
+         userRepo.deleteById(userID);
+         return true;
     }
 
     /*public void createPasswordResetTokenForUser(User user, String token) {

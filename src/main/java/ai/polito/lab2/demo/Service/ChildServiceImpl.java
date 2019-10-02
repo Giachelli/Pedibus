@@ -18,23 +18,32 @@ public class ChildServiceImpl implements ChildService {
 
     // ricerca un Child tramite ID
     @Override
-    public ChildDTO findChildbyID(ObjectId childId) {
-        Child child = childRepo.findChildByIdChild(childId);
-        return child.convertDTO();
+    public ChildDTO findChildDTObyID(ObjectId childId) {
+        Child child = childRepo.findChildByChildID(childId);
+        //return child.convertDTO();
+        return null;
     }
 
-    // questa funzione ritorna tutti i figli per una famiglia specifica ( controllare nel caso
+    @Override
+    public Child findChildbyID(ObjectId childId) {
+        Child child = childRepo.findChildByChildID(childId);
+        return child;
+    }
+
+    // questa funzione ritorna tutti i figli per un utente specifico ( controllare nel caso
     //ritorni zero figli) --> capiterà mai?
     @Override
-    public ArrayList<ChildDTO> findChildbyFamilyID(ObjectId familyId) {
-        ArrayList<Child> childs = childRepo.findChildByIdFamily(familyId);
+    public ArrayList<ChildDTO> findChildbyUserID(ObjectId userId) {
+        ArrayList<Child> childs = childRepo.findChildByUserID(userId);
         ArrayList<ChildDTO> childDTOS = new ArrayList<>();
         if (childs.isEmpty()) {
             ChildDTO c = ChildDTO.builder().build();
             childDTOS.add(c);
         } else {
             for (Child c : childs)
-                childDTOS.add(c.convertDTO());
+            {
+                //childDTOS.add(c.convertDTO());
+            }
 
         }
         return childDTOS;
