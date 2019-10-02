@@ -16,7 +16,7 @@ public class ChildDTO {
     public Child convert(ObjectId userID) {
         return Child.builder()
                 .nameChild(this.getNameChild())
-                .familyName(this.getFamilyName())
+                .name_family(this.getFamilyName())
                 .childID(this.getChildID())
                 .userID(userID)
                 .build();

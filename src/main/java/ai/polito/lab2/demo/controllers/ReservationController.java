@@ -103,7 +103,6 @@ public class ReservationController {
                 .date(data)
                 .build();
 
-
         r.setRoute(routeService.getRoutesByName(r.getName_route()).getId());
         //questo childRepo non dovrebbe essere utilizzato
         r.setBooked(false);
@@ -152,7 +151,7 @@ public class ReservationController {
             for (Child c : children)
                 notBookedA.add(ChildReservationVM.builder()
                         .childID(c.getChildID())
-                        .name_child(c.getName_child())
+                        .nameChild(c.getNameChild())
                         .name_family(c.getName_family())
                         .build());
         }
@@ -193,7 +192,7 @@ public class ReservationController {
                     for (Child c : children)
                         notBookedA.add(ChildReservationVM.builder()
                                 .childID(c.getChildID())
-                                .name_child(c.getName_child())
+                                .nameChild(c.getNameChild())
                                 .name_family(c.getName_family())
                                 .build());
                 }
@@ -218,7 +217,7 @@ public class ReservationController {
             for (Child c : children)
                 notBookedR.add(ChildReservationVM.builder()
                         .childID(c.getChildID())
-                        .name_child(c.getName_child())
+                        .nameChild(c.getNameChild())
                         .name_family(c.getName_family())
                         .build());
 
@@ -247,7 +246,7 @@ public class ReservationController {
                     for (Child c : children)
                         notBookedR.add(ChildReservationVM.builder()
                                 .childID(c.getChildID())
-                                .name_child(c.getName_child())
+                                .nameChild(c.getNameChild())
                                 .name_family(c.getName_family())
                                 .build());
                 }

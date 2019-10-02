@@ -11,11 +11,13 @@ import ai.polito.lab2.demo.viewmodels.AuthenticationRequestVM;
 import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
 import ai.polito.lab2.demo.viewmodels.RecoverVM;
 import ai.polito.lab2.demo.viewmodels.RegisterVM;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,11 +56,12 @@ public class AuthController {
     ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    private IUserService service;
+    private IUserService userService;
 
 
     String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
 
+    @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO registerUser(@RequestBody RegisterVM register, WebRequest request) {
 
@@ -84,6 +87,10 @@ public class AuthController {
         try {
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
+            if(!userService.userEnabled(username))
+            {
+                throw new BadCredentialsException("You are not enabled to login");
+            }
             String token = jwtTokenProvider.createToken(username, this.userRepo.findByUsername(username).getRolesString());
 
             Map<Object, Object> model = new HashMap<>();
@@ -96,11 +103,18 @@ public class AuthController {
         }
     }
     //TODO fare la get da inviare tramite mail
+    @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.GET)
+    public ResponseEntity getPage(){
+        Map<Object, Object> model = new TreeMap<>();
+        model.put("message", "create the page");
+        return ok(model);
+    }
+
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
     public void confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
         if(!userVM.getPassword().equals(userVM.getConfirmPassword()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password are differents");
-        if(service.manageUser(randomUUID,userVM))
+        if(userService.manageUser(randomUUID,userVM))
         {
         throw new ResponseStatusException(HttpStatus.OK, "OK");}
         else {
@@ -108,6 +122,7 @@ public class AuthController {
         }
     }
 
+    @Secured({"ROLE_USER","ROLE_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/recover", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity recoverPassword(@RequestBody User username, WebRequest request) {
 
@@ -120,13 +135,14 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Secured({"ROLE_USER","ROLE_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, @ModelAttribute("vm") RecoverVM vm) {
         //TO DO: CHECK TOKEN VALIDITY
 
 
         System.out.println("RECOVER REQUEST");
-        User user = service.getUserByPassUUID(randomUUID);
+        User user = userService.getUserByPassUUID(randomUUID);
         System.out.println("Pass user prima " + user.getPassword());
         if (user == null) {
             return new ResponseEntity<>(
@@ -149,15 +165,10 @@ public class AuthController {
         System.out.println("prova ad impostare " + vm.getPass());
 
         //user.setPassword(b.encode(vm.getPass()));
-        service.changePassword(user, vm.getPass());
+        userService.changePassword(user, vm.getPass());
         System.out.println("impostata " + user.getPassword());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    //@RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.GET)
-    //public String processRecover(@PathVariable String randomUUID, Model m, @ModelAttribute("vm") @Valid RecoverVM vm){
-    //public String confirm() {
-    //
-    //    return "confirm";
-    //}
+
 }

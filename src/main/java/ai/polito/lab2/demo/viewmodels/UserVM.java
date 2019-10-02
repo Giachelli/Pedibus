@@ -7,6 +7,5 @@ import lombok.Data;
 @Data
 public class UserVM {
     private String username;
-
     private String family_name;
 }

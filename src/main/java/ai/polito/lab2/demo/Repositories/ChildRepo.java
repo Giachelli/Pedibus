@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public interface ChildRepo extends MongoRepository<Child, ObjectId> {
     Child findChildByNameChild(String nameChild);
 
-    Child findChildByIdChild(ObjectId childId);
+    Child findChildByChildID(ObjectId childId);
 
     ArrayList<Child> findChildByUserID(ObjectId userID);
 }

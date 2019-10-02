@@ -13,13 +13,20 @@ public interface IUserService {
     //void createPasswordResetTokenForUser(User user, String token);
     User getUserByPassUUID(String UUID);
 
-    UserDTO getUserBy_id(ObjectId userID);
+    UserDTO getUserDTOBy_id(ObjectId userID);
+    User getUserBy_id(ObjectId userID);
 
     void changePassword(User user, String password);
+
+    boolean userEnabled(String username);
+
+    void saveUser(User u);
 
     boolean manageUser(String randomUUID, ConfirmUserVM userVM);
 
     UserDTO getUserByUsername(String name);
 
     ArrayList<UserDTO> findAll();
+
+    boolean deleteUserbyID(ObjectId userID);
 }

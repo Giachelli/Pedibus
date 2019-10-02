@@ -23,6 +23,8 @@ public interface RouteService {
 
         void saveRoute(RouteDTO r);
 
+        void saveRoute(Route r);
+
        void readAll() throws IOException;
 
       /*  Route getReservationByDate(Route route);      //addNewUser
