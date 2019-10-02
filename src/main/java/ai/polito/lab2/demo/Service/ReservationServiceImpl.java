@@ -1,8 +1,10 @@
 package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.ReservationDTO;
+import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
-import ai.polito.lab2.demo.viewmodels.PersonVM;
+import ai.polito.lab2.demo.viewmodels.ChildReservationVM;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Reservation;
@@ -33,6 +35,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private StopRepo stopRepo;
 
+    @Autowired
+    private ChildRepo childRepo;
+
+    /*
     public Reservation createReservation(ReservationDTO r) throws JsonProcessingException {
 
         Reservation res= Reservation.builder()
@@ -44,29 +50,33 @@ public class ReservationServiceImpl implements ReservationService {
                 .linea(r.getRoute())
                 .build();
         return  reservationRepo.save(res);
-    }
+    }*/
 
-    public Map<String, List<PersonVM>> findReservationAndata (int linea, long data){
+    public Map<String, List<ChildReservationVM>> findReservationAndata (int linea, long data){
         int i =0;
         Query query = new Query();
         query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("andata"));
         query.with(new Sort(Sort.Direction.ASC, "fermata"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
-        Map<String, List<PersonVM>> mappa = new HashMap<>();
+        Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
         String id_prec="";
         List<String> passeggeri= new LinkedList<>();
         for ( Reservation r: res){
             if (i==0) {
                 id_prec = "";
             }
-            Stop stop = stopRepo.findStopBy_id(r.getFermata());
+            Stop stop = stopRepo.findStopBy_id(r.getStopID());
+            Child c= childRepo.findChildByIdChild(r.getChildID());
             String s =stop.getNome();
-            String id=r.getFermata().toString();
+            String id=r.getStopID().toString();
             if(!mappa.containsKey(s)){
-                mappa.put(s, new LinkedList<PersonVM>());
+                mappa.put(s, new LinkedList<ChildReservationVM>());
             }
-            mappa.get(s).add(r.getAlunno());
-
+            mappa.get(s).add(ChildReservationVM.builder()
+                    .childID(c.getChildID())
+                    .name_family(c.getName_family())
+                    .name_child(c.getName_child())
+                    .build());
         }
         for (String key : mappa.keySet()) {
             System.out.println("key "+key+" values: "+ mappa.get(key));
@@ -74,26 +84,32 @@ public class ReservationServiceImpl implements ReservationService {
         return mappa;
     }
 
-    public Map<String, List<PersonVM>> findReservationRitorno (int linea, long data){
+    public Map<String, List<ChildReservationVM>> findReservationRitorno (int linea, long data){
         int i =0;
         Query query = new Query();
         query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("ritorno"));
         query.with(new Sort(Sort.Direction.ASC, "fermata"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
-        Map<String, List<PersonVM>> mappa = new HashMap<>();
+        Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
         String id_prec="";
         List<String> passeggeri= new LinkedList<>();
         for ( Reservation r: res){
             if (i==0) {
                 id_prec = "";
             }
-            Stop stop = stopRepo.findStopBy_id(r.getFermata());
+            Stop stop = stopRepo.findStopBy_id(r.getStopID());
+            Child c= childRepo.findChildByIdChild(r.getChildID());
+
             String s =stop.getNome();
-            String id=r.getFermata().toString();
+            String id=r.getStopID().toString();
             if(!mappa.containsKey(s)){
-                mappa.put(s, new LinkedList<PersonVM>());
+                mappa.put(s, new LinkedList<ChildReservationVM>());
             }
-            mappa.get(s).add(r.getAlunno());
+            mappa.get(s).add(ChildReservationVM.builder()
+                    .childID(c.getChildID())
+                    .name_family(c.getName_family())
+                    .name_child(c.getName_child())
+                    .build());
 
         }
         for (String key : mappa.keySet()) {
@@ -122,11 +138,10 @@ public class ReservationServiceImpl implements ReservationService {
 
 
 
-    public Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, String idPerson) {
+    public Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, ObjectId childID) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("fermata").is(id_fermata).and("data").is(data).and("alunno._id").is(idPerson.toString()));
+        query.addCriteria(Criteria.where("fermata").is(id_fermata).and("data").is(data).and("childID").is(childID));
         List<Reservation> r = mongoTemplate.find(query,Reservation.class);
-        System.out.println("ciao");
         return r.get(0);
     }
 

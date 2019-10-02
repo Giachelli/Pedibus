@@ -213,6 +213,12 @@ public class DataInitializer implements CommandLineRunner {
             newUserRole.setRole("ROLE_USER");
             roleRepository.save(newUserRole);
         }
+        Role muleRole = roleRepository.findByRole("ROLE_MULE"); // mule ---> accompagnatore
+        if (muleRole == null) {
+            Role newMuleRole = new Role();
+            newMuleRole.setRole("ROLE_MULE");
+            roleRepository.save(newMuleRole);
+        }
     }
 
 

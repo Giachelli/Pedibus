@@ -2,6 +2,7 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
+import org.bson.types.ObjectId;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public interface RouteService {
         void save(ArrayList<Route> r);
 
         RouteDTO findRouteByNameR(String nameR);
+
+        int findIDRouteByNameR(String nameR);
 
         void saveRoute(RouteDTO r);
 
