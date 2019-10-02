@@ -90,6 +90,11 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public int findIDRouteByNameR(String nameR) {
+        return routeRepo.findRouteByNameR(nameR).getId();
+    }
+
+    @Override
     public void saveRoute(RouteDTO r) {
         routeRepo.save(r.convertToRoute(this.getIdR()));
     }

@@ -29,6 +29,8 @@ public class User implements UserDetails {
 
     private String family_name;
 
+    private ArrayList<ObjectId> childsID;
+
     private String password;
 
     private String token;  //capire se salva il token del jwt e se serve

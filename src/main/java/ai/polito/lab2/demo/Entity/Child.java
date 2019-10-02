@@ -14,16 +14,16 @@ public class Child {
     @Id
     private ObjectId childID;
     private ObjectId userID;
-    private String familyName;
-    private String nameChild;
-
+    private String name_family;
+    private String name_child;
+/*
     public ChildDTO convertDTO() {
         return ChildDTO.builder()
                 .childID(this.getChildID())
                 .nameChild(this.getNameChild())
                 .familyName(this.getFamilyName())
                 .build();
-    }
+    }*/
 }
 
 // TODO: compito è modificare Person VM in ChildVM e creare (spostando anche alcuni metodi il ChildCOntroller (che
