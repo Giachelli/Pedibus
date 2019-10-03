@@ -66,8 +66,8 @@ public class AuthController {
     public UserDTO registerUser(@RequestBody RegisterVM register, WebRequest request) {
 
         UserDTO user = UserDTO.builder().
-                    email(register.getEmail()).
-                    roles(Arrays.asList(roleRepo.findByRole(register.getRole()))).build();
+                email(register.getEmail()).
+                roles(Arrays.asList(roleRepo.findByRole(register.getRole()))).build();
 
 
         try {
@@ -87,8 +87,7 @@ public class AuthController {
         try {
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
-            if(!userService.userEnabled(username))
-            {
+            if (!userService.userEnabled(username)) {
                 throw new BadCredentialsException("You are not enabled to login");
             }
             String token = jwtTokenProvider.createToken(username, this.userRepo.findByUsername(username).getRolesString());
@@ -96,15 +95,16 @@ public class AuthController {
             Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
             model.put("token", token);
-            System.out.println("User: "+username+" is logged");
+            System.out.println("User: " + username + " is logged");
             return ok(model);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied"); //deve restituire 401 Unauthorized, lo vedo io
         }
     }
+
     //TODO fare la get da inviare tramite mail
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.GET)
-    public ResponseEntity getPage(){
+    public ResponseEntity getPage() {
         Map<Object, Object> model = new TreeMap<>();
         model.put("message", "create the page");
         return ok(model);
@@ -112,17 +112,16 @@ public class AuthController {
 
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
     public void confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
-        if(!userVM.getPassword().equals(userVM.getConfirmPassword()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password are differents");
-        if(userService.manageUser(randomUUID,userVM))
-        {
-        throw new ResponseStatusException(HttpStatus.OK, "OK");}
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND," NOT FOUND");
+        if (!userVM.getPassword().equals(userVM.getConfirmPassword()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are differents");
+        if (userService.manageUser(randomUUID, userVM)) {
+            throw new ResponseStatusException(HttpStatus.OK, "OK");
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
         }
     }
 
-    @Secured({"ROLE_USER","ROLE_ADMIN","ROLE_MULE"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/recover", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity recoverPassword(@RequestBody User username, WebRequest request) {
 
@@ -135,7 +134,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Secured({"ROLE_USER","ROLE_ADMIN","ROLE_MULE"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, @ModelAttribute("vm") RecoverVM vm) {
         //TO DO: CHECK TOKEN VALIDITY

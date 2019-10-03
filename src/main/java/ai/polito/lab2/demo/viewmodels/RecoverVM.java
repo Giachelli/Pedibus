@@ -1,4 +1,5 @@
 package ai.polito.lab2.demo.viewmodels;
+
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;

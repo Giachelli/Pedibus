@@ -30,9 +30,9 @@ public class RouteController {
     @Autowired
     private RouteService routeService;
 
-    public void PopulateDb () throws IOException {
+    public void PopulateDb() throws IOException {
 
-       routeService.readAll();
+        routeService.readAll();
 
     }
 

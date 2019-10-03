@@ -62,72 +62,76 @@ public class DataInitializer implements CommandLineRunner {
 
     private void insertChildIntoDB() {
         this.childRepo.save(
-                Child.builder().
-                            nameChild("Luigi").build()
+                Child.builder()
+                        .nameChild("Luigi")
+                        .name_family("aaa")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Mario").build()
+                        .nameChild("Mario")
+                        .name_family("bb")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Franco").build()
+                        .nameChild("Franco")
+                        .name_family("aaaassa")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Giacomo").build()
+                        .nameChild("Giacomo")
+                        .name_family("cccccccc")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Francesco").build()
+                        .nameChild("Francesco")
+                        .name_family("fffddddd")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Mauro").build()
+                        .nameChild("Mauro")
+                        .name_family("ddddwwwwaaa")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("David").build()
+                        .nameChild("David")
+                        .name_family("adffdfdaa")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Alice").build()
+                        .nameChild("Jack")
+                        .name_family("aaaaffdfdgf")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Alessia").build()
+                        .nameChild("Paolo")
+                        .name_family("ssddeeeaaa")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Giulia").build()
+                        .nameChild("Antonio")
+                        .name_family("fgrtraa")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Chiara").build()
+                        .nameChild("Giovanni")
+                        .name_family("adfgfgfgaa")
+                        .build()
         );
         this.childRepo.save(
                 Child.builder()
-                        .nameChild("Ivan").build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Jack").build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Paolo").build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Antonio").build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Giovanni").build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Caterina").build()
+                        .nameChild("Caterina")
+                        .name_family("afdeereaa")
+                        .build()
         );
 
 

@@ -24,7 +24,7 @@ public class UserDTO {
     private Date expiryDate;
 
     public void addRole(Role userRole) {
-        if(!this.getRolesString().contains(userRole.getRole()))
+        if (!this.getRolesString().contains(userRole.getRole()))
             this.roles.add(userRole);
 
     }
@@ -40,7 +40,7 @@ public class UserDTO {
         return new Date(cal.getTime().getTime());
     }
 
-    public User converToUser(){
+    public User converToUser() {
         return User.builder()
                 .username(this.getEmail())
                 .family_name(this.getFamily_name())

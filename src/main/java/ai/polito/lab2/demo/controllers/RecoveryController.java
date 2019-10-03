@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class RecoveryController {
 
     @GetMapping("/recover/{randomUUID}")
-    public String recover (Model model, @PathVariable String randomUUID){
+    public String recover(Model model, @PathVariable String randomUUID) {
         model.addAttribute("message", "100");
         model.addAttribute("vm", new RecoverVM());
         return "recover";

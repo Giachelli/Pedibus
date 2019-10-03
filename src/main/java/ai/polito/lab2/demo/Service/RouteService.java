@@ -15,6 +15,8 @@ public interface RouteService {
 
         Route getRoutesByName(String NameR);   //getUserById
 
+        Route getRoutesByID(int routeID);   //getUserById
+
         void save(ArrayList<Route> r);
 
         RouteDTO findRouteByNameR(String nameR);

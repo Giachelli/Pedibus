@@ -69,15 +69,15 @@ public class ReservationController {
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Reservation create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
 
-        if(this.controlName_Route(nome_linea))
+        if (this.controlName_Route(nome_linea))
             return null; //TODO far tornare un errore
-        Reservation r= Reservation.builder()
-                        .childID(reservationVM.getChildID())
-                        .stopID(reservationVM.getStopID())
-                        .name_route(nome_linea)
-                        .direction(reservationVM.getDirection())
-                        .date(data)
-                        .build();
+        Reservation r = Reservation.builder()
+                .childID(reservationVM.getChildID())
+                .stopID(reservationVM.getStopID())
+                .name_route(nome_linea)
+                .direction(reservationVM.getDirection())
+                .date(data)
+                .build();
 
 
         r.setRoute(routeService.getRoutesByName(r.getName_route()).getId());
@@ -85,7 +85,7 @@ public class ReservationController {
         r.setBooked(true);
 
         //        Reservation r = reservationService.createReservation(reservationDTO);
-       // String idReservation = r.getId().toString();
+        // String idReservation = r.getId().toString();
         return r;
     }
 
@@ -93,9 +93,9 @@ public class ReservationController {
     @Secured("ROLE_MULE")
     @RequestMapping(value = "/reservations/add/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Reservation createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
-        if(this.controlName_Route(nome_linea))
+        if (this.controlName_Route(nome_linea))
             return null; //TODO far tornare un errore
-        Reservation r= Reservation.builder()
+        Reservation r = Reservation.builder()
                 .childID(reservationVM.getChildID())
                 .stopID(reservationVM.getStopID())
                 .name_route(nome_linea)
@@ -110,8 +110,8 @@ public class ReservationController {
         r.setInPlace(true);
 
 
-      //  Reservation r = reservationService.createReservation(reservationDTO);
-      //  String idReservation = r.getId().toString();
+        //  Reservation r = reservationService.createReservation(reservationDTO);
+        //  String idReservation = r.getId().toString();
         return r;
     }
 
@@ -127,7 +127,7 @@ public class ReservationController {
         return r;
     }
 
-    @Secured({"ROLE_SYSTEM_ADMIN","ROLE_ADMIN","ROLE_MULE"})
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.GET)
     public ResponseEntity getPeople(@PathVariable String nome_linea, @PathVariable long data) throws JsonProcessingException, ParseException {
 
@@ -160,7 +160,7 @@ public class ReservationController {
         // la info al registrationVM da passare
 
         for (Stop stop : route.getStopListA()) {
-                if (salire.size() == 0) {
+            if (salire.size() == 0) {
                 andata.add(Stop_RegistrationVM.builder()
                         .stopID(stop.get_id())
                         .name_stop(stop.getNome())
@@ -168,20 +168,17 @@ public class ReservationController {
                         .passengers(passeggeri)
                         .build());
             }
-                //se invece non è nulla controlliamo se nella mappa è presente la chiave definita dal nome
-                // della fermata
-                else {
+            //se invece non è nulla controlliamo se nella mappa è presente la chiave definita dal nome
+            // della fermata
+            else {
                 if (salire.get(stop.getNome()) != null) {
                     //se presente aggiungiamo tutti i passeggeri alla relativa fermata nella mappa
                     passeggeri.addAll(salire.get(stop.getNome()));
-                    for (ChildReservationVM p : passeggeri)
-                    {
+                    for (ChildReservationVM p : passeggeri) {
                         int i = 0;
-                        for(Child c : allChildren)
-                        {
+                        for (Child c : allChildren) {
 
-                            if(c.getChildID().toString().equals(p.getChildID()))
-                            {
+                            if (c.getChildID().toString().equals(p.getChildID())) {
                                 children.remove(c);
                                 continue;
                             }
@@ -234,11 +231,9 @@ public class ReservationController {
 
                 if (scendere.get(stop.getNome()) != null) {
                     passeggeri.addAll(scendere.get(stop.getNome()));
-                    for (ChildReservationVM p : passeggeri)
-                    {
-                        for(Child c : allChildren)
-                        {
-                            if(c.getChildID().equals(p.getChildID()))
+                    for (ChildReservationVM p : passeggeri) {
+                        for (Child c : allChildren) {
+                            if (c.getChildID().equals(p.getChildID()))
                                 children.remove(c);
                         }
                     }
@@ -259,7 +254,6 @@ public class ReservationController {
                 passeggeri = new ArrayList<>();
 
 
-
             }
         }
 
@@ -268,8 +262,8 @@ public class ReservationController {
         model.put("date", data);
         model.put("pathA", andata);
         model.put("pathR", ritorno);
-        model.put("resnotBookedA",notBookedA);
-        model.put("resnotBookedR",notBookedR);
+        model.put("resnotBookedA", notBookedA);
+        model.put("resnotBookedR", notBookedR);
         return ok(model);
     }
 
@@ -281,7 +275,7 @@ public class ReservationController {
 
         Reservation updatedReservation = reservationRepo.findReservationById(reservation_id);
 
-        if (data>=0) {
+        if (data >= 0) {
             updatedReservation.setDate(data);
         }
 
@@ -306,13 +300,13 @@ public class ReservationController {
         return updatedReservation;
     }
 
-    @Secured({"ROLE_USER","ROLE_MULE"})
+    @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable ObjectId reservation_id) {
         reservationService.delete(reservation_id);
     }
 
-    @Secured({"ROLE_USER","ROLE_MULE"})
+    @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.GET)
     public String getPeople(@PathVariable ObjectId reservation_id) throws JsonProcessingException {
         Reservation request = reservationService.findReservationById(reservation_id);
@@ -322,16 +316,17 @@ public class ReservationController {
         return json;
     }
 
-    private boolean controlName_Route(String name_route){
-        ArrayList<Route> routes= (ArrayList<Route>) routeService.getAllRoutes();
+    private boolean controlName_Route(String name_route) {
+        ArrayList<Route> routes = (ArrayList<Route>) routeService.getAllRoutes();
         ArrayList<String> routes_names = new ArrayList<>();
-        for( Route route: routes){
+        for (Route route : routes) {
 
             routes_names.add(route.getNameR());
-        };
-        if(! routes_names.contains(name_route))
+        }
+        ;
+        if (!routes_names.contains(name_route))
             return true;
-        else{
+        else {
             return false;
         }
     }

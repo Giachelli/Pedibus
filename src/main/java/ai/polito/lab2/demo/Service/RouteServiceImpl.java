@@ -56,6 +56,10 @@ public class RouteServiceImpl implements RouteService {
         return  mongoTemplate.find(query,Route.class).get(0);
     }
 
+    @Override
+    public Route getRoutesByID(int routeID) {
+        return routeRepo.findRouteById(routeID);
+    }
 
 
     public void save(ArrayList<Route> r) {

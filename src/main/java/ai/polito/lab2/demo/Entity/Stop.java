@@ -18,8 +18,8 @@ public class Stop {
     private String time;
 
     @Override
-    public String toString(){
-        return this.getNome()+" "+ this.get_id()+" "+getTime() ;
+    public String toString() {
+        return this.getNome() + " " + this.get_id() + " " + getTime();
     }
 
 }

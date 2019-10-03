@@ -52,7 +52,7 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
 
-   @Override
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map((Role role) -> new SimpleGrantedAuthority(role.getRole())).collect(toList());
     }
@@ -78,7 +78,7 @@ public class User implements UserDetails {
     }
 
     public void addRole(Role userRole) {
-        if(!this.getRolesString().contains(userRole.getRole()))
+        if (!this.getRolesString().contains(userRole.getRole()))
             this.roles.add(userRole);
 
     }
@@ -95,19 +95,19 @@ public class User implements UserDetails {
     }
 
     public UserDTO convertToDTO() {
-       return UserDTO.builder()
-               .email(this.getUsername()).roles(this.getRoles())
-               .family_name(this.getFamily_name())
-               .token(this.getToken()).expiryDate(this.getExpiryDate()).build();
+        return UserDTO.builder()
+                .email(this.getUsername()).roles(this.getRoles())
+                .family_name(this.getFamily_name())
+                .token(this.getToken()).expiryDate(this.getExpiryDate()).build();
     }
 
     // TODO eliminare i duplicati se esistono
 
     public void addAdminRoutesID(ArrayList<Integer> adminRouteID) {
-       this.adminRoutesID.addAll(adminRouteID);
+        this.adminRoutesID.addAll(adminRouteID);
     }
 
     public void addMuleRoutesID(ArrayList<Integer> muleRouteID) {
-       this.muleRoutesID.addAll(muleRouteID);
+        this.muleRoutesID.addAll(muleRouteID);
     }
 }

@@ -7,8 +7,7 @@ import javax.validation.constraints.Email;
 // View Model per la Registrazione.
 
 @Data
-public class RegisterVM
-{
+public class RegisterVM {
     //private int _id;
     @Email
     private String email;

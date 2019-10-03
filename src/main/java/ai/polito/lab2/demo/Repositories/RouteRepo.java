@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RouteRepo extends MongoRepository<Route, Integer> {
 
-    Route findRouteByNameR (String nameR);
+    Route findRouteByNameR(String nameR);
 
+    Route findRouteById(int i);
 
 
 }

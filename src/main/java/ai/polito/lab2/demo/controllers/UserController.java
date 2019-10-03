@@ -12,6 +12,7 @@ import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.UserService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
+import ai.polito.lab2.demo.viewmodels.UserRouteVM;
 import ai.polito.lab2.demo.viewmodels.UserVM;
 import ai.polito.lab2.demo.viewmodels.modifyRoleUserVM;
 import org.bson.types.ObjectId;
@@ -24,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -143,12 +145,12 @@ public class UserController {
         userService.saveUser(user);
 
         //controlli per lista vuota
-        //TODO lista di accompagantori nella ROUTE
+
 
         for (Route r : muleRoutes) {
             muleRouteID.add(r.getId());
             Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
-            addMuleRoute.addAdmin(user.getUsername());
+            addMuleRoute.addMule(user.getUsername());
             routeService.saveRoute(addMuleRoute);
         }
 
@@ -160,6 +162,25 @@ public class UserController {
         user.addMuleRoutesID(muleRouteID);
 
         userService.saveUser(user);
+    }
+
+    @RequestMapping(value = "/users/{userID}/getAdminLines", method = RequestMethod.GET)
+    public UserRouteVM getUserLines(@RequestBody ObjectId userID) {
+        User user = userService.getUserBy_id(userID);
+        ArrayList<Route> adminRoute = new ArrayList<>();
+        ArrayList<Route> muleRoute = new ArrayList<>();
+
+        for (int i : user.getAdminRoutesID())
+            adminRoute.add(routeService.getRoutesByID(i));
+        for (int i : user.getMuleRoutesID())
+            muleRoute.add(routeService.getRoutesByID(i));
+
+        return UserRouteVM.builder()
+                .userID(user.get_id())
+                .username(user.getUsername())
+                .adminRoute(adminRoute)
+                .muleRoute(muleRoute)
+                .build();
     }
 
 

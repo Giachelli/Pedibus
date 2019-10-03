@@ -42,7 +42,7 @@ public class ChildController {
     }
 
     @RequestMapping(value = "/user/{userID}/children", method = RequestMethod.GET)
-    public ResponseEntity getMyChilds(@PathVariable ObjectId userID){
+    public ResponseEntity getMyChilds(@PathVariable ObjectId userID) {
 
         ArrayList<Child> children = childRepo.findChildByUserID(userID);
 
