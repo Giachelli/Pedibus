@@ -10,10 +10,12 @@ import java.util.ArrayList;
 public interface IUserService {
 
     User getUserByUUID(String UUID);
+
     //void createPasswordResetTokenForUser(User user, String token);
     User getUserByPassUUID(String UUID);
 
     UserDTO getUserDTOBy_id(ObjectId userID);
+
     User getUserBy_id(ObjectId userID);
 
     void changePassword(User user, String password);

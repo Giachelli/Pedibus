@@ -19,24 +19,24 @@ public class RouteDTO {
     private long lastModified;
 
     public void addAdmin(String username) {
-        if (this.usernamesAdmin == null )
+        if (this.usernamesAdmin == null)
             this.usernamesAdmin = new ArrayList<>();
         this.usernamesAdmin.add(username);
 
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.getNameR();
     }
 
-   public Route convertToRoute(int idR){
+    public Route convertToRoute(int idR) {
        /*  return Route.builder().nameR(this.getNameR()).id(idR)
                 .stopListA(this.getStopListA())
                 .stopListB(this.getStopListB())
                 .usernamesAdmin(this.getUsernamesAdmin())
                 .lastModified(this.getLastModified()).build();*/
-       return new Route();
+        return new Route();
     }
 
 }

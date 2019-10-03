@@ -29,14 +29,14 @@ public class UserService implements IUserService {
     @Autowired
     EmailServiceImpl emailService;
 
-    public void saveUser(UserDTO userDTO){
+    public void saveUser(UserDTO userDTO) {
 
         User user = User.builder().
-                    username(userDTO.getEmail()).
-                    roles(userDTO.getRoles()).
-                    token(userDTO.getToken()).
-                    expiryDate(userDTO.getExpiryDate()).
-                    isEnabled(false).build();
+                username(userDTO.getEmail()).
+                roles(userDTO.getRoles()).
+                token(userDTO.getToken()).
+                expiryDate(userDTO.getExpiryDate()).
+                isEnabled(false).build();
 
         User u = userRepo.findByUsername(user.getUsername());
         if (u != null) /// da vedere cosa ritorna
@@ -71,7 +71,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void changePassword(User user, String password){
+    public void changePassword(User user, String password) {
 
         user.setPassword(passwordEncoder.encode(password));
         userRepo.save(user);
@@ -123,8 +123,7 @@ public class UserService implements IUserService {
     public ArrayList<UserDTO> findAll() {
         ArrayList<User> users = userRepo.findAll();
         ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
-        for(User user : users)
-        {
+        for (User user : users) {
             UserDTO userDTO = user.convertToDTO();
             userDTOArrayList.add(userDTO);
         }
@@ -133,8 +132,8 @@ public class UserService implements IUserService {
 
     @Override
     public boolean deleteUserbyID(ObjectId userID) {
-         userRepo.deleteById(userID);
-         return true;
+        userRepo.deleteById(userID);
+        return true;
     }
 
     /*public void createPasswordResetTokenForUser(User user, String token) {

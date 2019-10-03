@@ -12,13 +12,17 @@ import java.util.Map;
 
 public interface ReservationService {
     // Reservation createReservation( ReservationDTO r) throws JsonProcessingException;
-     Map<String, List<ChildReservationVM>> findReservationAndata (int linea, long data);
-     Map<String, List<ChildReservationVM>> findReservationRitorno (int linea, long data);
+    Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data);
 
-     Reservation update (Reservation r);
-     void save (Reservation r);
-     void delete (ObjectId id);
-     Reservation findReservationById(ObjectId reservation_id);
+    Map<String, List<ChildReservationVM>> findReservationRitorno(int linea, long data);
 
-     Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, ObjectId childID);
+    Reservation update(Reservation r);
+
+    void save(Reservation r);
+
+    void delete(ObjectId id);
+
+    Reservation findReservationById(ObjectId reservation_id);
+
+    Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, ObjectId childID);
 }

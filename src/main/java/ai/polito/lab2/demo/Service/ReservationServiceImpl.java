@@ -52,24 +52,24 @@ public class ReservationServiceImpl implements ReservationService {
         return  reservationRepo.save(res);
     }*/
 
-    public Map<String, List<ChildReservationVM>> findReservationAndata (int linea, long data){
-        int i =0;
+    public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
+        int i = 0;
         Query query = new Query();
         query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("andata"));
         query.with(new Sort(Sort.Direction.ASC, "fermata"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
         Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
-        String id_prec="";
-        List<String> passeggeri= new LinkedList<>();
-        for ( Reservation r: res){
-            if (i==0) {
+        String id_prec = "";
+        List<String> passeggeri = new LinkedList<>();
+        for (Reservation r : res) {
+            if (i == 0) {
                 id_prec = "";
             }
             Stop stop = stopRepo.findStopBy_id(r.getStopID());
-            Child c= childRepo.findChildByChildID(r.getChildID());
-            String s =stop.getNome();
-            String id=r.getStopID().toString();
-            if(!mappa.containsKey(s)){
+            Child c = childRepo.findChildByChildID(r.getChildID());
+            String s = stop.getNome();
+            String id = r.getStopID().toString();
+            if (!mappa.containsKey(s)) {
                 mappa.put(s, new LinkedList<ChildReservationVM>());
             }
             mappa.get(s).add(ChildReservationVM.builder()
@@ -79,30 +79,30 @@ public class ReservationServiceImpl implements ReservationService {
                     .build());
         }
         for (String key : mappa.keySet()) {
-            System.out.println("key "+key+" values: "+ mappa.get(key));
+            System.out.println("key " + key + " values: " + mappa.get(key));
         }
         return mappa;
     }
 
-    public Map<String, List<ChildReservationVM>> findReservationRitorno (int linea, long data){
-        int i =0;
+    public Map<String, List<ChildReservationVM>> findReservationRitorno(int linea, long data) {
+        int i = 0;
         Query query = new Query();
         query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("ritorno"));
         query.with(new Sort(Sort.Direction.ASC, "fermata"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
         Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
-        String id_prec="";
-        List<String> passeggeri= new LinkedList<>();
-        for ( Reservation r: res){
-            if (i==0) {
+        String id_prec = "";
+        List<String> passeggeri = new LinkedList<>();
+        for (Reservation r : res) {
+            if (i == 0) {
                 id_prec = "";
             }
             Stop stop = stopRepo.findStopBy_id(r.getStopID());
-            Child c= childRepo.findChildByChildID(r.getChildID());
+            Child c = childRepo.findChildByChildID(r.getChildID());
 
-            String s =stop.getNome();
-            String id=r.getStopID().toString();
-            if(!mappa.containsKey(s)){
+            String s = stop.getNome();
+            String id = r.getStopID().toString();
+            if (!mappa.containsKey(s)) {
                 mappa.put(s, new LinkedList<ChildReservationVM>());
             }
             mappa.get(s).add(ChildReservationVM.builder()
@@ -113,35 +113,34 @@ public class ReservationServiceImpl implements ReservationService {
 
         }
         for (String key : mappa.keySet()) {
-            System.out.println("key "+key+" values: "+ mappa.get(key));
+            System.out.println("key " + key + " values: " + mappa.get(key));
         }
         return mappa;
     }
 
     public Reservation update(Reservation reservation) {
         return reservationRepo.save(reservation);
-        }
+    }
 
-        public void delete(ObjectId reservatio_id){
-            Query query = new Query();
-            query.addCriteria(Criteria.where("id").is(reservatio_id));
-            mongoTemplate.remove(query, Reservation.class);
-     }
+    public void delete(ObjectId reservatio_id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(reservatio_id));
+        mongoTemplate.remove(query, Reservation.class);
+    }
 
-     public void save(Reservation r){
-            reservationRepo.save(r);
-     }
+    public void save(Reservation r) {
+        reservationRepo.save(r);
+    }
 
-     public Reservation findReservationById(ObjectId reservation_id){
+    public Reservation findReservationById(ObjectId reservation_id) {
         return reservationRepo.findReservationById(reservation_id);
-     }
-
+    }
 
 
     public Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, ObjectId childID) {
         Query query = new Query();
         query.addCriteria(Criteria.where("fermata").is(id_fermata).and("data").is(data).and("childID").is(childID));
-        List<Reservation> r = mongoTemplate.find(query,Reservation.class);
+        List<Reservation> r = mongoTemplate.find(query, Reservation.class);
         return r.get(0);
     }
 

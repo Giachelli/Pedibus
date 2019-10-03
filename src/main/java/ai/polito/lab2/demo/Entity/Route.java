@@ -26,11 +26,11 @@ public class Route {
 
 
     @Override
-    public String toString(){
-        return this.getNameR()+" "+ this.getId() ;
+    public String toString() {
+        return this.getNameR() + " " + this.getId();
     }
 
-    public RouteDTO convertToRouteDTO(){
+    public RouteDTO convertToRouteDTO() {
         return RouteDTO.builder().nameR(this.getNameR())
                 .stopListA(this.getStopListA())
                 .stopListB(this.getStopListB())

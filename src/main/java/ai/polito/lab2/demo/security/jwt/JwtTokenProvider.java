@@ -1,4 +1,5 @@
 package ai.polito.lab2.demo.security.jwt;
+
 import ai.polito.lab2.demo.security.CustomUserDetailsService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;

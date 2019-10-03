@@ -40,8 +40,7 @@ public class ChildServiceImpl implements ChildService {
             ChildDTO c = ChildDTO.builder().build();
             childDTOS.add(c);
         } else {
-            for (Child c : childs)
-            {
+            for (Child c : childs) {
                 //childDTOS.add(c.convertDTO());
             }
 
