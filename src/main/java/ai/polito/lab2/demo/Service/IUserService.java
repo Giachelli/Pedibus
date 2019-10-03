@@ -24,6 +24,8 @@ public interface IUserService {
 
     void saveUser(User u);
 
+    boolean getVerificationToken(String randomUUID);
+
     boolean manageUser(String randomUUID, ConfirmUserVM userVM);
 
     UserDTO getUserDTOByUsername(String name);

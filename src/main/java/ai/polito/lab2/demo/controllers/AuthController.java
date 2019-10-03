@@ -107,11 +107,18 @@ public class AuthController {
 
     //TODO fare la get da inviare tramite mail
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.GET)
-    public ResponseEntity getPage() {
+    public void getPage(@PathVariable String randomUUID) {
+        if (userService.getVerificationToken(randomUUID)){
+            throw new ResponseStatusException(HttpStatus.OK, "OK");
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
+        }
+        /*
         Map<Object, Object> model = new TreeMap<>();
         model.put("message", "create the page");
         return ok(model);
-    }
+        */
+        }
 
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
     public void confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
