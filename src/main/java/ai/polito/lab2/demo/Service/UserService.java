@@ -113,10 +113,16 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO getUserByUsername(String name) {
+    public UserDTO getUserDTOByUsername(String name) {
         User u = userRepo.findUserByUsername(name);
         UserDTO userDTO = u.convertToDTO();
         return userDTO;
+    }
+
+    @Override
+    public User getUserByUsername(String name) {
+        User u = userRepo.findUserByUsername(name);
+        return u;
     }
 
     @Override

@@ -26,9 +26,11 @@ public interface IUserService {
 
     boolean manageUser(String randomUUID, ConfirmUserVM userVM);
 
-    UserDTO getUserByUsername(String name);
+    UserDTO getUserDTOByUsername(String name);
 
     ArrayList<UserDTO> findAll();
 
     boolean deleteUserbyID(ObjectId userID);
+
+    User getUserByUsername(String name);
 }

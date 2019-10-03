@@ -92,9 +92,12 @@ public class AuthController {
             }
             String token = jwtTokenProvider.createToken(username, this.userRepo.findByUsername(username).getRolesString());
 
+            User u= userService.getUserByUsername(username);
+
             Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
             model.put("token", token);
+            model.put("roles", u.getRolesString());
             System.out.println("User: " + username + " is logged");
             return ok(model);
         } catch (AuthenticationException e) {
