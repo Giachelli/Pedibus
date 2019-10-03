@@ -61,7 +61,7 @@ public class UserController {
         UserDTO newAdmin = userService.getUserDTOBy_id(userID);
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
         String username = jwtTokenProvider.getUsername(token);
-        UserDTO u = userService.getUserByUsername(username);
+        UserDTO u = userService.getUserDTOByUsername(username);
 
         RouteDTO r = routeService.findRouteByNameR(nomeLinea.getNameR());
         if (r == null)

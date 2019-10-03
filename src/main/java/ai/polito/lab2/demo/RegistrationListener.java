@@ -38,7 +38,7 @@ public class RegistrationListener implements
         String confirmationUrl = "/confirm/" + token;
         String message = "Questa è la mail di conferma della registrazione. Per attivare l'account cliccare il link di seguito";
 
-        emailService.sendSimpleMessage(recipientAddress, subject, message + " " + "http://localhost:8080" + confirmationUrl);
+        emailService.sendSimpleMessage(recipientAddress, subject, message + " " + "http://localhost:4200" + confirmationUrl);
         userService.saveUser(user);
     }
 }
