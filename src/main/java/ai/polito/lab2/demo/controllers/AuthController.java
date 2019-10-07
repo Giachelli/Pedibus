@@ -11,7 +11,6 @@ import ai.polito.lab2.demo.viewmodels.AuthenticationRequestVM;
 import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
 import ai.polito.lab2.demo.viewmodels.RecoverVM;
 import ai.polito.lab2.demo.viewmodels.RegisterVM;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
