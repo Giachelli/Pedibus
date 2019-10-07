@@ -1,5 +1,8 @@
 package ai.polito.lab2.demo;
 
+
+
+import static reactor.bus.selector.Selectors.$;
 import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Role;
 import ai.polito.lab2.demo.Entity.User;
@@ -11,8 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
+import org.springframework.context.annotation.Bean;
+import reactor.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import reactor.bus.EventBus;
 
 import java.util.Arrays;
 
@@ -34,7 +40,6 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private ChildRepo childRepo;
-
 
     @Override
     public void run(String... args) throws Exception {
