@@ -3,11 +3,16 @@ package ai.polito.lab2.demo.Entity;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
+@Document(collection = "turn")
 public class Turn {
+    @Id
     private ObjectId turnID;
+
     private ObjectId muleID;
     private ObjectId partenzaStopID;
     private ObjectId arrivoStopID;

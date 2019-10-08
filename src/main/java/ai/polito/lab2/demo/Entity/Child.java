@@ -1,6 +1,6 @@
 package ai.polito.lab2.demo.Entity;
 
-import ai.polito.lab2.demo.Dto.ChildDTO;
+
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
