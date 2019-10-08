@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TurnRepo extends MongoRepository<Turn, ObjectId> {
 
-    Turn getTurnById(ObjectId turnID);
+    Turn getTurnByTurnID(ObjectId turnID);
 }

@@ -22,6 +22,6 @@ public class TurnServiceImpl implements TurnService {
 
     @Override
     public Turn getTurnByID(ObjectId turnID) {
-        return turnRepo.getTurnById(turnID);
+        return turnRepo.getTurnByTurnID(turnID);
     }
 }
