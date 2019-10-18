@@ -40,8 +40,8 @@ public class RouteController {
     }
 
     @Secured("ROLE_SYSTEM_ADMIN")
-    @RequestMapping(value = "/lines", method = RequestMethod.GET)
-    public ResponseEntity getAllRoutesInJson() throws JsonProcessingException {
+    @RequestMapping(value = "/routes", method = RequestMethod.GET)
+    public ResponseEntity getAllRoutes() throws JsonProcessingException {
         String user = Principal.class.getName();
         List<Route> routes = routeService.getAllRoutes();
         System.out.println(user+ " Request GET Lines. The lines are:\n");
@@ -53,8 +53,8 @@ public class RouteController {
         return ok().body(model);
     }
 
-    @RequestMapping(value = "/lines/{nome_linea}", method = RequestMethod.GET)
-    public Route getAllStopsForLine(@PathVariable String nome_linea) throws JsonProcessingException {
+    @RequestMapping(value = "/routes/{nome_linea}", method = RequestMethod.GET)
+    public Route getAllStopsForRoute(@PathVariable String nome_linea) throws JsonProcessingException {
         Route route = routeService.getRoutesByName(nome_linea);
         return route;
     }
