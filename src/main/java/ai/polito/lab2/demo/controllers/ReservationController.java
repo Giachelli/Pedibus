@@ -80,7 +80,7 @@ public class ReservationController {
                 .build();
 
 
-        r.setRoute(routeService.getRoutesByName(r.getName_route()).getId());
+        r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
         //questo childRepo non dovrebbe essere utilizzato
         r.setBooked(true);
 
@@ -103,7 +103,7 @@ public class ReservationController {
                 .date(data)
                 .build();
 
-        r.setRoute(routeService.getRoutesByName(r.getName_route()).getId());
+        r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
         //questo childRepo non dovrebbe essere utilizzato
         r.setBooked(false);
 
@@ -292,7 +292,7 @@ public class ReservationController {
         }
         if (nome_linea.isEmpty()) {
             updatedReservation.setName_route(nome_linea);
-            updatedReservation.setRoute(routeService.findIDRouteByNameR(nome_linea));
+            updatedReservation.setRouteID(routeService.findIDRouteByNameR(nome_linea));
         }
 
         reservationService.save(updatedReservation);
