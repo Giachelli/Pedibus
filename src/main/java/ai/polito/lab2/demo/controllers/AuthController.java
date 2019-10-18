@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
+import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 //@RequestMapping("/auth")
@@ -100,7 +101,7 @@ public class AuthController {
             System.out.println("User: " + username + " is logged");
             return ok(model);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username/password supplied"); //deve restituire 401 Unauthorized, lo vedo io
+            return badRequest().body("Invalid username/password supplied"); //deve restituire 401 Unauthorized, lo vedo io
         }
     }
 

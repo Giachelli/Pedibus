@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.*;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -41,15 +42,14 @@ public class RouteController {
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/lines", method = RequestMethod.GET)
     public ResponseEntity getAllRoutesInJson() throws JsonProcessingException {
+        String user = Principal.class.getName();
         List<Route> routes = routeService.getAllRoutes();
-        ArrayList<String> routesName = new ArrayList<>();
-        for (Route r : routes) {
-            routesName.add(r.getNameR());
-        }
-
+        System.out.println(user+ " Request GET Lines. The lines are:\n");
+        routes.forEach(route -> {
+            System.out.println(route.getNameR());
+        });
         Map<Object, Object> model = new HashMap<>();
-        model.put("lines", routesName);
-        System.out.println(routesName);
+        model.put("lines", routes);
         return ok().body(model);
     }
 
