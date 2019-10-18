@@ -83,8 +83,8 @@ public class AuthController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity signin(@RequestBody AuthenticationRequestVM data) {
-
         try {
+            System.out.println("Post /login");
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
             if (!userService.userEnabled(username)) {
@@ -101,7 +101,7 @@ public class AuthController {
             System.out.println("User: " + username + " is logged");
             return ok(model);
         } catch (AuthenticationException e) {
-            return badRequest().body("Invalid username/password supplied"); //deve restituire 401 Unauthorized, lo vedo io
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username/password supplied"); //deve restituire 401 Unauthorized, lo vedo io
         }
     }
 
