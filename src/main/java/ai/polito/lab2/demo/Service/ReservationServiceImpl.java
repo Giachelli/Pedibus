@@ -55,8 +55,8 @@ public class ReservationServiceImpl implements ReservationService {
     public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
         int i = 0;
         Query query = new Query();
-        query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("andata"));
-        query.with(new Sort(Sort.Direction.ASC, "fermata"));
+        query.addCriteria(Criteria.where("routeID").is(linea).and("date").is(data).and("direction").is("andata"));
+        query.with(new Sort(Sort.Direction.ASC, "stopID"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
         Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
         String id_prec = "";
@@ -87,8 +87,8 @@ public class ReservationServiceImpl implements ReservationService {
     public Map<String, List<ChildReservationVM>> findReservationRitorno(int linea, long data) {
         int i = 0;
         Query query = new Query();
-        query.addCriteria(Criteria.where("linea").is(linea).and("data").is(data).and("direzione").is("ritorno"));
-        query.with(new Sort(Sort.Direction.ASC, "fermata"));
+        query.addCriteria(Criteria.where("routeID").is(linea).and("date").is(data).and("direction").is("ritorno"));
+        query.with(new Sort(Sort.Direction.ASC, "stopID"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
         Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
         String id_prec = "";
@@ -139,7 +139,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     public Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, ObjectId childID) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("fermata").is(id_fermata).and("data").is(data).and("childID").is(childID));
+        query.addCriteria(Criteria.where("stopID").is(id_fermata).and("date").is(data).and("childID").is(childID));
         List<Reservation> r = mongoTemplate.find(query, Reservation.class);
         return r.get(0);
     }

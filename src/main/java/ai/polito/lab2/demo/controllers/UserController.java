@@ -68,10 +68,7 @@ public class UserController {
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity findAllUserinDB() {
         List<User> users= userRepo.findAll();
-
-        Map<Object, Object> model = new HashMap<>();
-        model.put("users", users);
-        return ok().body(model);
+        return ok().body(users);
 
     }
 
