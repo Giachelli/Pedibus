@@ -71,12 +71,12 @@ public class UserController {
 
         Map<Object, Object> model = new HashMap<>();
         model.put("users", users);
-        return ok(model);
+        return ok().body(model);
 
     }
 
     @RequestMapping(value = "/users/{userID}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    private void addAdmin(@RequestBody Route nomeLinea, @PathVariable final ObjectId userID, HttpServletRequest req) {
+    public void addAdmin(@RequestBody Route nomeLinea, @PathVariable final ObjectId userID, HttpServletRequest req) {
         System.out.println(nomeLinea.getNameR());
         //User newAdmin = userService.getUserBy_id(userID);
         UserDTO newAdmin = userService.getUserDTOBy_id(userID);
@@ -137,13 +137,19 @@ public class UserController {
 
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/delete", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable ObjectId userID) {
+    public void deleteUserByID(@PathVariable ObjectId userID) {
         userService.deleteUserbyID(userID);
     }
 
-    @Secured({"ROLE_ADMIN"})
+    @Secured("ROLE_SYSTEM_ADMIN") //per Cancellare un utente utilizzando il suo username
+    @RequestMapping(value = "/users/{userID}/delete", method = RequestMethod.DELETE)
+    public void deleteUser(@PathVariable String userID) {
+        userService.getUserByUsername(userID);
+    }
+
+    @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
-    public void modifyUser(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
+    public void modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
         User user = userService.getUserBy_id(userID);
         ArrayList<Route> adminRoutes = modifyRoleUser.getNewAdminRoutes();
         ArrayList<Route> muleRoutes = modifyRoleUser.getNewMuleRoutes();
@@ -184,6 +190,51 @@ public class UserController {
 
         userService.saveUser(user);
     }
+
+    @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN"}) //aggiungere ruoli all'utente tramite username
+    @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
+    public void modifyUser(@PathVariable String userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
+        User user = userService.getUserByUsername(userID);
+        ArrayList<Route> adminRoutes = modifyRoleUser.getNewAdminRoutes();
+        ArrayList<Route> muleRoutes = modifyRoleUser.getNewMuleRoutes();
+
+        ArrayList<Integer> adminRouteID = new ArrayList<>();
+        ArrayList<Integer> muleRouteID = new ArrayList<>();
+
+        for (Route r : adminRoutes) {
+            adminRouteID.add(r.getId());
+            Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
+            addAdminRoute.addAdmin(user.getUsername());
+            routeService.saveRoute(addAdminRoute);
+        }
+        if (adminRoutes.size() > 0)
+            if (!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
+                user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
+
+        user.addAdminRoutesID(adminRouteID);
+
+        userService.saveUser(user);
+
+        //controlli per lista vuota
+
+
+        for (Route r : muleRoutes) {
+            muleRouteID.add(r.getId());
+            Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
+            addMuleRoute.addMule(user.getUsername());
+            routeService.saveRoute(addMuleRoute);
+        }
+
+        if (muleRoutes.size() > 0)
+            if (!user.getRoles().contains(roleRepository.findByRole("ROLE_MULE"))) {
+                user.addRole(roleRepository.findByRole("ROLE_MULE"));
+            }
+
+        user.addMuleRoutesID(muleRouteID);
+
+        userService.saveUser(user);
+    }
+
 
     @RequestMapping(value = "/users/{userID}/getAdminLines", method = RequestMethod.GET)
     public UserRouteVM getUserLines(@RequestBody ObjectId userID) {
