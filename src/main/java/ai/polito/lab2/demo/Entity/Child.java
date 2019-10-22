@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Child {
     @Id
     private ObjectId childID;
-    private ObjectId userID;
+    private String username; //email del genitore (user)
     private String name_family;
     private String nameChild;
 /*

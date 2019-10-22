@@ -18,7 +18,7 @@ public class ChildDTO {
                 .nameChild(this.getNameChild())
                 .name_family(this.getFamilyName())
                 .childID(this.getChildID())
-                .userID(userID)
+                .username("bubba")
                 .build();
     }
 }

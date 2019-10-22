@@ -6,6 +6,7 @@ import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IUserService {
 
@@ -30,7 +31,9 @@ public interface IUserService {
 
     UserDTO getUserDTOByUsername(String name);
 
-    ArrayList<UserDTO> findAll();
+ //   ArrayList<UserDTO> findAll();
+
+    List<User> findAll();
 
     boolean deleteUserbyID(ObjectId userID);
 

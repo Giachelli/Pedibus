@@ -11,6 +11,7 @@ import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.controllers.RouteController;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
@@ -66,21 +67,25 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void insertChildIntoDB() {
+        System.out.println("creano il child");
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Luigi")
+                        .username("user1@info.it")
                         .name_family("aaa")
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Mario")
+                        .username("user2@info.it")
                         .name_family("bb")
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Franco")
+                        .username("user2@info.it")
                         .name_family("aaaassa")
                         .build()
         );
@@ -88,11 +93,13 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("Giacomo")
                         .name_family("cccccccc")
+
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Francesco")
+                        .username("user1@info.it")
                         .name_family("fffddddd")
                         .build()
         );
@@ -106,6 +113,7 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("David")
                         .name_family("adffdfdaa")
+                        .username("user1@info.it")
                         .build()
         );
         this.childRepo.save(

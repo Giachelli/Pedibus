@@ -7,6 +7,6 @@ import org.bson.types.ObjectId;
 @Data
 public class ChildRegisterVM {
     private String nameChild;
-    private ObjectId userID;
+    private String username;
 }
 

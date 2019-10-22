@@ -14,8 +14,6 @@ public interface UserRepo extends MongoRepository<User, ObjectId> {
 
     User findUserBy_id(ObjectId objectId);
 
-    ArrayList<User> findAll();
-
     User findByToken(String token);
 
     User findByPasstoken(String token);

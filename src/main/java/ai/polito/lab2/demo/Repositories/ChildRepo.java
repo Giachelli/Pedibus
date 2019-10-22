@@ -13,5 +13,5 @@ public interface ChildRepo extends MongoRepository<Child, ObjectId> {
 
     Child findChildByChildID(ObjectId childId);
 
-    ArrayList<Child> findChildByUserID(ObjectId userID);
+    ArrayList<Child> findChildByUsername(String Username);
 }

@@ -51,7 +51,6 @@ public class User implements UserDetails {
     @DBRef
     private List<Role> roles = new ArrayList<>();
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map((Role role) -> new SimpleGrantedAuthority(role.getRole())).collect(toList());
