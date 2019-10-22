@@ -110,6 +110,7 @@ public class ReservationController {
         r.setInPlace(true);
 
 
+        reservationService.save(r);
         //  Reservation r = reservationService.createReservation(reservationDTO);
         //  String idReservation = r.getId().toString();
         return r;
