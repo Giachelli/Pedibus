@@ -142,9 +142,10 @@ public class UserController {
     }
 
     @Secured("ROLE_SYSTEM_ADMIN") //per Cancellare un utente utilizzando il suo username
-    @RequestMapping(value = "/users/{userID}/delete", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable String userID) {
-        userService.getUserByUsername(userID);
+    @RequestMapping(value = "/users/{username}/delete", method = RequestMethod.DELETE)
+    public void deleteUser(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        userService.deleteUserbyID(user.get_id());
     }
 
     @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN"})
@@ -192,9 +193,9 @@ public class UserController {
     }
 
     @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN"}) //aggiungere ruoli all'utente tramite username
-    @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
-    public void modifyUser(@PathVariable String userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
-        User user = userService.getUserByUsername(userID);
+    @RequestMapping(value = "/users/modify/{username}", method = RequestMethod.PUT)
+    public void modifyUser(@PathVariable String username, @RequestBody modifyRoleUserVM modifyRoleUser) {
+        User user = userService.getUserByUsername(username);
         ArrayList<Route> adminRoutes = modifyRoleUser.getNewAdminRoutes();
         ArrayList<Route> muleRoutes = modifyRoleUser.getNewMuleRoutes();
 
