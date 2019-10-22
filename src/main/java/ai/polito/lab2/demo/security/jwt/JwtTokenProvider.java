@@ -4,6 +4,8 @@ import ai.polito.lab2.demo.security.CustomUserDetailsService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -66,18 +69,27 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, HttpServletRequest httpServletRequest) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 
             if (claims.getBody().getExpiration().before(new Date())) {
+
                 return false;
             }
 
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new InvalidJwtAuthenticationException("Expired or invalid JWT token");
+        } catch (ExpiredJwtException | IllegalArgumentException e) {
+
+            httpServletRequest.setAttribute("expired",e.getMessage());
+
+            //throw new InvalidJwtAuthenticationException("Expired or invalid JWT token");
         }
+        return false;
+    }
+
+    private ResponseEntity expiredtoken() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unathorized");
     }
 
 }

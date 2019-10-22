@@ -75,7 +75,6 @@ public class ChildController {
         for (Child r : children) {
             childrenName.add(r.getNameChild());
         }*/
-
         Map<Object, Object> model = new HashMap<>();
         model.put("children", children);
         return ok().body(children);

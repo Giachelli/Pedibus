@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class Reservation {
     @Id
-    @ToString.Exclude
     private ObjectId id;
 
     private ObjectId childID;

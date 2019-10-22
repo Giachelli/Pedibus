@@ -15,6 +15,7 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ai.polito.lab2.demo.security.jwt.JwtAuthenticationEntryPoint;
 
 import java.util.Arrays;
 
@@ -23,6 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
+
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -57,6 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf().disable()
                     .anonymous().and().cors().and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(unauthorizedHandler)
                     .and().authorizeRequests()
                     .antMatchers("/login").permitAll()
                     .and()
