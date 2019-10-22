@@ -11,7 +11,7 @@ public interface ChildService {
 
     Child findChildbyID(ObjectId childId);
 
-    ArrayList<ChildDTO> findChildbyUserID(ObjectId userId);
+    ArrayList<ChildDTO> findChildbyUsername(String username);
 
     ChildDTO findChildbyFamilyName(String familyName);
 

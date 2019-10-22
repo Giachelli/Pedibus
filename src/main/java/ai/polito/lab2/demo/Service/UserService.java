@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService {
@@ -148,7 +149,7 @@ public class UserService implements IUserService {
         return u;
     }
 
-    @Override
+    /*@Override
     public ArrayList<UserDTO> findAll() {
         ArrayList<User> users = userRepo.findAll();
         ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
@@ -157,6 +158,11 @@ public class UserService implements IUserService {
             userDTOArrayList.add(userDTO);
         }
         return userDTOArrayList;
+    }*/
+
+    @Override
+    public List<User> findAll(){
+        return userRepo.findAll();
     }
 
     @Override

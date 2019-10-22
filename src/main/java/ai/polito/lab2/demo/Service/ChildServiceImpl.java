@@ -33,8 +33,8 @@ public class ChildServiceImpl implements ChildService {
     // questa funzione ritorna tutti i figli per un utente specifico ( controllare nel caso
     //ritorni zero figli) --> capiterà mai?
     @Override
-    public ArrayList<ChildDTO> findChildbyUserID(ObjectId userId) {
-        ArrayList<Child> childs = childRepo.findChildByUserID(userId);
+    public ArrayList<ChildDTO> findChildbyUsername(String username) {
+        ArrayList<Child> childs = childRepo.findChildByUsername(username);
         ArrayList<ChildDTO> childDTOS = new ArrayList<>();
         if (childs.isEmpty()) {
             ChildDTO c = ChildDTO.builder().build();

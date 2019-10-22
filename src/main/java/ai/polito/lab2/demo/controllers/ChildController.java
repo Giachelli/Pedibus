@@ -20,6 +20,8 @@ import java.util.Map;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class ChildController {
 
     @Autowired
@@ -32,19 +34,19 @@ public class ChildController {
 
         Child child = Child.builder()
                 .nameChild(data.getNameChild())
-                .userID(data.getUserID())
+                .username(data.getUsername())
                 .build();
 
-        System.out.println(data.getUserID());
+        System.out.println(data.getUsername());
 
         childRepo.save(child);
         return child;
     }
 
     @RequestMapping(value = "/user/{userID}/children", method = RequestMethod.GET)
-    public ResponseEntity getMyChilds(@PathVariable ObjectId userID) {
+    public ResponseEntity getMyChilds(@PathVariable String userID) {
 
-        ArrayList<Child> children = childRepo.findChildByUserID(userID);
+        ArrayList<Child> children = childRepo.findChildByUsername(userID);
 
         ArrayList<String> childrenName = new ArrayList<>();
         for (Child r : children) {
@@ -54,6 +56,29 @@ public class ChildController {
         Map<Object, Object> model = new HashMap<>();
         model.put("children", childrenName);
         return ok(model);
+    }
+    // vanno aggiunti più query params
+    @RequestMapping(value = "/user/children", method = RequestMethod.GET)
+    public ResponseEntity getMyChildren(@RequestParam(required = false) String username) {
+
+        List<Child> children = new ArrayList<>();
+
+        if(!(username==null)){
+            children = childRepo.findChildByUsername(username);
+        } else {
+            children = childRepo.findAll();
+        }
+
+
+/*
+        ArrayList<String> childrenName = new ArrayList<>();
+        for (Child r : children) {
+            childrenName.add(r.getNameChild());
+        }*/
+
+        Map<Object, Object> model = new HashMap<>();
+        model.put("children", children);
+        return ok().body(children);
     }
 }
 

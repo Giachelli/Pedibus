@@ -3,7 +3,9 @@ package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Dto.UserDTO;
+import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Role;
+import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
@@ -19,19 +21,28 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 public class UserController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private UserRepo userRepo;
+
 
     @Autowired
     private UserService userService;
@@ -42,7 +53,7 @@ public class UserController {
     @Autowired
     RoleRepo roleRepository;
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/users", method = RequestMethod.GET)
     private ArrayList<UserVM> findAllUserinDB() {
         ArrayList<UserDTO> userDTOArrayList = userService.findAll();
         ArrayList<UserVM> userVMs = new ArrayList<>();
@@ -51,6 +62,16 @@ public class UserController {
             userVMs.add(u);
         }
         return userVMs;
+
+    }*/
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public ResponseEntity findAllUserinDB() {
+        List<User> users= userRepo.findAll();
+
+        Map<Object, Object> model = new HashMap<>();
+        model.put("users", users);
+        return ok(model);
 
     }
 
