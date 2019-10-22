@@ -18,7 +18,7 @@ public class Reservation {
 
     private ObjectId childID;
     private ObjectId stopID;
-    private int route;
+    private int routeID;
     private String name_route;
     private String direction;
     private boolean booked;
