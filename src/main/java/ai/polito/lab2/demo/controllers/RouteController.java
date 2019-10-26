@@ -3,6 +3,8 @@ package ai.polito.lab2.demo.controllers;
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Service.RouteService;
+import ai.polito.lab2.demo.viewmodels.RouteVM;
+import ai.polito.lab2.demo.viewmodels.StopVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +46,47 @@ public class RouteController {
     public ResponseEntity getAllRoutes() throws JsonProcessingException {
         String user = Principal.class.getName();
         List<Route> routes = routeService.getAllRoutes();
+        ArrayList<RouteVM> routeVMs = new ArrayList<>();
         System.out.println(user+ " Request GET Lines. The lines are:\n");
         routes.forEach(route -> {
-            System.out.println(route.getNameR());
+            ArrayList<StopVM> stopVMsA = new ArrayList<>();
+            ArrayList<StopVM> stopVMsB = new ArrayList<>();
+
+            route.getStopListA().forEach(stop -> {
+                StopVM stopVM = StopVM.builder()
+                        .stopID(stop.get_id().toString())
+                        .nameStop(stop.getNome())
+                        .time(stop.getTime())
+                        .num_s(stop.getNum_s())
+                        .build();
+
+                stopVMsA.add(stopVM);
+            });
+
+            route.getStopListB().forEach(stop -> {
+                StopVM stopVM = StopVM.builder()
+                        .stopID(stop.get_id().toString())
+                        .nameStop(stop.getNome())
+                        .time(stop.getTime())
+                        .num_s(stop.getNum_s())
+                        .build();
+                stopVMsB.add(stopVM);
+            });
+
+            RouteVM r = RouteVM.builder()
+                    .id(route.getId())
+                    .nameR(route.getNameR())
+                    .stopListA(stopVMsA)
+                    .stopListB(stopVMsB)
+                    .usernameAdmin(route.getUsernameAdmin())
+                    .usernameMule(route.getUsernameMule())
+                    .build();
+
+            routeVMs.add(r);
         });
+
         Map<Object, Object> model = new HashMap<>();
-        model.put("lines", routes);
+        model.put("lines", routeVMs);
         return ok().body(model);
     }
 

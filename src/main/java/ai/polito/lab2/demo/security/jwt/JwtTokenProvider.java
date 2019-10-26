@@ -88,8 +88,8 @@ public class JwtTokenProvider {
         return false;
     }
 
-    private ResponseEntity expiredtoken() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unathorized");
-    }
+   /* private ResponseEntity expiredtoken() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Expired or invalid JWT token");
+    }*/
 
 }
