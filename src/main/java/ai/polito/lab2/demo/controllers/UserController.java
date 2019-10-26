@@ -68,6 +68,12 @@ public class UserController {
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity findAllUserinDB() {
         List<User> users= userRepo.findAll();
+        ArrayList<String> usersIDString = new ArrayList<>();
+        for(User u : users)
+        {
+            usersIDString.add(u.get_id().toString());
+            System.out.println(u.get_id().toString());
+        }
         return ok().body(users);
 
     }

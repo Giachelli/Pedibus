@@ -29,8 +29,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             logger.error("Responding with unauthorized error. Message - {}", expired);
             httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,expired);
             System.out.println("HEI CI SONO");
-
-
         }else{
             logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
             httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());

@@ -45,9 +45,7 @@ public class RouteServiceImpl implements RouteService {
 
 
     public List<Route> getAllRoutes()  {
-        Query query = new Query();
-        query.fields().include("nameR").exclude("_id");
-        return mongoTemplate.find(query,Route.class);
+        return routeRepo.findAll();
     }
 
     public Route getRoutesByName(String NameR) {

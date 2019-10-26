@@ -25,7 +25,11 @@ public class JwtTokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
 
+        //TODO Attenzione alla lunghezza del TOKEN
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
+        if(token != null)
+            System.out.println("token = \n"+ token+"\n"+token.length()+"\n");
+
         if (token != null && jwtTokenProvider.validateToken(token,(HttpServletRequest) req)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             System.out.println("ci siamo loggati");
@@ -34,6 +38,10 @@ public class JwtTokenFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
+        /*else {
+            HttpServletResponse httpServletResponse = null;
+            res = httpServletResponse.sendError(401, "Expired or invalid token");
+        }*/
         filterChain.doFilter(req, res);
     }
 
