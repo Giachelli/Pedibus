@@ -9,5 +9,5 @@ import org.bson.types.ObjectId;
 public class UserVM {
     private String username;
     private String family_name;
-    private ObjectId userID;
+    private String userID;
 }

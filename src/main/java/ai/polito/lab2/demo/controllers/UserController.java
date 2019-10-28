@@ -69,12 +69,23 @@ public class UserController {
     public ResponseEntity findAllUserinDB() {
         List<User> users= userRepo.findAll();
         ArrayList<String> usersIDString = new ArrayList<>();
+        ArrayList<UserVM> userVMS = new ArrayList<>();
+
         for(User u : users)
         {
+            UserVM userVM = UserVM.builder()
+                    .userID(u.get_id().toString())
+                    .username(u.getUsername())
+                    .family_name(u.getFamily_name())
+                    .build();
             usersIDString.add(u.get_id().toString());
             System.out.println(u.get_id().toString());
+            userVMS.add(userVM);
         }
-        return ok().body(users);
+
+
+
+        return ok().body(userVMS);
 
     }
 
@@ -144,12 +155,12 @@ public class UserController {
         userService.deleteUserbyID(userID);
     }
 
-    @Secured("ROLE_SYSTEM_ADMIN") //per Cancellare un utente utilizzando il suo username
+    /*@Secured("ROLE_SYSTEM_ADMIN") //per Cancellare un utente utilizzando il suo username
     @RequestMapping(value = "/users/{username}/delete", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         userService.deleteUserbyID(user.get_id());
-    }
+    }*/
 
     @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)

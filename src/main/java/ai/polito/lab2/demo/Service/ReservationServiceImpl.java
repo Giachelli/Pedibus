@@ -73,9 +73,11 @@ public class ReservationServiceImpl implements ReservationService {
                 mappa.put(s, new LinkedList<ChildReservationVM>());
             }
             mappa.get(s).add(ChildReservationVM.builder()
-                    .childID(c.getChildID())
-                    .name_family(c.getName_family())
+                    .childID(c.getChildID().toString())
+                    .nameFamily(c.getName_family())
                     .nameChild(c.getNameChild())
+                    .inPlace(r.isInPlace())
+                    .booked(r.isBooked())
                     .build());
         }
         for (String key : mappa.keySet()) {
@@ -106,9 +108,11 @@ public class ReservationServiceImpl implements ReservationService {
                 mappa.put(s, new LinkedList<ChildReservationVM>());
             }
             mappa.get(s).add(ChildReservationVM.builder()
-                    .childID(c.getChildID())
-                    .name_family(c.getName_family())
+                    .childID(c.getChildID().toString())
+                    .nameFamily(c.getName_family())
                     .nameChild(c.getNameChild())
+                    .inPlace(r.isInPlace())
+                    .booked(r.isBooked())
                     .build());
 
         }
