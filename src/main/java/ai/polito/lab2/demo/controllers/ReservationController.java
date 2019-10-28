@@ -119,13 +119,13 @@ public class ReservationController {
     //TODO rivevedere implementazione objectID ChildID in base ad angular
 
     //RICHIESTA per confermare o meno presenza del bambino ( TODO vedere se si può skippare e fare solo lato angular)
-    @Secured("ROLE_MULE")
+    @Secured({"ROLE_MULE"})
     @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
-    public Reservation confirmPresence(@PathVariable final ObjectId id_fermata, @PathVariable long data, @RequestBody final ObjectId childID) throws JsonProcessingException, ParseException {
+    public ResponseEntity confirmPresence(@PathVariable final ObjectId id_fermata, @PathVariable long data, @RequestBody final ObjectId childID) throws JsonProcessingException, ParseException {
         Reservation r = reservationService.findReservationByNomeLineaAndDataAndIdPerson(id_fermata, data, childID);
         r.setInPlace(!r.isInPlace());
         reservationService.save(r);
-        return r;
+        return ok().body(r);
     }
 
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
@@ -270,7 +270,7 @@ public class ReservationController {
         model.put("pathR", ritorno);
         model.put("resnotBookedA", notBookedA);
         model.put("resnotBookedR", notBookedR);
-        return ok(model);
+        return ok().body(model);
     }
 
     //
