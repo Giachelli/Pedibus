@@ -79,7 +79,7 @@ public class JwtTokenProvider {
             }
 
             return true;
-        } catch (ExpiredJwtException | IllegalArgumentException e) {
+        } catch (JwtException | IllegalArgumentException e) {
 
             httpServletRequest.setAttribute("expired",e.getMessage());
 
