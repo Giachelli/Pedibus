@@ -73,6 +73,7 @@ public class DataInitializer implements CommandLineRunner {
                         .nameChild("Luigi")
                         .username("user1@info.it")
                         .name_family("aaa")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
@@ -80,6 +81,7 @@ public class DataInitializer implements CommandLineRunner {
                         .nameChild("Mario")
                         .username("user2@info.it")
                         .name_family("bb")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
@@ -87,13 +89,14 @@ public class DataInitializer implements CommandLineRunner {
                         .nameChild("Franco")
                         .username("user2@info.it")
                         .name_family("aaaassa")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Giacomo")
                         .name_family("cccccccc")
-
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
@@ -101,12 +104,14 @@ public class DataInitializer implements CommandLineRunner {
                         .nameChild("Francesco")
                         .username("user1@info.it")
                         .name_family("fffddddd")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Mauro")
                         .name_family("ddddwwwwaaa")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
@@ -114,36 +119,43 @@ public class DataInitializer implements CommandLineRunner {
                         .nameChild("David")
                         .name_family("adffdfdaa")
                         .username("user1@info.it")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Jack")
                         .name_family("aaaaffdfdgf")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Paolo")
                         .name_family("ssddeeeaaa")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Antonio")
                         .name_family("fgrtraa")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Giovanni")
                         .name_family("adfgfgfgaa")
+                        .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Caterina")
                         .name_family("afdeereaa")
+                        .username("user2@info.it")
+                        .isMale(false)
                         .build()
         );
 
