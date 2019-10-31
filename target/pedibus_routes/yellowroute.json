@@ -5,54 +5,54 @@
   "stopListA":
   [
     {
-    "nome": "f125",
+    "nome": "Corso Re Umberto",
     "num_s": 1,
     "time": "8:00"
     },
     {
-      "nome": "f126",
+      "nome": "Via Vespucci",
       "num_s": 2,
       "time": "8:05"
     },
     {
-      "nome": "f127",
+      "nome": "Incrocio Corso Duca Degli Abruzzi",
       "num_s": 3,
       "time": "8:10"
     },
     {
-      "nome": "f128",
+      "nome": "Fermata 10 Corso Duca",
       "num_s": 4,
       "time": "8:20"
     },
     {
-      "nome": "f129",
+      "nome": "Corso Duca degli Abruzzi 25",
       "num_s": 5,
       "time": "8:25"
     }
   ],
   "stopListB": [
     {
-      "nome": "f130",
+      "nome": "Corso Duca degli Abruzzi 25",
       "num_s": 1,
       "time": "16:00"
     },
     {
-      "nome": "f131",
+      "nome": "Fermata 10 Corso Duca",
       "num_s": 2,
       "time": "16:05"
     },
     {
-      "nome": "f132",
+      "nome": "Incrocio Corso Duca Degli Abruzzi",
       "num_s": 3,
       "time": "16:10"
     },
     {
-      "nome": "f133",
+      "nome": "Via Vespucci",
       "num_s": 4,
       "time": "16:20"
     },
     {
-      "nome": "f1",
+      "nome": "Corso Re Umberto",
       "num_s": 5,
       "time": "16:25"
     }]

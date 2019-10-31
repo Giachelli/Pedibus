@@ -5,54 +5,54 @@
   "stopListA":
   [
     {
-    "nome": "f1",
+    "nome": "Corso Peschiera 1",
     "num_s": 1,
     "time": "8:00"
     },
     {
-      "nome": "bruchi rossi",
+      "nome": "Corso Peschiera 25",
       "num_s": 2,
       "time": "8:05"
     },
     {
-      "nome": "bruchi verdi",
+      "nome": "Corso Peschiera 50",
       "num_s": 3,
       "time": "8:10"
     },
     {
-      "nome": "f4",
+      "nome": "Corso Peschiera 90",
       "num_s": 4,
       "time": "8:20"
     },
     {
-      "nome": "f5",
+      "nome": "Corso CastelFidardo 25",
       "num_s": 5,
       "time": "8:25"
     }
   ],
   "stopListB": [
     {
-      "nome": "f5",
+      "nome": "Corso CastelFidardo 25",
       "num_s": 1,
       "time": "16:00"
     },
     {
-      "nome": "f4",
+      "nome": "Corso Peschiera 90",
       "num_s": 2,
       "time": "16:05"
     },
     {
-      "nome": "f3",
+      "nome": "Corso Peschiera 50",
       "num_s": 3,
       "time": "16:10"
     },
     {
-      "nome": "f2",
+      "nome": "Corso Peschiera 25",
       "num_s": 4,
       "time": "16:20"
     },
     {
-      "nome": "f1",
+      "nome": "Corso Peschiera 1",
       "num_s": 5,
       "time": "16:25"
     }]

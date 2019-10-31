@@ -13,6 +13,7 @@ import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.ChildReservationVM;
+import ai.polito.lab2.demo.viewmodels.RegisterVM;
 import ai.polito.lab2.demo.viewmodels.Stop_RegistrationVM;
 import ai.polito.lab2.demo.viewmodels.ReservationVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -67,10 +68,11 @@ public class ReservationController {
 
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Reservation create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+    public ResponseEntity create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
 
-        if (this.controlName_Route(nome_linea))
-            return null; //TODO far tornare un errore
+        if (this.controlName_RouteAndStop(nome_linea, reservationVM.getStopID()))
+            return ResponseEntity.badRequest().body("Error in Route Name"); //TODO far tornare un errore
+
         Reservation r = Reservation.builder()
                 .childID(reservationVM.getChildID())
                 .stopID(reservationVM.getStopID())
@@ -80,20 +82,25 @@ public class ReservationController {
                 .build();
 
 
+
         r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
         //questo childRepo non dovrebbe essere utilizzato
         r.setBooked(true);
-
+        reservationService.save(r);
+        System.out.println(r);
+        r = reservationService.findReservationByStopIDAndDataAndChildID(reservationVM.getStopID(),data,reservationVM.getChildID());
+        System.out.println("Nuova Prenotazione");
+        System.out.println(r);
         //        Reservation r = reservationService.createReservation(reservationDTO);
         // String idReservation = r.getId().toString();
-        return r;
+        return ok().body(r);
     }
 
     //RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata
     @Secured("ROLE_MULE")
     @RequestMapping(value = "/reservations/add/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Reservation createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
-        if (this.controlName_Route(nome_linea))
+        if (this.controlName_RouteAndStop(nome_linea,reservationVM.getStopID()))
             return null; //TODO far tornare un errore
         Reservation r = Reservation.builder()
                 .childID(reservationVM.getChildID())
@@ -121,8 +128,9 @@ public class ReservationController {
     //RICHIESTA per confermare o meno presenza del bambino ( TODO vedere se si può skippare e fare solo lato angular)
     @Secured({"ROLE_MULE"})
     @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
-    public ResponseEntity confirmPresence(@PathVariable final ObjectId id_fermata, @PathVariable long data, @RequestBody final ObjectId childID) throws JsonProcessingException, ParseException {
-        Reservation r = reservationService.findReservationByNomeLineaAndDataAndIdPerson(id_fermata, data, childID);
+    public ResponseEntity confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody final String childID) throws JsonProcessingException, ParseException {
+        Reservation r = reservationService.findReservationByStopIDAndDataAndChildID(new ObjectId(id_fermata), data, new ObjectId(childID));
+        System.out.println("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
         r.setInPlace(!r.isInPlace());
         reservationService.save(r);
         return ok().body(r);
@@ -166,7 +174,7 @@ public class ReservationController {
 
             if (salire.size() == 0) {
                 andata.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id())
+                        .stopID(stop.get_id().toString())
                         .name_stop(stop.getNome())
                         .time(stop.getTime())
                         .passengers(passeggeri)
@@ -201,7 +209,7 @@ public class ReservationController {
                 }
 
                 andata.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id())
+                        .stopID(stop.get_id().toString())
                         .name_stop(stop.getNome())
                         .time(stop.getTime())
                         .passengers(passeggeri)
@@ -227,7 +235,7 @@ public class ReservationController {
         for (Stop stop : route.getStopListB()) {
             if (scendere.size() == 0) {
                 ritorno.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id())
+                        .stopID(stop.get_id().toString())
                         .name_stop(stop.getNome())
                         .time(stop.getTime())
                         .passengers(passeggeri)
@@ -252,7 +260,7 @@ public class ReservationController {
                                 .build());
                 }
                 ritorno.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id())
+                        .stopID(stop.get_id().toString())
                         .name_stop(stop.getNome())
                         .time(stop.getTime())
                         .passengers(passeggeri)
@@ -270,6 +278,8 @@ public class ReservationController {
         model.put("pathR", ritorno);
         model.put("resnotBookedA", notBookedA);
         model.put("resnotBookedR", notBookedR);
+        System.out.println(andata);
+        System.out.println(notBookedA);
         return ok().body(model);
     }
 
@@ -322,18 +332,23 @@ public class ReservationController {
         return json;
     }
 
-    private boolean controlName_Route(String name_route) {
-        ArrayList<Route> routes = (ArrayList<Route>) routeService.getAllRoutes();
-        ArrayList<String> routes_names = new ArrayList<>();
-        for (Route route : routes) {
-
-            routes_names.add(route.getNameR());
-        }
-        ;
-        if (!routes_names.contains(name_route))
+    private boolean controlName_RouteAndStop(String name_route, ObjectId stopID) {
+        Route route = routeService.getRoutesByName(name_route);
+        boolean found = false;
+        if(route == null)
             return true;
         else {
-            return false;
+            for (Stop s : route.getStopListA())
+            {
+                if(s.get_id().toString().equals(stopID.toString()))
+                    found = true;
+            }
+            for (Stop s : route.getStopListB())
+            {
+                if(s.get_id().toString().equals(stopID.toString()))
+                    found = true;
+            }
+            return !found;
         }
     }
 

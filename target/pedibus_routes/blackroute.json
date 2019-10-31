@@ -5,55 +5,55 @@
   "stopListA":
   [
     {
-    "nome": "f112",
+    "nome": "Stazione Porta Susa",
     "num_s": 1,
     "time": "8:00"
     },
     {
-      "nome": "f113",
+      "nome": "Corso Vitt Emanuele",
       "num_s": 2,
       "time": "8:05"
     },
     {
-      "nome": "f114",
+      "nome": "Corso Inghilterra",
       "num_s": 3,
       "time": "8:10"
     },
     {
 
-      "nome": "f115",
+      "nome": "Incrocio Corso Stati Uniti",
       "num_s": 4,
       "time": "8:20"
     },
     {
-      "nome": "f116",
+      "nome": "Mixto",
       "num_s": 5,
       "time": "8:25"
     }
   ],
   "stopListB": [
     {
-      "nome": "f117",
+      "nome": "Mixto",
       "num_s": 1,
       "time": "16:00"
     },
     {
-      "nome": "f118",
+      "nome": "Incrocio Corso Stati Uniti",
       "num_s": 2,
       "time": "16:05"
     },
     {
-      "nome": "f119",
+      "nome": "Corso Inghilterra",
       "num_s": 3,
       "time": "16:10"
     },
     {
-      "nome": "f120",
+      "nome": "Corso Vitt Emanuele",
       "num_s": 4,
       "time": "16:20"
     },
     {
-      "nome": "f121",
+      "nome": "Stazione Porta Susa",
       "num_s": 5,
       "time": "16:25"
     }]

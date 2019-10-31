@@ -53,6 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
     }*/
 
     public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
+        System.out.println("Entro in findReservationAndata con date "+ data);
         int i = 0;
         Query query = new Query();
         query.addCriteria(Criteria.where("routeID").is(linea).and("date").is(data).and("direction").is("andata"));
@@ -141,7 +142,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
 
-    public Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, ObjectId childID) {
+    public Reservation findReservationByStopIDAndDataAndChildID(ObjectId id_fermata, long data, ObjectId childID) {
         Query query = new Query();
         query.addCriteria(Criteria.where("stopID").is(id_fermata).and("date").is(data).and("childID").is(childID));
         List<Reservation> r = mongoTemplate.find(query, Reservation.class);
