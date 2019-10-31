@@ -35,6 +35,7 @@ public class ChildController {
         Child child = Child.builder()
                 .nameChild(data.getNameChild())
                 .username(data.getUsername())
+                .isMale(data.isMale())
                 .build();
 
         System.out.println(data.getUsername());
