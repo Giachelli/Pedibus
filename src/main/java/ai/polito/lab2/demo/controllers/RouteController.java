@@ -47,7 +47,7 @@ public class RouteController {
         String user = Principal.class.getName();
         List<Route> routes = routeService.getAllRoutes();
         ArrayList<RouteVM> routeVMs = new ArrayList<>();
-        System.out.println(user+ " Request GET Lines. The lines are:\n");
+        System.out.println(user+ " Request GET Lines. The lines are: routes\n");
         routes.forEach(route -> {
             ArrayList<StopVM> stopVMsA = new ArrayList<>();
             ArrayList<StopVM> stopVMsB = new ArrayList<>();

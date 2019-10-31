@@ -9,7 +9,7 @@ import java.util.ArrayList;
 @Data
 @Builder
 public class Stop_RegistrationVM {
-    private ObjectId stopID;
+    private String stopID;
     private String name_stop;
     private String time;
     private ArrayList<ChildReservationVM> passengers;

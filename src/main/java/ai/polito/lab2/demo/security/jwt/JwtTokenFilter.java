@@ -27,8 +27,8 @@ public class JwtTokenFilter extends GenericFilterBean {
 
         //TODO Attenzione alla lunghezza del TOKEN
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-        if(token != null)
-            System.out.println("token = \n"+ token+"\n"+token.length()+"\n");
+       /* if(token != null)
+            System.out.println("token = \n"+ token+"\n"+token.length()+"\n");*/
 
         if (token != null && jwtTokenProvider.validateToken(token,(HttpServletRequest) req)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);

@@ -24,5 +24,5 @@ public interface ReservationService {
 
     Reservation findReservationById(ObjectId reservation_id);
 
-    Reservation findReservationByNomeLineaAndDataAndIdPerson(ObjectId id_fermata, long data, ObjectId childID);
+    Reservation findReservationByStopIDAndDataAndChildID(ObjectId id_fermata, long data, ObjectId childID);
 }
