@@ -16,6 +16,7 @@ public class Child {
     private String username; //email del genitore (user)
     private String name_family;
     private String nameChild;
+    private boolean isMale;
 /*
     public ChildDTO convertDTO() {
         return ChildDTO.builder()
