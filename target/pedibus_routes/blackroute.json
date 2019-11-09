@@ -1,60 +1,80 @@
 
 {
   "id": 6,
-  "nameR": "Lineanera",
+  "nameR": "Linea Nera",
   "stopListA":
   [
     {
-    "nome": "Stazione Porta Susa",
+    "nome": "Stazione Porta Susa- Uscita Piazza XVIII Dicembre",
     "num_s": 1,
-    "time": "8:00"
+    "time": "8:00",
+    "lat": "45.0728005",
+    "lng": "7.6668232"
     },
     {
-      "nome": "Corso Vitt Emanuele",
+      "nome": "Corso Vittorio Emanuele- Incrocio Corso Bolzano",
       "num_s": 2,
-      "time": "8:05"
+      "time": "8:10",
+      "lat": "45.068333",
+      "lng": "7.6642197"
     },
     {
-      "nome": "Corso Inghilterra",
+      "nome": "Corso Castelfidardo 7- Quattro Soldi",
       "num_s": 3,
-      "time": "8:10"
+      "time": "8:15",
+      "lat": "45.0674279",
+      "lng": "7.6622625"
     },
     {
 
-      "nome": "Incrocio Corso Stati Uniti",
+      "nome": "Incrocio Corso Stati Uniti-Statua ",
       "num_s": 4,
-      "time": "8:20"
+      "time": "8:20",
+      "lat": "45.0657093",
+      "lng": "7.6624261"
     },
     {
       "nome": "Mixto",
       "num_s": 5,
-      "time": "8:25"
+      "time": "8:25",
+      "lat": "45.0619927",
+      "lng": "7.6605399"
     }
   ],
   "stopListB": [
     {
       "nome": "Mixto",
       "num_s": 1,
-      "time": "16:00"
+      "time": "16:00",
+      "lat": "45.0619927",
+      "lng": "7.6605399"
     },
     {
-      "nome": "Incrocio Corso Stati Uniti",
+      "nome": "Incrocio Corso Stati Uniti-Statua",
       "num_s": 2,
-      "time": "16:05"
+      "time": "16:05",
+      "lat": "45.0657093",
+      "lng": "7.6624261"
     },
     {
-      "nome": "Corso Inghilterra",
+      "nome": "Castelfidardo 7- Quattro Soldi",
       "num_s": 3,
-      "time": "16:10"
+      "time": "16:10",
+      "lat": "45.0674279",
+      "lng": "7.6622625"
     },
     {
-      "nome": "Corso Vitt Emanuele",
+      "nome": "Corso Vittorio Emanuele-Incrocio Corso Bolzano",
       "num_s": 4,
-      "time": "16:20"
+      "time": "16:15",
+      "lat": "45.068333",
+      "lng": "7.6642197"
     },
     {
-      "nome": "Stazione Porta Susa",
+      "nome": "Stazione Porta Susa-Uscita Piazza XVIII Dicembre",
       "num_s": 5,
-      "time": "16:25"
+      "time": "16:25",
+      "lat": "45.0728005",
+      "lng": "7.6668232"
     }]
 }

@@ -11,4 +11,6 @@ public class StopVM {
     private String nameStop;
     private int num_s;
     private String time;
+    private double lat;
+    private double lng;
 }

@@ -48,6 +48,7 @@ public class RouteController {
         List<Route> routes = routeService.getAllRoutes();
         ArrayList<RouteVM> routeVMs = new ArrayList<>();
         System.out.println(user+ " Request GET Lines. The lines are: routes\n");
+                routes.forEach(route -> System.out.println(route.getNameR()));
         routes.forEach(route -> {
             ArrayList<StopVM> stopVMsA = new ArrayList<>();
             ArrayList<StopVM> stopVMsB = new ArrayList<>();
@@ -58,6 +59,8 @@ public class RouteController {
                         .nameStop(stop.getNome())
                         .time(stop.getTime())
                         .num_s(stop.getNum_s())
+                        .lat(stop.getLat())
+                        .lng(stop.getLng())
                         .build();
 
                 stopVMsA.add(stopVM);
@@ -69,6 +72,8 @@ public class RouteController {
                         .nameStop(stop.getNome())
                         .time(stop.getTime())
                         .num_s(stop.getNum_s())
+                        .lat(stop.getLat())
+                        .lng(stop.getLng())
                         .build();
                 stopVMsB.add(stopVM);
             });
