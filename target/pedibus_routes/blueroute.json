@@ -1,59 +1,79 @@
 
 {
   "id": 3,
-  "nameR": "Lineablu",
+  "nameR": "Linea Blu",
   "stopListA":
   [
     {
-    "nome": "Porta Nuova- VIa Paolo Sacchi",
+    "nome": "Via Paolo Sacchi 18- Unicredit",
     "num_s": 1,
-    "time": "8:00"
+    "time": "7:55",
+    "lat": "45.0611421",
+    "lng": "7.6642197"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio via Massena",
+      "nome": "Corso Stati Uniti- Incrocio via Massena, fermata Bus",
       "num_s": 2,
-      "time": "8:05"
+      "time": "8:00",
+      "lat": "45.0611421",
+      "lng": "7.6734554"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto",
+      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto, capolinea Bus",
       "num_s": 3,
-      "time": "8:10"
+      "time": "8:10",
+      "lat": "45.0627537",
+      "lng": "7.6702514"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio Corso Galileo Ferraris",
+      "nome": "Corso Stati Uniti- Incrocio Via Manfredo Fanti ",
       "num_s": 4,
-      "time": "8:20"
+      "time": "8:15",
+      "lat": "45.0635646",
+      "lng": "7.6672473"
     },
     {
-      "nome": "corso Stati Uniti-incrocio Corso Duca",
+      "nome": "corso Stati Uniti- Incrocio Corso Duca (stazione tobike)",
       "num_s": 5,
-      "time": "8:25"
+      "time": "8:23",
+      "lat": "45.0644359",
+      "lng": "7.6655606"
     }
   ],
   "stopListB": [
     {
-      "nome": "corso Stati Uniti-incrocio Corso Duca",
+      "nome": "corso Stati Uniti- Incrocio Corso Duca (stazione tobike)",
       "num_s": 1,
-      "time": "16:00"
+      "time": "16:02",
+      "lat": "45.0644359",
+      "lng": "7.6655606"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio Corso Galileo Ferraris",
+      "nome": "Corso Stati Uniti- Incrocio Via Manfredo Fanti",
       "num_s": 2,
-      "time": "16:05"
+      "time": "16:10",
+      "lat": "45.0635646",
+      "lng": "7.6672473"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto",
+      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto, capolinea Bus",
       "num_s": 3,
-      "time": "16:10"
+      "time": "16:15",
+      "lat": "45.0627537",
+      "lng": "7.6702514"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio via Massena",
+      "nome": "Corso Stati Uniti- Incrocio via Massena, fermata Bus",
       "num_s": 4,
-      "time": "16:20"
+      "time": "16:25",
+      "lat": "45.0611421",
+      "lng": "7.6734554"
     },
     {
-      "nome": "Porta Nuova- VIa Paolo Sacchi",
+      "nome": "Via Paolo Sacchi 18- Unicredit",
       "num_s": 5,
-      "time": "16:25"
+      "time": "16:30",
+      "lat": "45.0611421",
+      "lng": "7.6642197"
     }]
 }

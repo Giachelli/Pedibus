@@ -1,59 +1,78 @@
-
 {
   "id": 2,
-  "nameR": "Lineabianca",
+  "nameR": "Linea Bianca",
   "stopListA":
   [
     {
-    "nome": "Corso Mediterraneo vicino alla fermata Bus",
+    "nome": "Piazza Marmolada- Incrocio via Spalato- Degustazione The",
     "num_s": 1,
-    "time": "8:00"
+    "time": "8:00",
+    "lat": "45.054883",
+    "lng": "7.649337"
     },
     {
-      "nome": "Corso Peschiera-incrocio Corso Inghilterra",
+      "nome": "Corso Lione 74- Trattoria-Pizzeria da Totò e Martina",
       "num_s": 2,
-      "time": "8:05"
+      "time": "8:05",
+      "lat": "45.0568499",
+      "lng": "7.6529401"
     },
     {
-      "nome": "Vicino alla segreteria del Poli",
+      "nome": "Corso Lione 40- Pizzeria Il Picchio",
       "num_s": 3,
-      "time": "8:10"
+      "time": "8:10",
+      "lat": "45.0575786",
+      "lng": "7.6544575"
     },
     {
-      "nome": "Corso Stati uniti Rotonda con il treno",
+      "nome": "Corso Mediterraneo 124- Fermata 3550",
       "num_s": 4,
-      "time": "8:20"
+      "time": "8:15",
+      "lat": "45.059077",
+      "lng": "7.6553165"
     },
     {
-      "nome": "corso Stati Uniti-incrocio Corso Duca",
+      "nome": "Corso Mediterraneo- Incrocio Corso Peschiera",
       "num_s": 5,
-      "time": "8:25"
+      "time": "8:20",
+      "lat": "45.061142",
+      "lng": "7.658117"
     }
   ],
   "stopListB": [
     {
-      "nome": "corso Stati Uniti-incrocio Corso Duca",
+      "nome": "Corso Mediterraneo- Incrocio Corso Peschiera",
       "num_s": 1,
-      "time": "16:00"
+      "time": "16:10",
+      "lat": "45.061142",
+      "lng": "7.658117"
     },
     {
-      "nome": "Corso Stati uniti Rotonda con il treno",
+      "nome": "Corso Mediterraneo 124- Fermata 3550",
       "num_s": 2,
-      "time": "16:05"
+      "time": "16:15",
+      "lat": "45.059077",
+      "lng": "7.6553165"
     },
     {
-      "nome": "Vicino alla segreteria del Poli",
+      "nome": "Corso Lione 40- Pizzeria Il Picchio",
       "num_s": 3,
-      "time": "16:10"
+      "time": "16:20",
+      "lat": "45.0575786",
+      "lng": "7.6544575"
     },
     {
-      "nome": "Corso Peschiera-incrocio Corso Inghilterra",
+      "nome": "Corso Lione 74- Trattoria-Pizzeria da Totò e Martina",
       "num_s": 4,
-      "time": "16:20"
+      "time": "16:25",
+      "lat": "45.0551422",
+      "lng": "7.6503551"
     },
     {
-      "nome": "Corso Mediterraneo vicino alla fermata Bus",
+      "nome": "Piazza Marmolada- Incrocio via Spalato- Degustazione The",
       "num_s": 5,
-      "time": "16:25"
+      "time": "16:30",
+      "lat": "45.054883",
+      "lng": "7.649337"
     }]
 }

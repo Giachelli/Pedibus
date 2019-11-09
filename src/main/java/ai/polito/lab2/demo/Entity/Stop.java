@@ -15,6 +15,8 @@ public class Stop {
     private String nome;
     private int num_s;
     private String time;
+    private double lat;
+    private double lng;
 
     @Override
     public String toString() {

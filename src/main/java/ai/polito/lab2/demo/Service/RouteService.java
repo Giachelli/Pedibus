@@ -17,7 +17,7 @@ public interface RouteService {
 
         Route getRoutesByID(int routeID);   //getUserById
 
-        void save(ArrayList<Route> r);
+        void saveAll(ArrayList<Route> r);
 
         RouteDTO findRouteByNameR(String nameR);
 

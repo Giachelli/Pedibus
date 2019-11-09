@@ -43,15 +43,14 @@ public class RouteServiceImpl implements RouteService {
     }
 
 
-
-    public List<Route> getAllRoutes()  {
+    public List<Route> getAllRoutes() {
         return routeRepo.findAll();
     }
 
     public Route getRoutesByName(String NameR) {
         Query query = new Query();
         query.addCriteria(Criteria.where("nameR").is(NameR));
-        return  mongoTemplate.find(query,Route.class).get(0);
+        return mongoTemplate.find(query, Route.class).get(0);
     }
 
     @Override
@@ -60,25 +59,22 @@ public class RouteServiceImpl implements RouteService {
     }
 
 
-    public void save(ArrayList<Route> r) {
+    public void saveAll(ArrayList<Route> r) {
 
-        for (Route route : r)
-        {
+        for (Route route : r) {
             System.out.println(route.getNameR());
-            if((routeRepo.findRouteByNameR(route.getNameR()) == null))
-            {
+            if ((routeRepo.findRouteByNameR(route.getNameR()) == null)) {
                 stopRepo.saveAll(route.getStopListA());
                 stopRepo.saveAll(route.getStopListB());
                 routeRepo.save(route);
                 continue;
+            } else {
+                if (routeRepo.findRouteByNameR(route.getNameR()).getLastModified() != route.getLastModified()) {
+                    stopRepo.saveAll(route.getStopListA());
+                    stopRepo.saveAll(route.getStopListB());
+                    routeRepo.save(route);
+                }
             }
-            if (routeRepo.findRouteByNameR(route.getNameR()).getLastModified() != route.getLastModified())
-            {
-                stopRepo.saveAll(route.getStopListA());
-                stopRepo.saveAll(route.getStopListB());
-                routeRepo.save(route);
-            }
-
 
         }
 
@@ -112,14 +108,13 @@ public class RouteServiceImpl implements RouteService {
         final File folder = new File("target/pedibus_routes");
         ArrayList<Route> routesArray = new ArrayList<>();
 
-        for(final File file : Objects.requireNonNull(folder.listFiles()))
-        {
+        for (final File file : Objects.requireNonNull(folder.listFiles())) {
             Route route = objectMapper.readValue(file, Route.class);
             route.setLastModified(file.lastModified());
             routesArray.add(route);
         }
 
-        this.save(routesArray);
+        this.saveAll(routesArray);
 
     }
 
