@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @Builder
 public class ReservationVM {
-    private ObjectId childID;
-    private ObjectId stopID;
+    private String childID;
+    private String stopID;
     private String direction;
 }

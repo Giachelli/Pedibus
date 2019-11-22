@@ -41,7 +41,6 @@ public class RouteController {
 
     }
 
-    @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/routes", method = RequestMethod.GET)
     public ResponseEntity getAllRoutes() throws JsonProcessingException {
         String user = Principal.class.getName();
