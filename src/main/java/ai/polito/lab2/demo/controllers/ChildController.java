@@ -47,11 +47,13 @@ public class ChildController {
     @RequestMapping(value = "/user/{userID}/children", method = RequestMethod.GET)
     public ResponseEntity getMyChilds(@PathVariable String userID) {
 
+
         ArrayList<Child> children = childRepo.findChildByUsername(userID);
 
         ArrayList<String> childrenName = new ArrayList<>();
         for (Child r : children) {
             childrenName.add(r.getNameChild());
+
         }
 
         Map<Object, Object> model = new HashMap<>();
@@ -61,19 +63,23 @@ public class ChildController {
     // vanno aggiunti più query params
     @RequestMapping(value = "/user/children", method = RequestMethod.GET)
     public ResponseEntity getMyChildren(@RequestParam(required = false) String username) {
-
-        List<Child> children = new ArrayList<>();
+        System.out.println("entro qui "+username);
+        ArrayList<Child> children ;
 
         ArrayList<ChildVM> childrenVM = new ArrayList<>();
 
 
-        if(!(username==null)){
+        if(! username.isEmpty() ){
+            System.out.println("SONO QUI ");
             children = childRepo.findChildByUsername(username);
+            System.out.println("SONO QUI e "+children.size());
         } else {
-            children = childRepo.findAll();
+            children = (ArrayList) childRepo.findAll();
         }
 
+        System.out.println("arrivo qui "+ children.size());
         for (Child r : children) {
+            System.out.println("name: " + r.getNameChild());
             childrenVM.add(
                     ChildVM.builder()
                     .childID(r.getChildID().toString())

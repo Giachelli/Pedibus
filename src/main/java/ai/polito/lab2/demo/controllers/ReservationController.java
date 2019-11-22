@@ -69,13 +69,21 @@ public class ReservationController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+        System.out.println("entro qui");
+        System.out.println(nome_linea);
+        ObjectId stopID = new ObjectId(reservationVM.getStopID());
+        ObjectId childID = new ObjectId(reservationVM.getChildID());
 
-        if (this.controlName_RouteAndStop(nome_linea, reservationVM.getStopID()))
+        if(routeRepo.findRouteByNameR(nome_linea) == null)
+            return ResponseEntity.badRequest().body("Error in Route Name"); //TODO far tornare un errore
+
+
+        if (this.controlName_RouteAndStop(nome_linea, stopID))
             return ResponseEntity.badRequest().body("Error in Route Name"); //TODO far tornare un errore
 
         Reservation r = Reservation.builder()
-                .childID(reservationVM.getChildID())
-                .stopID(reservationVM.getStopID())
+                .childID(childID)
+                .stopID(stopID)
                 .name_route(nome_linea)
                 .direction(reservationVM.getDirection())
                 .date(data)
@@ -88,7 +96,7 @@ public class ReservationController {
         r.setBooked(true);
         reservationService.save(r);
         System.out.println(r);
-        r = reservationService.findReservationByStopIDAndDataAndChildID(reservationVM.getStopID(),data,reservationVM.getChildID());
+        r = reservationService.findReservationByStopIDAndDataAndChildID(stopID,data,childID);
         System.out.println("Nuova Prenotazione");
         System.out.println(r);
         //        Reservation r = reservationService.createReservation(reservationDTO);
@@ -100,11 +108,14 @@ public class ReservationController {
     @Secured("ROLE_MULE")
     @RequestMapping(value = "/reservations/add/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Reservation createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
-        if (this.controlName_RouteAndStop(nome_linea,reservationVM.getStopID()))
+        ObjectId stopID = new ObjectId(reservationVM.getStopID());
+        ObjectId childID = new ObjectId(reservationVM.getChildID());
+
+        if (this.controlName_RouteAndStop(nome_linea,stopID))
             return null; //TODO far tornare un errore
         Reservation r = Reservation.builder()
-                .childID(reservationVM.getChildID())
-                .stopID(reservationVM.getStopID())
+                .childID(childID)
+                .stopID(stopID)
                 .name_route(nome_linea)
                 .direction(reservationVM.getDirection())
                 .date(data)
@@ -289,6 +300,9 @@ public class ReservationController {
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Reservation update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
 
+        ObjectId stopID = new ObjectId(reservationVM.getStopID());
+        ObjectId childID = new ObjectId(reservationVM.getChildID());
+
         Reservation updatedReservation = reservationRepo.findReservationById(reservation_id);
 
         if (data >= 0) {
@@ -297,14 +311,14 @@ public class ReservationController {
 
         // TODO per il lab 5 non serve ma controllare qui la corrispondenza tra ChildReservationVM e il Child
         if (!reservationVM.getChildID().toString().isEmpty()) {
-            updatedReservation.setChildID(reservationVM.getChildID());
+            updatedReservation.setChildID(childID);
         }
 
         if (!reservationVM.getDirection().isEmpty()) {
             updatedReservation.setDirection(reservationVM.getDirection());
         }
         if (reservationVM.getStopID() != null) {
-            updatedReservation.setStopID(reservationVM.getStopID());
+            updatedReservation.setStopID(stopID);
         }
         if (nome_linea.isEmpty()) {
             updatedReservation.setName_route(nome_linea);

@@ -97,6 +97,7 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("Giacomo")
                         .name_family("cccccccc")
+                        .username("user3@info.it")
                         .isMale(true)
                         .build()
         );
@@ -112,6 +113,7 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("Mauro")
                         .name_family("ddddwwwwaaa")
+                        .username("user3@info.it")
                         .isMale(true)
                         .build()
         );
@@ -127,6 +129,7 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("Jack")
                         .name_family("aaaaffdfdgf")
+                        .username("user3@info.it")
                         .isMale(true)
                         .build()
         );
@@ -134,6 +137,7 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("Paolo")
                         .name_family("ssddeeeaaa")
+                        .username("user4@info.it")
                         .isMale(true)
                         .build()
         );
@@ -141,6 +145,7 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("Antonio")
                         .name_family("fgrtraa")
+                        .username("user6@info.it")
                         .isMale(true)
                         .build()
         );
@@ -148,6 +153,7 @@ public class DataInitializer implements CommandLineRunner {
                 Child.builder()
                         .nameChild("Giovanni")
                         .name_family("adfgfgfgaa")
+                        .username("user2@info.it")
                         .isMale(true)
                         .build()
         );
