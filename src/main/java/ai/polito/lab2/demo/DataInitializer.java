@@ -175,6 +175,7 @@ public class DataInitializer implements CommandLineRunner {
         Role role = this.roleRepository.findByRole("ROLE_USER");
         this.users.save(User.builder()
                 .username("user1@info.it")
+                .family_name("Malnati")
                 .password(this.passwordEncoder.encode("1user@user"))
                 //.roles(Arrays.asList(role, roleRepository.findByRole("ROLE_ADMIN")))
                 .roles(Arrays.asList(role))
@@ -184,6 +185,7 @@ public class DataInitializer implements CommandLineRunner {
 
         this.users.save(User.builder()
                 .username("user2@info.it")
+                .family_name("Servetti")
                 .password(this.passwordEncoder.encode("2user@user"))
                 .roles(Arrays.asList(role))
                 .isEnabled(true)
@@ -193,6 +195,7 @@ public class DataInitializer implements CommandLineRunner {
 
         this.users.save(User.builder()
                 .username("user3@info.it")
+                .family_name("Cabodi")
                 .password(this.passwordEncoder.encode("3user@user"))
                 .roles(Arrays.asList(role))
                 .isEnabled(true)
@@ -202,6 +205,7 @@ public class DataInitializer implements CommandLineRunner {
 
         this.users.save(User.builder()
                 .username("user4@info.it")
+                .family_name("Lioy")
                 .password(this.passwordEncoder.encode("1user@user"))
                 .roles(Arrays.asList(role))
                 .isEnabled(true)
@@ -211,6 +215,7 @@ public class DataInitializer implements CommandLineRunner {
 
         this.users.save(User.builder()
                 .username("user5@info.it")
+                .family_name("Bernardi")
                 .password(this.passwordEncoder.encode("5user@user"))
                 .roles(Arrays.asList(role))
                 .isEnabled(true)
@@ -220,6 +225,7 @@ public class DataInitializer implements CommandLineRunner {
 
         this.users.save(User.builder()
                 .username("user6@info.it")
+                .family_name("Sanchez")
                 .password(this.passwordEncoder.encode("6user@user"))
                 .roles(Arrays.asList(role))
                 .isEnabled(true)
