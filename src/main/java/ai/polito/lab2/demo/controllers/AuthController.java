@@ -98,6 +98,7 @@ public class AuthController {
             model.put("username", username);
             model.put("token", token);
             model.put("roles", u.getRolesString());
+            model.put("family_name", u.getFamily_name());
             System.out.println("User: " + username + " is logged");
             return ok(model);
         } catch (AuthenticationException e) {
