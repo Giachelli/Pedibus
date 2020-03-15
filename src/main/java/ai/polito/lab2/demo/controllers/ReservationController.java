@@ -172,7 +172,7 @@ public class ReservationController {
                 notBookedA.add(ChildReservationVM.builder()
                         .childID(c.getChildID().toString())
                         .nameChild(c.getNameChild())
-                        .nameFamily(c.getName_family())
+                        .nameFamily(c.getFamily_name())
                         .inPlace(false)
                         .booked(false)
                         .build());
@@ -213,7 +213,7 @@ public class ReservationController {
                         notBookedA.add(ChildReservationVM.builder()
                                 .childID(c.getChildID().toString())
                                 .nameChild(c.getNameChild())
-                                .nameFamily(c.getName_family())
+                                .nameFamily(c.getFamily_name())
                                 .booked(false)
                                 .inPlace(false)
                                 .build());
@@ -240,7 +240,7 @@ public class ReservationController {
                 notBookedR.add(ChildReservationVM.builder()
                         .childID(c.getChildID().toString())
                         .nameChild(c.getNameChild())
-                        .nameFamily(c.getName_family())
+                        .nameFamily(c.getFamily_name())
                         .build());
 
         for (Stop stop : route.getStopListB()) {
@@ -267,7 +267,7 @@ public class ReservationController {
                         notBookedR.add(ChildReservationVM.builder()
                                 .childID(c.getChildID().toString())
                                 .nameChild(c.getNameChild())
-                                .nameFamily(c.getName_family())
+                                .nameFamily(c.getFamily_name())
                                 .build());
                 }
                 ritorno.add(Stop_RegistrationVM.builder()

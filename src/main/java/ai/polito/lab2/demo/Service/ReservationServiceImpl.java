@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
             mappa.get(s).add(ChildReservationVM.builder()
                     .childID(c.getChildID().toString())
-                    .nameFamily(c.getName_family())
+                    .nameFamily(c.getFamily_name())
                     .nameChild(c.getNameChild())
                     .inPlace(r.isInPlace())
                     .booked(r.isBooked())
@@ -110,7 +110,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
             mappa.get(s).add(ChildReservationVM.builder()
                     .childID(c.getChildID().toString())
-                    .nameFamily(c.getName_family())
+                    .nameFamily(c.getFamily_name())
                     .nameChild(c.getNameChild())
                     .inPlace(r.isInPlace())
                     .booked(r.isBooked())

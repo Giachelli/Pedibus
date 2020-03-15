@@ -10,7 +10,7 @@ import org.bson.types.ObjectId;
 public class ChildVM {
     private String childID;
     private String username;
-    private String name_family;
+    private String family_name;
     private String nameChild;
     private boolean isMale;
 }
