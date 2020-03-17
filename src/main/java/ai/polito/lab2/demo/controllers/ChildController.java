@@ -29,7 +29,7 @@ public class ChildController {
 
 
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Child registerChild(@RequestBody ChildVM data) {
+    public ChildVM registerChild(@RequestBody ChildVM data) {
 
 
         Child child = Child.builder()
@@ -42,7 +42,10 @@ public class ChildController {
         System.out.println(data.getUsername());
 
         childRepo.save(child);
-        return child;
+
+        ChildVM data_return = data;
+        data_return.setChildID(child.getChildID().toString());
+        return data_return;
     }
 
     @RequestMapping(value = "/user/{userID}/children", method = RequestMethod.GET)
