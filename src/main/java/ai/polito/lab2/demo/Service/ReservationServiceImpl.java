@@ -149,6 +149,13 @@ public class ReservationServiceImpl implements ReservationService {
         return r.get(0);
     }
 
+    public void bookChild(String childID, int routeID){
+        Child child=childRepo.findChildByChildID(childID);
+        child.setBooked(true);
+        child.setNomeLinea(routeRepo.findRouteById(routeID).getNameR());
+        childRepo.save(child);
+    }
+
 
 }
 

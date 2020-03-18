@@ -15,5 +15,7 @@ public class ChildVM {
     private String family_name;
     private String nameChild;
     private boolean isMale;
+    private boolean booked;
+    private String nomeLinea;
 }
 

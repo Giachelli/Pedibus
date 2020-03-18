@@ -90,8 +90,8 @@ public class ReservationController {
                 .build();
 
 
-
-        r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
+        int routeID = routeService.getRoutesByName(r.getName_route()).getId();
+        r.setRouteID(routeID);
         //questo childRepo non dovrebbe essere utilizzato
         r.setBooked(true);
         reservationService.save(r);
@@ -101,6 +101,7 @@ public class ReservationController {
         System.out.println(r);
         //        Reservation r = reservationService.createReservation(reservationDTO);
         // String idReservation = r.getId().toString();
+        reservationService.bookChild(reservationVM.getChildID(), routeID);
         return ok().body(r);
     }
 

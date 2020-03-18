@@ -37,6 +37,7 @@ public class ChildController {
                 .username(data.getUsername())
                 .family_name(data.getFamily_name())
                 .isMale(data.isMale())
+                .booked(false)
                 .build();
 
         System.out.println(data.getUsername());
@@ -90,6 +91,8 @@ public class ChildController {
                     .nameChild(r.getNameChild())
                     .username(r.getUsername())
                     .isMale(r.isMale())
+                    .booked(r.isBooked())
+                    .nomeLinea(r.getNomeLinea())
                     .build()
             );
         }
