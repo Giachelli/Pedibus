@@ -66,7 +66,7 @@ public class UserController {
     }*/
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public ResponseEntity findAllUserinDB() {
+    public ResponseEntity<List<UserVM>> findAllUserinDB() {
         List<User> users= userRepo.findAll();
         ArrayList<String> usersIDString = new ArrayList<>();
         ArrayList<UserVM> userVMS = new ArrayList<>();
@@ -85,12 +85,12 @@ public class UserController {
 
 
 
-        return ok().body(userVMS);
+        return new ResponseEntity<List<UserVM>>(userVMS, HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/users/{userID}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void addAdmin(@RequestBody Route nomeLinea, @PathVariable final ObjectId userID, HttpServletRequest req) {
+    public ResponseEntity addAdmin(@RequestBody Route nomeLinea, @PathVariable final ObjectId userID, HttpServletRequest req) {
         System.out.println(nomeLinea.getNameR());
         //User newAdmin = userService.getUserBy_id(userID);
         UserDTO newAdmin = userService.getUserDTOBy_id(userID);
@@ -130,29 +130,32 @@ public class UserController {
         routeService.saveRoute(r);
 
 
-        throw new ResponseStatusException(HttpStatus.OK, "OK");
+       return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/disenabled", method = RequestMethod.PUT)
-    public void disenabledUser(@PathVariable ObjectId userID) {
+    public ResponseEntity disenabledUser(@PathVariable ObjectId userID) {
         User u = userService.getUserBy_id(userID);
         u.setEnabled(false);
         userService.saveUser(u);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/enabled", method = RequestMethod.PUT)
-    public void enabledUser(@PathVariable ObjectId userID) {
+    public ResponseEntity enabledUser(@PathVariable ObjectId userID) {
         User u = userService.getUserBy_id(userID);
         u.setEnabled(true);
         userService.saveUser(u);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/delete", method = RequestMethod.DELETE)
-    public void deleteUserByID(@PathVariable ObjectId userID) {
+    public ResponseEntity deleteUserByID(@PathVariable ObjectId userID) {
         userService.deleteUserbyID(userID);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     /*@Secured("ROLE_SYSTEM_ADMIN") //per Cancellare un utente utilizzando il suo username
@@ -164,7 +167,7 @@ public class UserController {
 
     @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
-    public void modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
+    public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
         User user = userService.getUserBy_id(userID);
         ArrayList<Route> adminRoutes = modifyRoleUser.getNewAdminRoutes();
         ArrayList<Route> muleRoutes = modifyRoleUser.getNewMuleRoutes();
@@ -186,6 +189,8 @@ public class UserController {
 
         userService.saveUser(user);
 
+
+
         //controlli per lista vuota
 
 
@@ -204,11 +209,12 @@ public class UserController {
         user.addMuleRoutesID(muleRouteID);
 
         userService.saveUser(user);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN"}) //aggiungere ruoli all'utente tramite username
     @RequestMapping(value = "/users/modify/{username}", method = RequestMethod.PUT)
-    public void modifyUser(@PathVariable String username, @RequestBody modifyRoleUserVM modifyRoleUser) {
+    public ResponseEntity modifyUser(@PathVariable String username, @RequestBody modifyRoleUserVM modifyRoleUser) {
         User user = userService.getUserByUsername(username);
         ArrayList<Route> adminRoutes = modifyRoleUser.getNewAdminRoutes();
         ArrayList<Route> muleRoutes = modifyRoleUser.getNewMuleRoutes();
@@ -228,6 +234,7 @@ public class UserController {
 
         user.addAdminRoutesID(adminRouteID);
 
+        //todo questo secondo me è superfluo e inutile 21/03
         userService.saveUser(user);
 
         //controlli per lista vuota
@@ -248,11 +255,13 @@ public class UserController {
         user.addMuleRoutesID(muleRouteID);
 
         userService.saveUser(user);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
     @RequestMapping(value = "/users/{userID}/getAdminLines", method = RequestMethod.GET)
-    public UserRouteVM getUserLines(@RequestBody ObjectId userID) {
+    public ResponseEntity<UserRouteVM> getUserLines(@RequestBody ObjectId userID) {
         User user = userService.getUserBy_id(userID);
         ArrayList<Route> adminRoute = new ArrayList<>();
         ArrayList<Route> muleRoute = new ArrayList<>();
@@ -262,12 +271,14 @@ public class UserController {
         for (int i : user.getMuleRoutesID())
             muleRoute.add(routeService.getRoutesByID(i));
 
-        return UserRouteVM.builder()
+        UserRouteVM userVM = UserRouteVM.builder()
                 .userID(user.get_id())
                 .username(user.getUsername())
                 .adminRoute(adminRoute)
                 .muleRoute(muleRoute)
                 .build();
+
+        return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
     }
 
 

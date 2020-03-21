@@ -5,10 +5,12 @@ package ai.polito.lab2.demo;
 import static reactor.bus.selector.Selectors.$;
 import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Role;
+import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
+import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.controllers.RouteController;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -21,7 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.bus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 @Component
 @Slf4j
@@ -32,6 +36,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private RouteController routeController;
+
+    @Autowired
+    private RouteService routeService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -52,6 +59,7 @@ public class DataInitializer implements CommandLineRunner {
 
             this.users.save(User.builder()
                     .username("admin@info.it")
+                    .family_name("admin surname")
                     .password(this.passwordEncoder.encode("12345@dmin"))
                     .roles(Arrays.asList(roleRepository.findByRole("ROLE_USER"),
                             roleRepository.findByRole("ROLE_SYSTEM_ADMIN"),
@@ -173,21 +181,33 @@ public class DataInitializer implements CommandLineRunner {
     public void insertUserIntoDB() {
 
         Role role = this.roleRepository.findByRole("ROLE_USER");
+        ArrayList<Integer> routeId = new ArrayList<>();
+        routeId.add(1);
+        Route r1 = routeService.getRoutesByID(1);
+        Route r2 = routeService.getRoutesByID(2);
+        routeId.add(2);
         this.users.save(User.builder()
                 .username("user1@info.it")
                 .family_name("Malnati")
                 .password(this.passwordEncoder.encode("1user@user"))
-                //.roles(Arrays.asList(role, roleRepository.findByRole("ROLE_ADMIN")))
-                .roles(Arrays.asList(role))
+                .roles(Arrays.asList(role, roleRepository.findByRole("ROLE_MULE")))
+                .muleRoutesID(routeId)
+                //.roles(Arrays.asList(role))
                 .isEnabled(true)
                 .build()
         );
+        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        routeService.saveRoute(r2);
+        routeService.saveRoute(r1);
 
         this.users.save(User.builder()
                 .username("user2@info.it")
                 .family_name("Servetti")
                 .password(this.passwordEncoder.encode("2user@user"))
-                .roles(Arrays.asList(role))
+                //.roles(Arrays.asList(role))
+                .roles(Arrays.asList(role, roleRepository.findByRole("ROLE_MULE")))
+                .muleRoutesID(routeId)
                 .isEnabled(true)
                 .build()
         );

@@ -8,6 +8,7 @@ import ai.polito.lab2.demo.viewmodels.StopVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -95,9 +96,9 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/routes/{nome_linea}", method = RequestMethod.GET)
-    public Route getAllStopsForRoute(@PathVariable String nome_linea) throws JsonProcessingException {
+    public ResponseEntity<Route> getAllStopsForRoute(@PathVariable String nome_linea) throws JsonProcessingException {
         Route route = routeService.getRoutesByName(nome_linea);
-        return route;
+        return new ResponseEntity<Route>(route, HttpStatus.OK);
     }
 
 }
