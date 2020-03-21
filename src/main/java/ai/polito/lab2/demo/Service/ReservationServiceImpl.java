@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
             mappa.get(s).add(ChildReservationVM.builder()
                     .childID(c.getChildID().toString())
-                    .nameFamily(c.getName_family())
+                    .nameFamily(c.getFamily_name())
                     .nameChild(c.getNameChild())
                     .inPlace(r.isInPlace())
                     .booked(r.isBooked())
@@ -110,7 +110,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
             mappa.get(s).add(ChildReservationVM.builder()
                     .childID(c.getChildID().toString())
-                    .nameFamily(c.getName_family())
+                    .nameFamily(c.getFamily_name())
                     .nameChild(c.getNameChild())
                     .inPlace(r.isInPlace())
                     .booked(r.isBooked())
@@ -147,6 +147,13 @@ public class ReservationServiceImpl implements ReservationService {
         query.addCriteria(Criteria.where("stopID").is(id_fermata).and("date").is(data).and("childID").is(childID));
         List<Reservation> r = mongoTemplate.find(query, Reservation.class);
         return r.get(0);
+    }
+
+    public void bookChild(String childID, int routeID){
+        Child child=childRepo.findChildByChildID(childID);
+        child.setBooked(true);
+        child.setNomeLinea(routeRepo.findRouteById(routeID).getNameR());
+        childRepo.save(child);
     }
 
 

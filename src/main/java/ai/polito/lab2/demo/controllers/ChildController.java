@@ -29,19 +29,24 @@ public class ChildController {
 
 
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Child registerChild(@RequestBody ChildVM data) {
+    public ChildVM registerChild(@RequestBody ChildVM data) {
 
 
         Child child = Child.builder()
                 .nameChild(data.getNameChild())
                 .username(data.getUsername())
+                .family_name(data.getFamily_name())
                 .isMale(data.isMale())
+                .booked(false)
                 .build();
 
         System.out.println(data.getUsername());
 
         childRepo.save(child);
-        return child;
+
+        ChildVM data_return = data;
+        data_return.setChildID(child.getChildID().toString());
+        return data_return;
     }
 
     @RequestMapping(value = "/user/{userID}/children", method = RequestMethod.GET)
@@ -86,6 +91,8 @@ public class ChildController {
                     .nameChild(r.getNameChild())
                     .username(r.getUsername())
                     .isMale(r.isMale())
+                    .booked(r.isBooked())
+                    .nomeLinea(r.getNomeLinea())
                     .build()
             );
         }

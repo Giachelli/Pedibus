@@ -92,8 +92,8 @@ public class ReservationController {
                 .build();
 
 
-
-        r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
+        int routeID = routeService.getRoutesByName(r.getName_route()).getId();
+        r.setRouteID(routeID);
         //questo childRepo non dovrebbe essere utilizzato
         r.setBooked(true);
         reservationService.save(r);
@@ -103,7 +103,10 @@ public class ReservationController {
         System.out.println(r);
         //        Reservation r = reservationService.createReservation(reservationDTO);
         // String idReservation = r.getId().toString();
+
+        reservationService.bookChild(reservationVM.getChildID(), routeID);
         return new ResponseEntity<Reservation>(r,HttpStatus.CREATED);
+
     }
 
     //RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata
@@ -174,7 +177,7 @@ public class ReservationController {
                 notBookedA.add(ChildReservationVM.builder()
                         .childID(c.getChildID().toString())
                         .nameChild(c.getNameChild())
-                        .nameFamily(c.getName_family())
+                        .nameFamily(c.getFamily_name())
                         .inPlace(false)
                         .booked(false)
                         .build());
@@ -215,7 +218,7 @@ public class ReservationController {
                         notBookedA.add(ChildReservationVM.builder()
                                 .childID(c.getChildID().toString())
                                 .nameChild(c.getNameChild())
-                                .nameFamily(c.getName_family())
+                                .nameFamily(c.getFamily_name())
                                 .booked(false)
                                 .inPlace(false)
                                 .build());
@@ -242,7 +245,7 @@ public class ReservationController {
                 notBookedR.add(ChildReservationVM.builder()
                         .childID(c.getChildID().toString())
                         .nameChild(c.getNameChild())
-                        .nameFamily(c.getName_family())
+                        .nameFamily(c.getFamily_name())
                         .build());
 
         for (Stop stop : route.getStopListB()) {
@@ -269,7 +272,7 @@ public class ReservationController {
                         notBookedR.add(ChildReservationVM.builder()
                                 .childID(c.getChildID().toString())
                                 .nameChild(c.getNameChild())
-                                .nameFamily(c.getName_family())
+                                .nameFamily(c.getFamily_name())
                                 .build());
                 }
                 ritorno.add(Stop_RegistrationVM.builder()

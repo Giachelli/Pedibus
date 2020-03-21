@@ -14,9 +14,11 @@ public class Child {
     @Id
     private ObjectId childID;
     private String username; //email del genitore (user)
-    private String name_family;
+    private String family_name;
     private String nameChild;
     private boolean isMale;
+    private boolean booked;
+    private String nomeLinea;
 /*
     public ChildDTO convertDTO() {
         return ChildDTO.builder()
