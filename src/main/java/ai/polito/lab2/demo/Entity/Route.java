@@ -39,11 +39,16 @@ public class Route {
     }
 
     public void addAdmin(String username) {
-        this.addAdmin(username);
+        if(this.usernameAdmin == null )
+            this.usernameAdmin = new ArrayList<>();
+
+        this.usernameAdmin.add(username);
     }
 
 
     public void addMule(String username) {
-        this.addMule(username);
+        if(this.usernameMule == null)
+            this.usernameMule = new ArrayList<>();
+        this.usernameMule.add(username);
     }
 }

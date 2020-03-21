@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.util.*;
 
+import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 
@@ -68,18 +70,18 @@ public class ReservationController {
 
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+    public ResponseEntity<Reservation> create(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         System.out.println("entro qui");
         System.out.println(nome_linea);
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
 
         if(routeRepo.findRouteByNameR(nome_linea) == null)
-            return ResponseEntity.badRequest().body("Error in Route Name"); //TODO far tornare un errore
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //TODO far tornare un errore
 
 
         if (this.controlName_RouteAndStop(nome_linea, stopID))
-            return ResponseEntity.badRequest().body("Error in Route Name"); //TODO far tornare un errore
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //TODO far tornare un errore
 
         Reservation r = Reservation.builder()
                 .childID(childID)
@@ -101,14 +103,16 @@ public class ReservationController {
         System.out.println(r);
         //        Reservation r = reservationService.createReservation(reservationDTO);
         // String idReservation = r.getId().toString();
+
         reservationService.bookChild(reservationVM.getChildID(), routeID);
-        return ok().body(r);
+        return new ResponseEntity<Reservation>(r,HttpStatus.CREATED);
+
     }
 
     //RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata
     @Secured("ROLE_MULE")
     @RequestMapping(value = "/reservations/add/{nome_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Reservation createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+    public ResponseEntity<Reservation> createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
 
@@ -132,7 +136,7 @@ public class ReservationController {
         reservationService.save(r);
         //  Reservation r = reservationService.createReservation(reservationDTO);
         //  String idReservation = r.getId().toString();
-        return r;
+        return new ResponseEntity<>(r,HttpStatus.CREATED);
     }
 
     //TODO rivevedere implementazione objectID ChildID in base ad angular
@@ -145,7 +149,7 @@ public class ReservationController {
         System.out.println("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
         r.setInPlace(!r.isInPlace());
         reservationService.save(r);
-        return ok().body(r);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
@@ -299,7 +303,7 @@ public class ReservationController {
 
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Reservation update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
+    public ResponseEntity update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
 
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
@@ -328,23 +332,23 @@ public class ReservationController {
 
         reservationService.save(updatedReservation);
 
-        return updatedReservation;
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable ObjectId reservation_id) {
+    public ResponseEntity delete(@PathVariable ObjectId reservation_id) {
+
         reservationService.delete(reservation_id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.GET)
-    public String getPeople(@PathVariable ObjectId reservation_id) throws JsonProcessingException {
+    public ResponseEntity<Reservation> getPeople(@PathVariable ObjectId reservation_id) throws JsonProcessingException {
         Reservation request = reservationService.findReservationById(reservation_id);
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        // TODO -> NON SERVE USARE JSON
-        String json = ow.writeValueAsString(request);
-        return json;
+
+        return new ResponseEntity<>(request,HttpStatus.OK);
     }
 
     private boolean controlName_RouteAndStop(String name_route, ObjectId stopID) {
