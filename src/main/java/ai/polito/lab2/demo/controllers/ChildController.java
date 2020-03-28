@@ -89,6 +89,7 @@ public class ChildController {
                     ChildVM.builder()
                     .childID(r.getChildID().toString())
                     .nameChild(r.getNameChild())
+                    .family_name(r.getFamily_name())
                     .username(r.getUsername())
                     .isMale(r.isMale())
                     .booked(r.isBooked())

@@ -26,5 +26,9 @@ public interface ReservationService {
 
     Reservation findReservationByStopIDAndDataAndChildID(ObjectId id_fermata, long data, ObjectId childID);
 
+    List<Reservation> findReservationByChildID(ObjectId child_id);
+
+    List<Reservation> findAll();
+
     void bookChild(String childID, int routeID);
 }

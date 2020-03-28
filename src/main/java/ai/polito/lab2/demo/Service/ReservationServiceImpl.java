@@ -156,7 +156,13 @@ public class ReservationServiceImpl implements ReservationService {
         childRepo.save(child);
     }
 
+    public List<Reservation> findReservationByChildID (ObjectId child_id){
+       return reservationRepo.findReservationByChildID(child_id);
+    }
 
+    public List<Reservation> findAll() {
+        return reservationRepo.findAll();
+    }
 }
 
 

@@ -351,6 +351,14 @@ public class ReservationController {
         return new ResponseEntity<>(request,HttpStatus.OK);
     }
 
+    @Secured({"ROLE_USER", "ROLE_MULE"})
+    @RequestMapping(value = "/reservations", method = RequestMethod.GET)
+    public ResponseEntity<List<Reservation>> getChildReservation(@RequestParam (required = true) ObjectId childID) throws JsonProcessingException {
+        System.out.println("CHILDID :" + childID);
+        List<Reservation> request = reservationService.findReservationByChildID(childID);
+
+        return new ResponseEntity<>(request,HttpStatus.OK);
+    }
     private boolean controlName_RouteAndStop(String name_route, ObjectId stopID) {
         Route route = routeService.getRoutesByName(name_route);
         boolean found = false;
