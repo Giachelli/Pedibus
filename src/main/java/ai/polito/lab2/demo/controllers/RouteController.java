@@ -86,7 +86,7 @@ public class RouteController {
             List<UserVM> muleVMList = new ArrayList<>();
             List<UserVM> adminVMList = new ArrayList<>();
 
-            if(route.getUsernameAdmin().size() > 0)
+            if(route.getUsernameAdmin() != null)
             for(String u : route.getUsernameAdmin())
             {
                 User admin = userService.getUserByUsername(u);
@@ -98,7 +98,7 @@ public class RouteController {
                 adminVMList.add(adminVM);
             }
 
-            if(route.getUsernameMule().size() > 0)
+            if(route.getUsernameMule() != null)
             for(String u : route.getUsernameMule())
             {
                 User mule = userService.getUserByUsername(u);
