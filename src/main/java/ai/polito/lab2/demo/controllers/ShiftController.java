@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,45 +34,55 @@ public class ShiftController {
 
     //@Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ShiftCreateVM> createShift(@RequestBody ShiftCreateVM shiftVM) {
+    public ResponseEntity<List<ShiftCreateVM>> createShift(@RequestBody List<ShiftCreateVM> shiftVMList) {
 
-        if (!shiftVM.control())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        List<ShiftCreateVM> returnedList = new ArrayList<>();
 
-        Route route = routeService.getRoutesByID(shiftVM.getLineId());
-        if(route == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        /*
+        if(shiftVMList.size() > 25)
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        if((!route.getUsernameMule().contains(shiftVM.getUsername()))||(!route.getUsernameAdmin().contains(shiftVM.getUsernameAdmin())))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+         */
 
-        User u = userService.getUserByUsername(shiftVM.getUsername());
-        if( u == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        for (ShiftCreateVM shiftVM : shiftVMList) {
+            if (!shiftVM.control())
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        User admin = userService.getUserByUsername(shiftVM.getUsernameAdmin());
-        if( admin == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            Route route = routeService.getRoutesByID(shiftVM.getLineId());
+            if (route == null)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            if ((!route.getUsernameMule().contains(shiftVM.getUsername())) || (!route.getUsernameAdmin().contains(shiftVM.getUsernameAdmin())))
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            User u = userService.getUserByUsername(shiftVM.getUsername());
+            if (u == null)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            User admin = userService.getUserByUsername(shiftVM.getUsernameAdmin());
+            if (admin == null)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 
+            ShiftDTO t;
+            t = ShiftDTO.builder()
+                    .muleID(u.get_id())
+                    .adminID(admin.get_id())
+                    .lineId(shiftVM.getLineId())
+                    .data(shiftVM.getData())
+                    .direction(shiftVM.isDirection())
+                    .build();
+
+            // metto il turno sul db
+            Shift shift = shiftService.save(t);
+            //notificare gli admin di linea
+
+            shiftVM.setShiftId(shift.getTurnID());
+            returnedList.add(shiftVM);
+        }
 
 
-        ShiftDTO t;
-        t = ShiftDTO.builder()
-                .muleID(u.get_id())
-                .adminID(admin.get_id())
-                .lineId(shiftVM.getLineId())
-                .data(shiftVM.getData())
-                .direction(shiftVM.isDirection())
-                .build();
-
-        // metto il turno sul db
-        Shift shift = shiftService.save(t);
-        //notificare gli admin di linea
-
-        shiftVM.setShiftId(shift.getTurnID());
-
-        return new ResponseEntity<ShiftCreateVM>(shiftVM,HttpStatus.CREATED);
+        return new ResponseEntity<List<ShiftCreateVM>>(returnedList, HttpStatus.CREATED);
     }
 
     // delete del turno
@@ -100,15 +111,15 @@ public class ShiftController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
             User u = userService.getUserByUsername(shiftVM.getUsername());
-            if( u == null)
+            if (u == null)
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
             User admin = userService.getUserByUsername(shiftVM.getUsernameAdmin());
-            if( admin == null)
+            if (admin == null)
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
             Route route = routeService.getRoutesByID(shiftVM.getLineId());
-            if(route == null)
+            if (route == null)
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
             t.setDate(shiftVM.getData());
@@ -118,8 +129,7 @@ public class ShiftController {
             t.setAdminID(admin.get_id());
 
             shiftService.editTurn(t);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 

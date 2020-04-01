@@ -14,8 +14,8 @@ public class RouteVM {
 
     private int id;
     private String nameR;
-    private List<String> usernameAdmin;
-    private List<String> usernameMule;
+    private List<UserVM> usernameAdmin;
+    private List<UserVM> usernameMule;
     private ArrayList<StopVM> stopListA;
     private ArrayList<StopVM> stopListB;
 }

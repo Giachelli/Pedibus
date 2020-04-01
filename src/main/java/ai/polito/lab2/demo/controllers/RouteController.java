@@ -2,9 +2,13 @@ package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
+import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.RouteService;
+import ai.polito.lab2.demo.Service.UserService;
 import ai.polito.lab2.demo.viewmodels.RouteVM;
 import ai.polito.lab2.demo.viewmodels.StopVM;
+import ai.polito.lab2.demo.viewmodels.UserVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,8 @@ public class RouteController {
 
     @Autowired
     private RouteService routeService;
+    @Autowired
+    private UserService userService;
 
     public void PopulateDb() throws IOException {
 
@@ -77,14 +83,38 @@ public class RouteController {
                         .build();
                 stopVMsB.add(stopVM);
             });
+            List<UserVM> muleVMList = new ArrayList<>();
+            List<UserVM> adminVMList = new ArrayList<>();
+
+            for(String u : route.getUsernameAdmin())
+            {
+                User admin = userService.getUserByUsername(u);
+                UserVM adminVM = UserVM.builder()
+                        .userID(admin.get_id().toString())
+                        .username(u)
+                        .family_name(admin.getFamily_name())
+                        .build();
+                adminVMList.add(adminVM);
+            }
+
+            for(String u : route.getUsernameMule())
+            {
+                User mule = userService.getUserByUsername(u);
+                UserVM muleVM = UserVM.builder()
+                        .userID(mule.get_id().toString())
+                        .username(u)
+                        .family_name(mule.getFamily_name())
+                        .build();
+               muleVMList.add(muleVM);
+            }
 
             RouteVM r = RouteVM.builder()
                     .id(route.getId())
                     .nameR(route.getNameR())
                     .stopListA(stopVMsA)
                     .stopListB(stopVMsB)
-                    .usernameAdmin(route.getUsernameAdmin())
-                    .usernameMule(route.getUsernameMule())
+                    .usernameAdmin(adminVMList)
+                    .usernameMule(muleVMList)
                     .build();
 
             routeVMs.add(r);
