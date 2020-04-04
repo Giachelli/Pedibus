@@ -86,8 +86,31 @@ public class ShiftController {
         return new ResponseEntity<List<ShiftCreateVM>>(returnedList, HttpStatus.CREATED);
     }
 
+    //todo si potrebbe fare solo i turni futuri, o degli ulimi sette giorni! (per ora prendiamo tutti i turni)
+    //get dei turni per una linea (linea id) per un mule (mule ID)
+    @RequestMapping(value = "/shift/{routeID}/{muleID}", method = RequestMethod.DELETE)
+    public ResponseEntity getMuleShifts(@PathVariable final int routeID,@PathVariable final ObjectId muleID){
+        Route r = routeService.getRoutesByID(routeID);
+        if(r == null)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User u = userService.getUserBy_id(muleID);
+        if(u == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        List<ShiftCreateVM> shifts = shiftService.getTurns(routeID, muleID);
+
+       //todo da commentare se funziona
+        System.out.println("per la linea "+r.getNameR()+ " e per il mule con username "+ u.getUsername()+ " " +
+                "sono state trovate queste prenotazioni (numero):  "+shifts.size() );
+
+        return new ResponseEntity(shifts, HttpStatus.OK);
+    }
+
     // delete del turno
-    //@Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/{shiftID}/delete", method = RequestMethod.DELETE)
     public ResponseEntity deleteShift(@PathVariable final ObjectId shiftID) {
 
@@ -101,7 +124,7 @@ public class ShiftController {
     }
 
     // modifica di un turno molto simile alla creazione
-    //@Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/{shiftID}/edit", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity editTurn(@PathVariable final ObjectId shiftID, @RequestBody ShiftCreateVM shiftVM) {
 

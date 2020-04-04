@@ -3,15 +3,22 @@ package ai.polito.lab2.demo.Service;
 import ai.polito.lab2.demo.Dto.ShiftDTO;
 import ai.polito.lab2.demo.Entity.Shift;
 import ai.polito.lab2.demo.Repositories.ShiftRepo;
+import ai.polito.lab2.demo.viewmodels.ShiftCreateVM;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ShiftServiceImpl implements ShiftService {
 
     @Autowired
     private ShiftRepo shiftRepo;
+
+    @Autowired
+    private UserService userService;
 
 
     @Override
@@ -38,5 +45,25 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     public void editTurn(Shift t) {
         shiftRepo.save(t);
+    }
+
+    @Override
+    public List<ShiftCreateVM> getTurns(int routeID, ObjectId muleID) {
+      List<Shift> shifts =  shiftRepo.findByLineaIDAndMuleID(routeID, muleID);
+
+        ArrayList<ShiftCreateVM> listShifts = new ArrayList<>();
+      for(Shift s : shifts)
+      {
+          ShiftCreateVM shiftCreateVM = ShiftCreateVM.builder()
+                  .shiftId(s.getTurnID())
+                  .data(s.getDate())
+                  .direction(s.isDirection())
+                  .lineId(s.getLineaID())
+                  .username(userService.getUserBy_id(s.getMuleID()).getUsername())
+                  .usernameAdmin(userService.getUserBy_id(s.getAdminID()).getUsername())
+                  .build();
+          listShifts.add(shiftCreateVM);
+      }
+      return listShifts;
     }
 }
