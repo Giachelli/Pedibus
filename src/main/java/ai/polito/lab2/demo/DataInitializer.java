@@ -53,9 +53,16 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         routeController.PopulateDb();
         setRoleDb();
+        setMule_Admin_Test();
         if (users.findByUsername("admin@info.it") != null) {
             //do nothing
         } else {
+            ArrayList<Integer> routeId = new ArrayList<>();
+            routeId.add(1);
+            routeId.add(2);
+            routeId.add(3);
+            routeId.add(4);
+            routeId.add(6);
 
             this.users.save(User.builder()
                     .username("admin@info.it")
@@ -64,15 +71,44 @@ public class DataInitializer implements CommandLineRunner {
                     .roles(Arrays.asList(roleRepository.findByRole("ROLE_USER"),
                             roleRepository.findByRole("ROLE_SYSTEM_ADMIN"),
                             roleRepository.findByRole("ROLE_MULE")))
+                    .adminRoutesID(routeId)
                     .isEnabled(true)
                     .build()
             );
-            insertUserIntoDB();
+            insertUserIntoDB(routeId);
             insertChildIntoDB();
         }
 /*
         log.debug("printing all users...");
         this.users.findAll().forEach(v -> log.debug(" User :" + v.toString()));*/
+    }
+
+    //funzione semplice che verrà cancellata ma che serve per testare
+    private void setMule_Admin_Test() {
+        Route r1 = routeService.getRoutesByID(1);
+        Route r2 = routeService.getRoutesByID(2);
+
+        r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        routeService.saveRoute(r2);
+        routeService.saveRoute(r1);
+
+        r1 = routeService.getRoutesByID(3);
+        r2 = routeService.getRoutesByID(4);
+        r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        routeService.saveRoute(r2);
+        routeService.saveRoute(r1);
+
+
+        r1 = routeService.getRoutesByID(6);
+        r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        routeService.saveRoute(r1);
     }
 
     private void insertChildIntoDB() {
@@ -190,14 +226,14 @@ public class DataInitializer implements CommandLineRunner {
     }
 
 
-    public void insertUserIntoDB() {
+    public void insertUserIntoDB(ArrayList<Integer> routeId) {
 
         Role role = this.roleRepository.findByRole("ROLE_USER");
-        ArrayList<Integer> routeId = new ArrayList<>();
-        routeId.add(1);
-        Route r1 = routeService.getRoutesByID(1);
-        Route r2 = routeService.getRoutesByID(2);
-        routeId.add(2);
+
+
+
+
+
         this.users.save(User.builder()
                 .username("user1@info.it")
                 .family_name("Malnati")
@@ -208,10 +244,7 @@ public class DataInitializer implements CommandLineRunner {
                 .isEnabled(true)
                 .build()
         );
-        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
-        r2.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
-        routeService.saveRoute(r2);
-        routeService.saveRoute(r1);
+
 
         this.users.save(User.builder()
                 .username("user2@info.it")

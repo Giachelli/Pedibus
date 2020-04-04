@@ -87,6 +87,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/reservations/**").hasRole("USER")
                     .and()
                     .authorizeRequests()
+                    .antMatchers("/shift/**").hasAnyRole("SYSTEM_ADMIN", "ADMIN","MULE")
+                    .and()
+                    .authorizeRequests()
                     .anyRequest().authenticated()
                     .and()
                     .apply(new JwtConfigurer(jwtTokenProvider));

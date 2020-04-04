@@ -15,7 +15,6 @@ import java.io.IOException;
 
 @Component
 @ControllerAdvice
-
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);

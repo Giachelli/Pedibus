@@ -16,7 +16,7 @@ import java.io.IOException;
 @SpringBootApplication
 @EnableMongoRepositories(basePackageClasses = {RouteRepo.class})
 @EnableGlobalMethodSecurity(securedEnabled = true)
-@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
 public class DemoApplication {
 
 
