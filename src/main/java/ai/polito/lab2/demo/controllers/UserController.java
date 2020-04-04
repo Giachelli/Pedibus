@@ -43,7 +43,6 @@ public class UserController {
     @Autowired
     private UserRepo userRepo;
 
-
     @Autowired
     private UserService userService;
 
