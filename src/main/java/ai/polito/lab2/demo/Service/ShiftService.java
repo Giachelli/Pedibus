@@ -15,4 +15,6 @@ public interface ShiftService {
     void editTurn(Shift t);
 
     List<ShiftCreateVM> getTurns(int routeID, ObjectId muleID);
+
+    List<ShiftCreateVM> getTurnsDate(int routeID, ObjectId muleID);
 }

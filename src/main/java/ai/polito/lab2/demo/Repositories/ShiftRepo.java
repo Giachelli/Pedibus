@@ -13,4 +13,6 @@ public interface ShiftRepo extends MongoRepository<Shift, ObjectId> {
     Shift getTurnByTurnID(ObjectId turnID);
 
     List<Shift> findByLineaIDAndMuleID(int routeID, ObjectId muleID);
+
+    List<Shift> findByLineaIDAndMuleIDAndDateAfter(int routeID, ObjectId muleID,long dateAfter);
 }

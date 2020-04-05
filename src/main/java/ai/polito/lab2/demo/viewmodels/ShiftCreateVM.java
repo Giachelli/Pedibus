@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @Builder
 public class ShiftCreateVM { //classe che mappa l'oggetto che arriva dal frontEnd
-    private ObjectId shiftId; //id del turno
+    private String shiftId; //id del turno
     private String username; // username Mule
     private String usernameAdmin; //dell'admin
     private long data; //data del turno in millisecondi
@@ -20,7 +20,7 @@ public class ShiftCreateVM { //classe che mappa l'oggetto che arriva dal frontEn
 
     //funzione di controllo che va a vedere i campi della classe se sono nulli o poco sensati.
     public boolean control() {
-        long d = LocalDate.now().minusDays(1).toEpochDay();
+        //long d = LocalDate.now().minusDays(1).toEpochDay();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
