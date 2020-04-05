@@ -78,7 +78,7 @@ public class ShiftController {
             Shift shift = shiftService.save(t);
             //notificare gli admin di linea
 
-            shiftVM.setShiftId(shift.getTurnID());
+            shiftVM.setShiftId(shift.getTurnID().toString());
             returnedList.add(shiftVM);
         }
 
@@ -86,9 +86,9 @@ public class ShiftController {
         return new ResponseEntity<List<ShiftCreateVM>>(returnedList, HttpStatus.CREATED);
     }
 
-    //todo si potrebbe fare solo i turni futuri, o degli ulimi sette giorni! (per ora prendiamo tutti i turni)
+
     //get dei turni per una linea (linea id) per un mule (mule ID)
-    @RequestMapping(value = "/shift/{routeID}/{muleID}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/shift/{routeID}/{muleID}/history", method = RequestMethod.GET)
     public ResponseEntity getMuleShifts(@PathVariable final int routeID,@PathVariable final ObjectId muleID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
@@ -98,11 +98,39 @@ public class ShiftController {
 
         User u = userService.getUserBy_id(muleID);
         if(u == null)
+        {
+            System.out.println("utente non esistente");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         List<ShiftCreateVM> shifts = shiftService.getTurns(routeID, muleID);
 
-       //todo da commentare se funziona
+
+        System.out.println("per la linea "+r.getNameR()+ " e per il mule con username "+ u.getUsername()+ " " +
+                "sono state trovate queste prenotazioni (numero):  "+shifts.size() );
+
+        return new ResponseEntity(shifts, HttpStatus.OK);
+    }
+
+    //get dei turni per una linea (linea id) per un mule (mule ID)
+    @RequestMapping(value = "/shift/{routeID}/{muleID}", method = RequestMethod.GET)
+    public ResponseEntity getMuleShiftsAfter(@PathVariable final int routeID,@PathVariable final ObjectId muleID){
+        Route r = routeService.getRoutesByID(routeID);
+        if(r == null)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User u = userService.getUserBy_id(muleID);
+        if(u == null)
+        {
+            System.out.println("utente non esistente");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<ShiftCreateVM> shifts = shiftService.getTurnsDate(routeID, muleID);
+
+
         System.out.println("per la linea "+r.getNameR()+ " e per il mule con username "+ u.getUsername()+ " " +
                 "sono state trovate queste prenotazioni (numero):  "+shifts.size() );
 
