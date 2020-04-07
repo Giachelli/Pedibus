@@ -9,6 +9,7 @@ import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Stop;
+import ai.polito.lab2.demo.viewmodels.ReservationCalendarVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -149,19 +152,41 @@ public class ReservationServiceImpl implements ReservationService {
         return r.get(0);
     }
 
-    public void bookChild(String childID, int routeID){
-        Child child=childRepo.findChildByChildID(childID);
-        child.setBooked(true);
-        child.setNomeLinea(routeRepo.findRouteById(routeID).getNameR());
-        childRepo.save(child);
-    }
-
     public List<Reservation> findReservationByChildID (ObjectId child_id){
        return reservationRepo.findReservationByChildID(child_id);
     }
 
     public List<Reservation> findAll() {
         return reservationRepo.findAll();
+    }
+
+    public ArrayList<ReservationCalendarVM> reservationFamily(String family_name){
+       List<Reservation> res = reservationRepo.findReservationByFamilyName(family_name);
+       ArrayList<ReservationCalendarVM> rcvms= new ArrayList<>();
+       res.forEach(bubba -> System.out.println("BUBBAAA:::" + bubba.getName_route()));
+
+       res.forEach(reservation -> {
+        Date data= null;
+        Stop s = stopRepo.findStopBy_id(reservation.getStopID());
+        try{
+            data = new SimpleDateFormat("h:mm").parse(s.getTime());
+            System.out.println(data.getTime());
+        } catch (ParseException e) {
+            System.out.println("ParseException occured: " + e.getMessage());
+        }
+        ReservationCalendarVM rcvm = ReservationCalendarVM.builder()
+                                     .name_route(reservation.getName_route())
+                                     .direction(reservation.getDirection())
+                                     .name_stop(s.getNome())
+                                     .nameChild(childRepo.findChildByChildID(reservation.getChildID()).getNameChild())
+                                     .color(childRepo.findChildByChildID(reservation.getChildID()).getColor())
+                                     .date(reservation.getDate())
+                                     .hour(data.getTime())
+                                     .build();
+
+        rcvms.add(rcvm);
+       });
+       return rcvms;
     }
 }
 

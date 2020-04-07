@@ -1,20 +1,17 @@
 package ai.polito.lab2.demo.viewmodels;
 
-
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
-public class ChildVM {
-
-    private String childID;
-    private String username;
-    private String family_name;
+public class ReservationCalendarVM {
     private String nameChild;
-    private boolean isMale;
     private String color;
+    private String name_route;
+    private String direction;
+    private String name_stop;
+    private long hour;
+    private long date;
 }
-

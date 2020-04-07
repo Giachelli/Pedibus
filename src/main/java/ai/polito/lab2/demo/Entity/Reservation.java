@@ -21,6 +21,7 @@ public class Reservation {
     private String name_route;
     private String direction;
     private boolean booked;
+    private String familyName;
     private boolean inPlace;
     private long date;
 }

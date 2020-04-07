@@ -12,10 +12,7 @@ import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
-import ai.polito.lab2.demo.viewmodels.ChildReservationVM;
-import ai.polito.lab2.demo.viewmodels.RegisterVM;
-import ai.polito.lab2.demo.viewmodels.Stop_RegistrationVM;
-import ai.polito.lab2.demo.viewmodels.ReservationVM;
+import ai.polito.lab2.demo.viewmodels.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -86,6 +83,7 @@ public class ReservationController {
         Reservation r = Reservation.builder()
                 .childID(childID)
                 .stopID(stopID)
+                .familyName(reservationVM.getFamily_name())
                 .name_route(nome_linea)
                 .direction(reservationVM.getDirection())
                 .date(data)
@@ -104,7 +102,6 @@ public class ReservationController {
         //        Reservation r = reservationService.createReservation(reservationDTO);
         // String idReservation = r.getId().toString();
 
-        reservationService.bookChild(reservationVM.getChildID(), routeID);
         return new ResponseEntity<Reservation>(r,HttpStatus.CREATED);
 
     }
@@ -121,6 +118,7 @@ public class ReservationController {
         Reservation r = Reservation.builder()
                 .childID(childID)
                 .stopID(stopID)
+                .familyName(reservationVM.getFamily_name())
                 .name_route(nome_linea)
                 .direction(reservationVM.getDirection())
                 .date(data)
@@ -351,14 +349,30 @@ public class ReservationController {
         return new ResponseEntity<>(request,HttpStatus.OK);
     }
 
-    @Secured({"ROLE_USER", "ROLE_MULE"})
+
+    // TODO: da cancellare probably
+
+
+   /* @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
-    public ResponseEntity<List<Reservation>> getChildReservation(@RequestParam (required = true) ObjectId childID) throws JsonProcessingException {
+    public ResponseEntity<List<Reservation>> getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
         System.out.println("CHILDID :" + childID);
         List<Reservation> request = reservationService.findReservationByChildID(childID);
 
         return new ResponseEntity<>(request,HttpStatus.OK);
+    }*/
+
+   // TODO: prendersi anche l'ora della fermata
+    @Secured({"ROLE_USER", "ROLE_MULE"})
+    @RequestMapping(value = "/reservations", method = RequestMethod.GET)
+    public ResponseEntity getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
+        System.out.println("family_name :" + family_name);
+        ArrayList<ReservationCalendarVM> reservationCalendarVMS = new ArrayList<>();
+        reservationCalendarVMS = reservationService.reservationFamily(family_name);
+
+        return ok().body(reservationCalendarVMS);
     }
+
     private boolean controlName_RouteAndStop(String name_route, ObjectId stopID) {
         Route route = routeService.getRoutesByName(name_route);
         boolean found = false;

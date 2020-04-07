@@ -116,35 +116,33 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Luigi")
-                        .booked(false)
                         .username("user1@info.it")
-                        .family_name("aaa")
+                        .family_name("Malnati")
                         .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Mario")
-                        .booked(false)
                         .username("user2@info.it")
-                        .family_name("bb")
+                        .family_name("Servetti")
+                        .color("#F4D8CD")
                         .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Franco")
-                        .booked(false)
                         .username("user2@info.it")
-                        .family_name("aaaassa")
+                        .family_name("Servetti")
+                        .color("#ED4B4B")
                         .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Giacomo")
-                        .booked(false)
-                        .family_name("cccccccc")
+                        .family_name("Cabodi")
                         .username("user3@info.it")
                         .isMale(true)
                         .build()
@@ -152,17 +150,15 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Francesco")
-                        .booked(false)
                         .username("user1@info.it")
-                        .family_name("fffddddd")
+                        .family_name("Malnati")
                         .isMale(true)
                         .build()
         );
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Mauro")
-                        .booked(false)
-                        .family_name("ddddwwwwaaa")
+                        .family_name("Cabodi")
                         .username("user3@info.it")
                         .isMale(true)
                         .build()
@@ -170,8 +166,7 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("David")
-                        .booked(false)
-                        .family_name("adffdfdaa")
+                        .family_name("Malnati")
                         .username("user1@info.it")
                         .isMale(true)
                         .build()
@@ -179,8 +174,7 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Jack")
-                        .booked(false)
-                        .family_name("aaaaffdfdgf")
+                        .family_name("Cabodi")
                         .username("user3@info.it")
                         .isMale(true)
                         .build()
@@ -188,8 +182,7 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Paolo")
-                        .booked(false)
-                        .family_name("ssddeeeaaa")
+                        .family_name("Lioy")
                         .username("user4@info.it")
                         .isMale(true)
                         .build()
@@ -197,7 +190,6 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Antonio")
-                        .booked(false)
                         .family_name("fgrtraa")
                         .username("user6@info.it")
                         .isMale(true)
@@ -206,8 +198,8 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Giovanni")
-                        .booked(false)
-                        .family_name("adfgfgfgaa")
+                        .family_name("Servetti")
+                        .color("#3A2E39")
                         .username("user2@info.it")
                         .isMale(true)
                         .build()
@@ -215,8 +207,8 @@ public class DataInitializer implements CommandLineRunner {
         this.childRepo.save(
                 Child.builder()
                         .nameChild("Caterina")
-                        .booked(false)
-                        .family_name("afdeereaa")
+                        .family_name("Servetti")
+                        .color("#1E555C")
                         .username("user2@info.it")
                         .isMale(false)
                         .build()

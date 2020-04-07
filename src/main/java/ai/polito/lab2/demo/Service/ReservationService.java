@@ -3,9 +3,11 @@ package ai.polito.lab2.demo.Service;
 import ai.polito.lab2.demo.Dto.ReservationDTO;
 import ai.polito.lab2.demo.viewmodels.ChildReservationVM;
 import ai.polito.lab2.demo.Entity.Reservation;
+import ai.polito.lab2.demo.viewmodels.ReservationCalendarVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,5 +32,5 @@ public interface ReservationService {
 
     List<Reservation> findAll();
 
-    void bookChild(String childID, int routeID);
+    ArrayList<ReservationCalendarVM> reservationFamily (String family_name);
 }

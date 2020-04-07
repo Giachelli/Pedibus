@@ -13,4 +13,5 @@ public class ReservationVM {
     private String childID;
     private String stopID;
     private String direction;
+    private String family_name;
 }

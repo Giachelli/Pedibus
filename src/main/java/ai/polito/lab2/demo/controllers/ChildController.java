@@ -2,9 +2,12 @@ package ai.polito.lab2.demo.controllers;
 
 
 import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
+import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
+import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.viewmodels.ChildVM;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,8 @@ public class ChildController {
 
     @Autowired
     private ChildRepo childRepo;
-
+    @Autowired
+    private ReservationService reservationService;
 
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ChildVM registerChild(@RequestBody ChildVM data) {
@@ -37,7 +41,7 @@ public class ChildController {
                 .username(data.getUsername())
                 .family_name(data.getFamily_name())
                 .isMale(data.isMale())
-                .booked(false)
+                .color(data.getColor())
                 .build();
 
         System.out.println(data.getUsername());
@@ -90,10 +94,9 @@ public class ChildController {
                     .childID(r.getChildID().toString())
                     .nameChild(r.getNameChild())
                     .family_name(r.getFamily_name())
+                    .color(r.getColor())
                     .username(r.getUsername())
                     .isMale(r.isMale())
-                    .booked(r.isBooked())
-                    .nomeLinea(r.getNomeLinea())
                     .build()
             );
         }
@@ -106,6 +109,15 @@ public class ChildController {
     @RequestMapping(value = "/user/child", method = RequestMethod.DELETE)
     public void deleteChild(@RequestParam(required = true) ObjectId childID ) {
 
+        ArrayList<ObjectId> reservations_id = new ArrayList<>();
+        for (Reservation r:reservationService.findReservationByChildID(childID)){
+
+            reservations_id.add(r.getId());
+        }
+
+        reservations_id.forEach( (x) -> {
+            reservationService.delete(x);
+        });
         childRepo.deleteById(childID);
     }
 }

@@ -17,8 +17,7 @@ public class Child {
     private String family_name;
     private String nameChild;
     private boolean isMale;
-    private boolean booked;
-    private String nomeLinea;
+    private String color;
 /*
     public ChildDTO convertDTO() {
         return ChildDTO.builder()
