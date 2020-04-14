@@ -175,6 +175,7 @@ public class ReservationServiceImpl implements ReservationService {
             System.out.println("ParseException occured: " + e.getMessage());
         }
         ReservationCalendarVM rcvm = ReservationCalendarVM.builder()
+                                     .id(reservation.getId().toString())
                                      .name_route(reservation.getName_route())
                                      .direction(reservation.getDirection())
                                      .name_stop(s.getNome())

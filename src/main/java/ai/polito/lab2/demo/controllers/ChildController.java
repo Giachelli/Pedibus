@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -33,8 +34,10 @@ public class ChildController {
     private ReservationService reservationService;
 
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ChildVM registerChild(@RequestBody ChildVM data) {
+    public ResponseEntity<ChildVM> registerChild(@RequestBody ChildVM data) {
 
+        if (data.getNameChild()== "" || data.getUsername() == null || data.getFamily_name()==null || data.getColor()==null)
+            return badRequest().build();
 
         Child child = Child.builder()
                 .nameChild(data.getNameChild())
@@ -50,7 +53,7 @@ public class ChildController {
 
         ChildVM data_return = data;
         data_return.setChildID(child.getChildID().toString());
-        return data_return;
+        return ok().body(data_return);
     }
 
     @RequestMapping(value = "/user/{userID}/children", method = RequestMethod.GET)

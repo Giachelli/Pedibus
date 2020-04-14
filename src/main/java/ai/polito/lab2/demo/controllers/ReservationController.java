@@ -373,6 +373,17 @@ public class ReservationController {
         return ok().body(reservationCalendarVMS);
     }
 
+    @Secured({"ROLE_USER", "ROLE_MULE"})
+    @RequestMapping(value = "/reservations", method = RequestMethod.DELETE)
+    public ResponseEntity deleteChildReservation(@RequestParam (required = true) ObjectId id) throws JsonProcessingException {
+        System.out.println("id :" + id);
+
+        reservationService.delete(id);
+
+        return noContent().build();
+    }
+
+
     private boolean controlName_RouteAndStop(String name_route, ObjectId stopID) {
         Route route = routeService.getRoutesByName(name_route);
         boolean found = false;

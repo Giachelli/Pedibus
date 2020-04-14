@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 @Data
 @Builder
 public class ReservationCalendarVM {
+    private String id;
     private String nameChild;
     private String color;
     private String name_route;
