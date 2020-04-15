@@ -5,6 +5,7 @@ import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.Shift;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Service.IUserService;
+import ai.polito.lab2.demo.Service.MessageService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.ShiftService;
 import ai.polito.lab2.demo.viewmodels.ShiftCreateVM;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,9 @@ public class ShiftController {
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private MessageService messageService;
 
 
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
@@ -72,11 +78,22 @@ public class ShiftController {
                     .lineId(shiftVM.getLineId())
                     .data(shiftVM.getData())
                     .direction(shiftVM.isDirection())
+                    .status("pending")
                     .build();
+
 
             // metto il turno sul db
             Shift shift = shiftService.save(t);
             //notificare gli admin di linea
+
+            String direzione = shiftVM.isDirection() ? "andata" : "ritorno";
+            String pattern = "dd-MM";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String date = simpleDateFormat.format(new Date (shiftVM.getData()));
+            String action = "Turno definito per la linea "+ routeService.getRoutesByID(shiftVM.getLineId()).getNameR()+" il giorno " + date+" nella direzione di "+ direzione;
+
+            long day = new Date().getTime();
+            messageService.createMessageShift(admin.get_id(), u.get_id(), action, day);
 
             shiftVM.setShiftId(shift.getTurnID().toString());
             returnedList.add(shiftVM);

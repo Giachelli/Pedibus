@@ -17,6 +17,7 @@ public class ShiftCreateVM { //classe che mappa l'oggetto che arriva dal frontEn
     private long data; //data del turno in millisecondi
     private int lineId; //id della linea
     private boolean direction; // per sapere se è andata (true) o ritorno (false)
+    private String status; // tre valori: pending, accepted, rejected
 
     //funzione di controllo che va a vedere i campi della classe se sono nulli o poco sensati.
     public boolean control() {

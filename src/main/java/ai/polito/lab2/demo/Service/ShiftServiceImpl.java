@@ -24,9 +24,14 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public Shift save(ShiftDTO t) {
-       Shift shift = Shift.builder().muleID(t.getMuleID())
-                    .AdminID(t.getAdminID()).date(t.getData())
-                    .lineaID(t.getLineId()).direction(t.isDirection()).build();
+       Shift shift = Shift.builder()
+                    .muleID(t.getMuleID())
+                    .AdminID(t.getAdminID())
+                    .date(t.getData())
+                    .lineaID(t.getLineId())
+                    .direction(t.isDirection())
+                    .status(t.getStatus())
+                    .build();
 
         return shiftRepo.save(shift);
     }

@@ -12,4 +12,5 @@ public class ShiftDTO {
     private long data;
     private int lineId;
     private boolean direction;
+    private String status;
 }

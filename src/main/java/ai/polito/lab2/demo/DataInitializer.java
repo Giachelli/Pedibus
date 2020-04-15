@@ -3,11 +3,10 @@ package ai.polito.lab2.demo;
 
 
 import static reactor.bus.selector.Selectors.$;
-import ai.polito.lab2.demo.Entity.Child;
-import ai.polito.lab2.demo.Entity.Role;
-import ai.polito.lab2.demo.Entity.Route;
-import ai.polito.lab2.demo.Entity.User;
+
+import ai.polito.lab2.demo.Entity.*;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
+import ai.polito.lab2.demo.Repositories.MessageRepo;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.RouteService;
@@ -17,15 +16,12 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
-import org.springframework.context.annotation.Bean;
-import reactor.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import reactor.bus.EventBus;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 @Component
 @Slf4j
@@ -49,6 +45,8 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private ChildRepo childRepo;
 
+    @Autowired
+    private MessageRepo messageRepo;
     @Override
     public void run(String... args) throws Exception {
         routeController.PopulateDb();
@@ -77,6 +75,7 @@ public class DataInitializer implements CommandLineRunner {
             );
             insertUserIntoDB(routeId);
             insertChildIntoDB();
+            insertMessageDb();
         }
 /*
         log.debug("printing all users...");
@@ -318,6 +317,19 @@ public class DataInitializer implements CommandLineRunner {
             newMuleRole.setRole("ROLE_MULE");
             roleRepository.save(newMuleRole);
         }
+    }
+
+    private void insertMessageDb() {
+        System.out.println("Provo a creare il message");
+        this.messageRepo.save(
+                Message.builder()
+                        .senderID(users.findByUsername("user1@info.it").get_id())
+                        .action("Ho modificato il turno")
+                        .receiverID(users.findByUsername("user2@info.it").get_id())
+                        .date(new Date().getTime())
+                        .read(false)
+                        .build()
+        );
     }
 
 

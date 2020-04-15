@@ -17,6 +17,7 @@ public class Shift {
     private int lineaID; //id della linea
     private long date;//andata o ritorno
     private boolean direction; //se è settato True = andata , false se è ritorno
+    private String status; // tre valori: pending, accepted, rejected
 
 
 }
