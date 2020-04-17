@@ -75,7 +75,7 @@ public class DataInitializer implements CommandLineRunner {
             );
             insertUserIntoDB(routeId);
             insertChildIntoDB();
-            insertMessageDb();
+          //  insertMessageDb();
         }
 /*
         log.debug("printing all users...");
@@ -318,7 +318,7 @@ public class DataInitializer implements CommandLineRunner {
             roleRepository.save(newMuleRole);
         }
     }
-
+    /*
     private void insertMessageDb() {
         System.out.println("Provo a creare il message");
         this.messageRepo.save(
@@ -331,6 +331,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
     }
+    */
 
 
 }

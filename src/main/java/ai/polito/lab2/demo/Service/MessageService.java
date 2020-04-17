@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 public interface MessageService {
     ArrayList<Message> findMessagesByReceiverID (ObjectId receiverID);
-    void createMessageShift (ObjectId senderID, ObjectId receiverID, String action, long time);
+    void createMessageShift (ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId shiftID);
+    void createMessageResponse(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId shiftID, String status);
     Message findMessageByMessageID (ObjectId messageID);
-    void updateRead(Message m);
+    void update(Message m);
+    Message findMessageByShiftID(ObjectId shiftID);
 }

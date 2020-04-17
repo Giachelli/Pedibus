@@ -12,5 +12,6 @@ import java.util.ArrayList;
 public interface MessageRepo extends MongoRepository<Message, ObjectId>{
     ArrayList<Message> findAllByReceiverID(ObjectId receiverID);
     Message findMessageByMessageID(ObjectId messageID);
+    Message findMessageByShiftID(ObjectId messageID);
 }
 

@@ -14,7 +14,6 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepo messageRepo;
 
-
     public ArrayList<Message> findMessagesByReceiverID(ObjectId receiverID){
 
         ArrayList<Message> messages = messageRepo.findAllByReceiverID(receiverID);
@@ -26,20 +25,45 @@ public class MessageServiceImpl implements MessageService {
         return messageRepo.findMessageByMessageID(messageID);
     }
 
-    public void updateRead (Message message){
+    public void update (Message message){
         messageRepo.save(message);
     }
-    public void createMessageShift(ObjectId senderID, ObjectId receiverID, String action, long time){
+
+    public void createMessageShift(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId shiftID){
+
+
         Message message = Message.builder()
                             .senderID(senderID)
                             .receiverID(receiverID)
                             .action(action)
                             .read(false)
                             .date(time)
+                            .shiftID(shiftID)
                             .status("pending")
                             .build();
 
         messageRepo.save(message);
 
+    }
+
+    public void createMessageResponse(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId shiftID,String status){
+
+
+        Message message = Message.builder()
+                .senderID(senderID)
+                .receiverID(receiverID)
+                .action(action)
+                .read(false)
+                .date(time)
+                .shiftID(shiftID)
+                .status(status)
+                .build();
+
+        messageRepo.save(message);
+
+    }
+
+    public Message findMessageByShiftID(ObjectId shiftID){
+        return messageRepo.findMessageByShiftID(shiftID);
     }
 }

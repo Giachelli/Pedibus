@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Dto.ShiftDTO;
+import ai.polito.lab2.demo.Entity.Message;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.Shift;
 import ai.polito.lab2.demo.Entity.User;
@@ -86,14 +87,15 @@ public class ShiftController {
             Shift shift = shiftService.save(t);
             //notificare gli admin di linea
 
-            String direzione = shiftVM.isDirection() ? "andata" : "ritorno";
-            String pattern = "dd-MM";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            String date = simpleDateFormat.format(new Date (shiftVM.getData()));
-            String action = "Turno definito per la linea "+ routeService.getRoutesByID(shiftVM.getLineId()).getNameR()+" il giorno " + date+" nella direzione di "+ direzione;
+            String action = "Richiesta turno";
 
             long day = new Date().getTime();
-            messageService.createMessageShift(admin.get_id(), u.get_id(), action, day);
+
+            messageService.createMessageShift(admin.get_id(), u.get_id(),
+                    action,
+                    day,
+                    shift.getTurnID()
+            );
 
             shiftVM.setShiftId(shift.getTurnID().toString());
             returnedList.add(shiftVM);
@@ -206,6 +208,48 @@ public class ShiftController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    //accettazione/rifiuto di un turno
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
+    @RequestMapping(value = "/shift/{shiftID}/{status}", method = RequestMethod.PUT)
+    public ResponseEntity editStatus(@PathVariable final ObjectId shiftID, @PathVariable String status) {
+
+        Shift t = shiftService.getTurnByID(shiftID);
+
+        //caso in cui il turno in questione è già stato modificato
+        if(!t.getStatus().equals("pending")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if (status.equals("accepted")|| status.equals("rejected")) {
+            System.out.println("entrato!!!!!!!!!!!!!!!!!!!!!!!!! status è:" + status);
+            t.setStatus(status);
+
+            shiftService.editTurn(t);
+
+            Message message = messageService.findMessageByShiftID(shiftID);
+
+            message.setStatus(status);
+            message.setRead(true);
+            messageService.update(message);
+
+
+
+            String action = status+" turn";
+
+            long day = new Date().getTime();
+
+            messageService.createMessageResponse(t.getMuleID(), t.getAdminID(),
+                    action,
+                    day,
+                    t.getTurnID(),
+                    status);
+
+            // TODO: fare crezione messaggio per un/più admin di linea(se ce ne sono più di uno (come risposta all'accettazione))
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     /*
     @RequestMapping(value = "/turn/confirm/{turnID}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
