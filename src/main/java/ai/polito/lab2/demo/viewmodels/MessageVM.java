@@ -8,6 +8,7 @@ import lombok.Data;
 public class MessageVM {
     String messageID;
     String shiftID;
+    String reservationID;
     String text;
     String sender;
     Boolean read;
@@ -15,5 +16,6 @@ public class MessageVM {
     String status;
     String dateShift;
     Boolean direction;
+    String directionReservation;
     String nameLinea;
 }

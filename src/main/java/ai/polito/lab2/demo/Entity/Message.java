@@ -19,6 +19,7 @@ public class Message {
     String action; //eg: Richiesta turno, Accettazione/Rifiuto turno, Richiesta bimbo
     private long date;
     ObjectId shiftID;
+    ObjectId reservationID;
     Boolean read;
     String status; // pending, accepted, rejected
 }

@@ -238,7 +238,8 @@ public class ShiftController {
 
             long day = new Date().getTime();
 
-            messageService.createMessageResponse(t.getMuleID(), t.getAdminID(),
+            messageService.createMessageResponse(t.getMuleID(),
+                    t.getAdminID(),
                     action,
                     day,
                     t.getTurnID(),

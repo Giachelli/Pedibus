@@ -29,6 +29,8 @@ public interface RouteService {
 
        void readAll() throws IOException;
 
+       List<String> getAccompagnaotori(int lineaID);
+
       /*  Route getReservationByDate(Route route);      //addNewUser
 
         Object addReservation(String userId);       //getAllUserSettings

@@ -63,6 +63,38 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
+    public void createMessageResponse(ObjectId senderID, ObjectId receiverID, String action, long time){
+
+
+        Message message = Message.builder()
+                .senderID(senderID)
+                .receiverID(receiverID)
+                .action(action)
+                .read(false)
+                .date(time)
+                .build();
+
+        messageRepo.save(message);
+
+    }
+
+    public void createMessageReservation(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId reservationID){
+
+
+        Message message = Message.builder()
+                .senderID(senderID)
+                .receiverID(receiverID)
+                .action(action)
+                .read(false)
+                .date(time)
+                .reservationID(reservationID)
+                .build();
+
+        messageRepo.save(message);
+
+    }
+
+
     public Message findMessageByShiftID(ObjectId shiftID){
         return messageRepo.findMessageByShiftID(shiftID);
     }

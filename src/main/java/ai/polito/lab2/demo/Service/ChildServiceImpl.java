@@ -2,18 +2,26 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.ChildDTO;
 import ai.polito.lab2.demo.Entity.Child;
+import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ChildServiceImpl implements ChildService {
 
     @Autowired
     private ChildRepo childRepo;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
 
     // ricerca un Child tramite ID
@@ -60,5 +68,13 @@ public class ChildServiceImpl implements ChildService {
         Child c = childDTO.convert(familyID);
         childRepo.save(c);
 
+    }
+
+    public Child findChildByNameChildAndUsername(String nameChild, String username){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("nameChild").is(nameChild).and("username").is(username));
+        List<Child> child= mongoTemplate.find(query, Child.class);
+        System.out.println("child list size::::::::" + child.size());
+        return child.get(0);
     }
 }

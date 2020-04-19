@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.ArrayUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,11 +119,25 @@ public class RouteServiceImpl implements RouteService {
 
     }
 
+    @Override
+    public List<String> getAccompagnaotori(int lineaID) {
+        List<String> accompagnatori = new ArrayList<>();
 
+        Route route = routeRepo.findRouteById(lineaID);
 
+            // da verificare se questo accompagnatori si comporta bene
+        accompagnatori=route.getUsernameAdmin();
 
+        accompagnatori.addAll(route.getUsernameMule());
 
-   /* @Override
+        accompagnatori.forEach((x) ->{
+            System.out.println(x);
+        });
+
+        return accompagnatori;
+    }
+
+    /* @Override
     public Route getRouteByName(String nameR) {
         Query query = new Query();
         query.addCriteria(Criteria.where("nameR").is(nameR));

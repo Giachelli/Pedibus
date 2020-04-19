@@ -9,8 +9,10 @@ import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
+import ai.polito.lab2.demo.Service.MessageService;
 import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
+import ai.polito.lab2.demo.Service.UserService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,7 +49,14 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @Autowired
+    private MessageService messageService;
+
+    // TODO: cambiare con service
+    @Autowired
     private ChildRepo childRepo;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private RouteRepo routeRepo;
@@ -91,17 +100,49 @@ public class ReservationController {
 
 
         int routeID = routeService.getRoutesByName(r.getName_route()).getId();
+
+        /*  TODO: DA USARE QUANDO IL MESSAGGIO SARà RICEVUTO DA PIù USER
+
+        List<ObjectId> receiverIDs = new ArrayList<>();
+
+        for (String accompagnatore : routeService.getAccompagnaotori(routeID)){
+            receiverIDs.add(userService.getUserByUsername(accompagnatore).get_id());
+        }
+         */
+
+
         r.setRouteID(routeID);
+
         //questo childRepo non dovrebbe essere utilizzato
         r.setBooked(true);
         reservationService.save(r);
-        System.out.println(r);
+
+
+        Child child = childRepo.findChildByChildID(childID);
+
+        ObjectId senderID = userService.getUserByUsername(child.getUsername()).get_id();
+        ObjectId receiverID=userService.getUserByUsername("admin@info.it").get_id();
+
+
+        String action = "Prenotazione bimbo";
+        long day = new Date().getTime();
+
+        //TODO: far si che i messaggi vengano inviati agli admin di linea (quindi secondo argomento deve essere un array)
+        messageService.createMessageReservation(senderID,
+                receiverID,
+                action,
+                day,
+                r.getId());
+
+      /*
+        System.out.println("Prima di ricercare la prenotazione nel DB::::::::::" + r);
         r = reservationService.findReservationByStopIDAndDataAndChildID(stopID,data,childID);
         System.out.println("Nuova Prenotazione");
+        System.out.println("DOPO di ricercare la prenotazione nel DB::::::::::" + r);
         System.out.println(r);
         //        Reservation r = reservationService.createReservation(reservationDTO);
         // String idReservation = r.getId().toString();
-
+      */
         return new ResponseEntity<Reservation>(r,HttpStatus.CREATED);
 
     }
@@ -369,14 +410,14 @@ public class ReservationController {
         System.out.println("family_name :" + family_name);
         ArrayList<ReservationCalendarVM> reservationCalendarVMS = new ArrayList<>();
         reservationCalendarVMS = reservationService.reservationFamily(family_name);
-
         return ok().body(reservationCalendarVMS);
     }
 
+
+    // A livello stilistico era meglio farlo con il PathParam ma funziona anche così
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.DELETE)
     public ResponseEntity deleteChildReservation(@RequestParam (required = true) ObjectId id) throws JsonProcessingException {
-        System.out.println("id :" + id);
 
         reservationService.delete(id);
 

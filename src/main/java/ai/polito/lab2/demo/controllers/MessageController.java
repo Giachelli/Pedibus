@@ -1,14 +1,8 @@
 package ai.polito.lab2.demo.controllers;
 
-import ai.polito.lab2.demo.Entity.Message;
-import ai.polito.lab2.demo.Entity.Route;
-import ai.polito.lab2.demo.Entity.Shift;
-import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.Entity.*;
 import ai.polito.lab2.demo.Repositories.UserRepo;
-import ai.polito.lab2.demo.Service.MessageService;
-import ai.polito.lab2.demo.Service.RouteService;
-import ai.polito.lab2.demo.Service.ShiftService;
-import ai.polito.lab2.demo.Service.UserService;
+import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.viewmodels.MessageVM;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +34,8 @@ public class MessageController {
     @Autowired
     private ShiftService shiftService;
 
+    @Autowired
+    private ReservationService reservationService;
 
 
     @RequestMapping(value = "/messages", method = RequestMethod.GET)
@@ -51,10 +47,11 @@ public class MessageController {
 
         for (Message message : messages)
         {
+            String senderName = userService.getUserBy_id(message.getSenderID()).getUsername();
+            //Get messaggio turni
             if(message.getShiftID()!=null){
 
                 Shift shift = shiftService.getTurnByID(message.getShiftID());
-                String senderName = userService.getUserBy_id(message.getSenderID()).getUsername();
                 String pattern = "dd/MM";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 String date = simpleDateFormat.format(new Date(shift.getDate()));
@@ -72,7 +69,37 @@ public class MessageController {
                         .nameLinea(routeService.getRoutesByID(shift.getLineaID()).getNameR())
                         .build();
                 messageVMS.add(messageVM);
-            };
+            }else if(message.getReservationID()!=null){ //get messaggio che concerne le reservation
+                Reservation reservation = reservationService.findReservationById(message.getReservationID());
+                String pattern = "dd/MM";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String date = simpleDateFormat.format(new Date(reservation.getDate()));
+
+                MessageVM messageVM = MessageVM.builder()
+                        .sender(senderName)
+                        .messageID(message.getMessageID().toString())
+                        .text(message.getAction())
+                        .read(message.getRead())
+                        .date(message.getDate())
+                        .reservationID(message.getReservationID().toString())
+                        .dateShift(date)
+                        .directionReservation(reservation.getDirection())
+                        .nameLinea(routeService.getRoutesByID(reservation.getRouteID()).getNameR())
+                        .build();
+                messageVMS.add(messageVM);
+
+            }else{ //get messaggio che concerne il bimbo
+                {
+                    MessageVM messageVM = MessageVM.builder()
+                            .sender(senderName)
+                            .messageID(message.getMessageID().toString())
+                            .text(message.getAction())
+                            .read(message.getRead())
+                            .date(message.getDate())
+                            .build();
+                    messageVMS.add(messageVM);
+                };
+            }
         }
 
         return ok().body(messageVMS);

@@ -16,4 +16,6 @@ public interface ChildService {
     ChildDTO findChildbyFamilyName(String familyName);
 
     void saveChild(ChildDTO childDTO, ObjectId familyID);
+
+    Child findChildByNameChildAndUsername(String nameChild, String username);
 }
