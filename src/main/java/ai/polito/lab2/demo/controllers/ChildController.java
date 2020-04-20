@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo.controllers;
 
 
+import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Route;
@@ -50,6 +51,7 @@ public class ChildController {
         //caso in cui il child viene iscritto con una linea e una fermata di default
         if (data.getNameRoute()!=null && data.getDirection() != null && data.getStopID()!=null) {
             int routeID = routeService.findIDRouteByNameR(data.getNameRoute());
+            RouteDTO r = routeService.findRouteByNameR(data.getNameRoute());
 
              child = Child.builder()
                     .nameChild(data.getNameChild())

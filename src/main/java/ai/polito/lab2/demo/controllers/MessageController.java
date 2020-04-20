@@ -71,23 +71,23 @@ public class MessageController {
                 messageVMS.add(messageVM);
             }else if(message.getReservationID()!=null){ //get messaggio che concerne le reservation
                 Reservation reservation = reservationService.findReservationById(message.getReservationID());
-                String pattern = "dd/MM";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                String date = simpleDateFormat.format(new Date(reservation.getDate()));
-
-                MessageVM messageVM = MessageVM.builder()
-                        .sender(senderName)
-                        .messageID(message.getMessageID().toString())
-                        .text(message.getAction())
-                        .read(message.getRead())
-                        .date(message.getDate())
-                        .reservationID(message.getReservationID().toString())
-                        .dateShift(date)
-                        .directionReservation(reservation.getDirection())
-                        .nameLinea(routeService.getRoutesByID(reservation.getRouteID()).getNameR())
-                        .build();
-                messageVMS.add(messageVM);
-
+                if(reservation != null){
+                    String pattern = "dd/MM";
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                    String date = simpleDateFormat.format(new Date(reservation.getDate()));
+                    MessageVM messageVM = MessageVM.builder()
+                            .sender(senderName)
+                            .messageID(message.getMessageID().toString())
+                            .text(message.getAction())
+                            .read(message.getRead())
+                            .date(message.getDate())
+                            .reservationID(message.getReservationID().toString())
+                            .dateShift(date)
+                            .directionReservation(reservation.getDirection())
+                            .nameLinea(routeService.getRoutesByID(reservation.getRouteID()).getNameR())
+                            .build();
+                    messageVMS.add(messageVM);
+                }
             }else{ //get messaggio che concerne il bimbo
                 {
                     MessageVM messageVM = MessageVM.builder()

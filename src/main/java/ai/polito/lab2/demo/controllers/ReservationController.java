@@ -205,6 +205,10 @@ public class ReservationController {
         // nella MAPPA salire ci sono tutti i bimbi prenotati per una certa linea in una certa data
         // la chiave della mappa è il nome della fermata, value è una lista di utenti prenotati per quella fermata.
         Map<String, List<ChildReservationVM>> salire = reservationService.findReservationAndata(route.getId(), data);
+        salire.forEach((key,value) -> {
+            System.out.println("KEEEEEEEEY:::::" + key);
+            System.out.println("Valueeeeeeee::::" + value);
+        });
         // per ogni fermata contiene una serie di info e la lista dei passeggeri che sarebbe l'arrylist passeggeri.
         ArrayList<Stop_RegistrationVM> andata = new ArrayList<>();
         ArrayList<ChildReservationVM> passeggeri = new ArrayList<>();

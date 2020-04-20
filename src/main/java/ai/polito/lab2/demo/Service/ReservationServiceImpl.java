@@ -62,6 +62,9 @@ public class ReservationServiceImpl implements ReservationService {
         query.addCriteria(Criteria.where("routeID").is(linea).and("date").is(data).and("direction").is("andata"));
         query.with(new Sort(Sort.Direction.ASC, "stopID"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
+        res.forEach(reservation -> {
+            System.out.println("RESERVATION::::::::"+ reservation);
+        });
         Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
         String id_prec = "";
         List<String> passeggeri = new LinkedList<>();
