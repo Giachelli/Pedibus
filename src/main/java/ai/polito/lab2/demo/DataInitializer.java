@@ -5,12 +5,12 @@ package ai.polito.lab2.demo;
 import static reactor.bus.selector.Selectors.$;
 
 import ai.polito.lab2.demo.Entity.*;
-import ai.polito.lab2.demo.Repositories.ChildRepo;
-import ai.polito.lab2.demo.Repositories.MessageRepo;
-import ai.polito.lab2.demo.Repositories.RoleRepo;
-import ai.polito.lab2.demo.Repositories.UserRepo;
+import ai.polito.lab2.demo.Repositories.*;
 import ai.polito.lab2.demo.Service.RouteService;
+import ai.polito.lab2.demo.Service.StopService;
+import ai.polito.lab2.demo.controllers.ChildController;
 import ai.polito.lab2.demo.controllers.RouteController;
+import ai.polito.lab2.demo.viewmodels.ChildVM;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private ChildRepo childRepo;
+
+    @Autowired
+    private ChildController childController;
 
     @Autowired
     private MessageRepo messageRepo;
@@ -112,107 +115,59 @@ public class DataInitializer implements CommandLineRunner {
 
     private void insertChildIntoDB() {
         System.out.println("creano il child");
-        this.childRepo.save(
-                Child.builder()
+        Route r1 = routeService.getRoutesByID(2);
+        this.childController.registerChild(
+                ChildVM.builder()
                         .nameChild("Luigi")
                         .username("user1@info.it")
                         .family_name("Malnati")
+                        .color("#B0C4DE")
                         .isMale(true)
+                        .stopID(r1.getStopListA().get(0).get_id().toString())
+                        .stopName(r1.getStopListA().get(0).getNome())
+                        .nameRoute(r1.getNameR())
+                        .direction("andata")
                         .build()
         );
-        this.childRepo.save(
-                Child.builder()
+        this.childController.registerChild(
+                ChildVM.builder()
                         .nameChild("Mario")
                         .username("user2@info.it")
                         .family_name("Servetti")
                         .color("#F4D8CD")
                         .isMale(true)
+                        .stopID(r1.getStopListA().get(1).get_id().toString())
+                        .stopName(r1.getStopListA().get(1).getNome())
+                        .nameRoute(r1.getNameR())
+                        .direction("andata")
                         .build()
         );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Franco")
-                        .username("user2@info.it")
-                        .family_name("Servetti")
-                        .color("#ED4B4B")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Giacomo")
-                        .family_name("Cabodi")
-                        .username("user3@info.it")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Francesco")
+        this.childController.registerChild(
+                ChildVM.builder()
+                        .nameChild("Carla")
                         .username("user1@info.it")
                         .family_name("Malnati")
+                        .color("#2F4F4F")
                         .isMale(true)
+                        .stopID(r1.getStopListA().get(0).get_id().toString())
+                        .stopName(r1.getStopListA().get(0).getNome())
+                        .nameRoute(r1.getNameR())
+                        .direction("andata")
                         .build()
         );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Mauro")
-                        .family_name("Cabodi")
-                        .username("user3@info.it")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("David")
-                        .family_name("Malnati")
-                        .username("user1@info.it")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Jack")
-                        .family_name("Cabodi")
-                        .username("user3@info.it")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Paolo")
-                        .family_name("Lioy")
-                        .username("user4@info.it")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Antonio")
-                        .family_name("fgrtraa")
-                        .username("user6@info.it")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Giovanni")
-                        .family_name("Servetti")
-                        .color("#3A2E39")
+        this.childController.registerChild(
+                ChildVM.builder()
+                        .nameChild("Alice")
                         .username("user2@info.it")
-                        .isMale(true)
-                        .build()
-        );
-        this.childRepo.save(
-                Child.builder()
-                        .nameChild("Caterina")
                         .family_name("Servetti")
-                        .color("#1E555C")
-                        .username("user2@info.it")
-                        .isMale(false)
+                        .color("#D2691E")
+                        .isMale(true)
+                        .stopID(r1.getStopListA().get(1).get_id().toString())
+                        .stopName(r1.getStopListA().get(1).getNome())
+                        .nameRoute(r1.getNameR())
+                        .direction("andata")
                         .build()
         );
-
 
     }
 

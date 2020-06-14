@@ -49,6 +49,7 @@ public class ChildController {
         if (data.getNameChild()== "" || data.getUsername() == null || data.getFamily_name()==null || data.getColor()==null)
             return badRequest().build();
         //caso in cui il child viene iscritto con una linea e una fermata di default
+        //TODO aggiungere nel caso il ritorno solito
         if (data.getNameRoute()!=null && data.getDirection() != null && data.getStopID()!=null) {
             int routeID = routeService.findIDRouteByNameR(data.getNameRoute());
             RouteDTO r = routeService.findRouteByNameR(data.getNameRoute());
@@ -74,13 +75,28 @@ public class ChildController {
 
             child = childRepo.findChildByNameChildAndUsername(data.getNameChild(), data.getUsername());
             System.out.println("CHILD DOPO: " + child);
-
+            //todo controllare che entri qui quando sto a creare un bimbo
             if (data.getDirection() != null && !data.getDirection().equals("")) {
                 if (data.getDirection().equals("andata") || data.getDirection().equals("ritorno")) {
                     // TODO per ora lo faccio per due giorni ma è da fare per tutto il periodo scolastico
-
-                    long dataTimeStamp = new Date().getTime();
-                    for (int i = 0; i < 2; i++) {
+                    // Usare Calendar che permette tramite get(Day_of_the_week) di prendere la data corretta
+                    Calendar today = Calendar.getInstance();
+                    today.set(Calendar.MILLISECOND, 0);
+                    today.set(Calendar.SECOND, 0);
+                    today.set(Calendar.MINUTE, 0);
+                    today.set(Calendar.HOUR_OF_DAY, 0);
+                    int day = 0;
+                    long dataTimeStamp;
+                    int j = 7;
+                    for (int i = 0; i < j; i++) {
+                        day = today.get(Calendar.DAY_OF_WEEK);
+                        dataTimeStamp = today.getTimeInMillis();
+                        if(day == 1 || day == 7)
+                        {
+                            today.add(Calendar.DATE,1);
+                            j++;
+                            continue;
+                        }
                         Reservation reservation = Reservation.builder()
                                 .childID(child.getChildID())
                                 .familyName(child.getFamily_name())
@@ -94,8 +110,8 @@ public class ChildController {
                                 .build();
 
                         reservationService.save(reservation);
-
-                        dataTimeStamp = dataTimeStamp + 86400000;
+                        // aggiungere tramite calendar con set + 1
+                        today.add(Calendar.DATE,1);
                     }
                 }
                 //TODO: fare caso in cui chi iscrive il bambino vuole iscriverlo sia per l'andata che per il ritorno
@@ -157,6 +173,7 @@ public class ChildController {
 
         ChildVM data_return = data;
         data_return.setChildID(child.getChildID().toString());
+        System.out.println("Arrivo qui e ed esco");
         return ok().body(data_return);
     }
 
