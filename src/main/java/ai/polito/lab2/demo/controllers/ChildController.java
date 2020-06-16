@@ -80,7 +80,8 @@ public class ChildController {
                 if (data.getDirection().equals("andata") || data.getDirection().equals("ritorno")) {
                     // TODO per ora lo faccio per due giorni ma è da fare per tutto il periodo scolastico
                     // Usare Calendar che permette tramite get(Day_of_the_week) di prendere la data corretta
-                    Calendar today = Calendar.getInstance();
+                    TimeZone timeZone = TimeZone.getTimeZone("UTC");
+                    Calendar today = Calendar.getInstance(timeZone);
                     today.set(Calendar.MILLISECOND, 0);
                     today.set(Calendar.SECOND, 0);
                     today.set(Calendar.MINUTE, 0);

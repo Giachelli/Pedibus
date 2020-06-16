@@ -194,7 +194,7 @@ public class ReservationController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{nome_linea}/{data}", method = RequestMethod.GET)
     public ResponseEntity getPeople(@PathVariable String nome_linea, @PathVariable long data) throws JsonProcessingException, ParseException {
-
+        System.out.println("data richiesta "+data);
         Route route = routeService.getRoutesByName(nome_linea);
         ArrayList<ChildReservationVM> notBookedA = new ArrayList<>();
         ArrayList<ChildReservationVM> notBookedR = new ArrayList<>();
