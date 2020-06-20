@@ -192,6 +192,14 @@ public class ReservationServiceImpl implements ReservationService {
        });
        return rcvms;
     }
+
+    @Override
+    public Reservation findReservationByChildIDAndData(ObjectId childID, long data) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("date").is(data).and("childID").is(childID));
+        List<Reservation> r = mongoTemplate.find(query, Reservation.class);
+        return r.get(0);
+    }
 }
 
 
