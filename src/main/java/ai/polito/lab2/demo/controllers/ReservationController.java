@@ -82,6 +82,12 @@ public class ReservationController {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
 
+        Reservation r = reservationService.findReservationByChildIDAndData(childID, data);
+        if(r != null)
+        {
+            reservationService.delete(r.getId());
+        }
+
         if(routeRepo.findRouteByNameR(nome_linea) == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //TODO far tornare un errore
 
@@ -89,7 +95,7 @@ public class ReservationController {
         if (this.controlName_RouteAndStop(nome_linea, stopID))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //TODO far tornare un errore
 
-        Reservation r = Reservation.builder()
+        r = Reservation.builder()
                 .childID(childID)
                 .stopID(stopID)
                 .familyName(reservationVM.getFamily_name())

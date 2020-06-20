@@ -131,6 +131,22 @@ public class ShiftController {
         return new ResponseEntity(shifts, HttpStatus.OK);
     }
 
+    //get dei turni per una linea (linea id)
+    @RequestMapping(value = "/shift/{routeID}", method = RequestMethod.GET)
+    public ResponseEntity getRouteShifts(@PathVariable final int routeID){
+        Route r = routeService.getRoutesByID(routeID);
+        if(r == null)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<ShiftCreateVM> shifts = shiftService.getTurnsRoute(routeID);
+
+        System.out.println("per la linea "+r.getNameR()+ " sono state trovate queste prenotazioni (numero):  "+shifts.size() );
+
+        return new ResponseEntity(shifts, HttpStatus.OK);
+    }
+
     //get dei turni per una linea (linea id) per un mule (mule ID)
     @RequestMapping(value = "/shift/{routeID}/{muleID}", method = RequestMethod.GET)
     public ResponseEntity getMuleShiftsAfter(@PathVariable final int routeID,@PathVariable final ObjectId muleID){
