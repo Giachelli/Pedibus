@@ -18,5 +18,5 @@ public interface ReservationRepo extends MongoRepository<Reservation, ObjectId> 
 
     List<Reservation> findReservationByFamilyName(String family_name);
 
-    Reservation findReservationByChildIDAndData(ObjectId childID, long data);
+    Reservation findReservationByChildIDAndDate(ObjectId childID, long data);
 }
