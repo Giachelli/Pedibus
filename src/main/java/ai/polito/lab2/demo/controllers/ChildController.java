@@ -214,6 +214,7 @@ public class ChildController {
         System.out.println("arrivo qui "+ children.size());
         for (Child r : children) {
             System.out.println("name: " + r.getNameChild());
+            Reservation reservation= reservationService.findRecentReservation(r.getChildID(),new Date().getTime());
             if (r.getStopID()!=null && r.getNameRoute()!=null && r.getDirection()!=null){
                 String stopName = stopService.findStopbyId(new ObjectId(r.getStopID())).getNome();
                 childrenVM.add(
@@ -226,6 +227,7 @@ public class ChildController {
                                 .isMale(r.isMale())
                                 .direction(r.getDirection())
                                 .nameRoute(r.getNameRoute())
+                                .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
                                 .stopID(r.getStopID())
                                 .stopName(stopName)
                                 .build()
@@ -237,6 +239,7 @@ public class ChildController {
                                 .nameChild(r.getNameChild())
                                 .family_name(r.getFamily_name())
                                 .color(r.getColor())
+                                .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
                                 .username(r.getUsername())
                                 .isMale(r.isMale())
                         .build());

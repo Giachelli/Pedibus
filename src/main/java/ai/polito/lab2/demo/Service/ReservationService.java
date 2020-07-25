@@ -35,4 +35,6 @@ public interface ReservationService {
     ArrayList<ReservationCalendarVM> reservationFamily (String family_name);
 
     Reservation findReservationByChildIDAndData(ObjectId childID, long data);
+
+    Reservation findRecentReservation(ObjectId childID, long data);
 }

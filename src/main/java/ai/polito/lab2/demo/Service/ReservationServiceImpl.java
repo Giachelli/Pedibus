@@ -55,6 +55,22 @@ public class ReservationServiceImpl implements ReservationService {
         return  reservationRepo.save(res);
     }*/
 
+    public Reservation findRecentReservation(ObjectId childID, long data){
+        Query query = new Query();
+        System.out.println("data::::::::::::::::::::::"+ data);
+        query.addCriteria(Criteria.where("childID").is(childID).and("date").gt(data));
+        query.with(new Sort(Sort.Direction.ASC, "date"));
+        List<Reservation> res = mongoTemplate.find(query, Reservation.class);
+        if (res.size()==0){
+            System.out.println("sono nel size = 0::::::::::::"+ data);
+
+            return null;
+        }else{
+            System.out.println("sono nel else del size = 0::::::::::::"+ data);
+            return res.get(0);
+        }
+    }
+
     public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
         System.out.println("Entro in findReservationAndata con date "+ data);
         int i = 0;
@@ -195,10 +211,17 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation findReservationByChildIDAndData(ObjectId childID, long data) {
+        System.out.println("date: " + data);
+        Long temp = data;
+        System.out.println("temp: " + temp);
         Query query = new Query();
-        query.addCriteria(Criteria.where("date").is(data).and("childID").is(childID));
+        query.addCriteria(Criteria.where("date").is(temp).and("childID").is(childID));
         List<Reservation> r = mongoTemplate.find(query, Reservation.class);
-        return r.get(0);
+        if (r.size()==0){
+            return null;
+        }
+        else
+            return r.get(0);
     }
 }
 

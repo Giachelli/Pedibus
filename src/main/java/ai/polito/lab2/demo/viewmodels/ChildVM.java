@@ -19,9 +19,10 @@ public class ChildVM {
     private String stopID;
     private String stopName;
     private String nameRoute;
-    private String direction; //può essere sia solo andata, sia solo ritorno, sia entrambi -> bisogna mapparla con i true false degli altri direction
+    private String direction;//può essere sia solo andata, sia solo ritorno, sia entrambi -> bisogna mapparla con i true false degli altri direction
     //private date forever //da vedè come fare
-
+    private String nextCorsa;
+    private String hourNextCorsa;
 
 
 }
