@@ -4,6 +4,7 @@ package ai.polito.lab2.demo;
 
 import static reactor.bus.selector.Selectors.$;
 
+import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.*;
 import ai.polito.lab2.demo.Repositories.*;
 import ai.polito.lab2.demo.Service.RouteService;
@@ -87,8 +88,9 @@ public class DataInitializer implements CommandLineRunner {
 
     //funzione semplice che verrà cancellata ma che serve per testare
     private void setMule_Admin_Test() {
-        Route r1 = routeService.getRoutesByID(1);
+        Route r1  = routeService.getRoutesByID(1);
         Route r2 = routeService.getRoutesByID(2);
+
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
@@ -98,7 +100,8 @@ public class DataInitializer implements CommandLineRunner {
         routeService.saveRoute(r1);
 
         r1 = routeService.getRoutesByID(3);
-        r2 = routeService.getRoutesByID(4);
+        r1 = routeService.getRoutesByID(4);
+
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));

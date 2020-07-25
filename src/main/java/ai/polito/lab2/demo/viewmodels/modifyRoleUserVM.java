@@ -10,6 +10,6 @@ import java.util.ArrayList;
 @Data
 @Builder
 public class modifyRoleUserVM {
-    ArrayList<Route> newAdminRoutes;
-    ArrayList<Route> newMuleRoutes;
+    ArrayList<Integer> newAdminRoutes;
+    ArrayList<Integer> newMuleRoutes;
 }

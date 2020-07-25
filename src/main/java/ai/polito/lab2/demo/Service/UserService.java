@@ -171,6 +171,18 @@ public class UserService implements IUserService {
         return true;
     }
 
+    public void updateUser(UserDTO newAdmin) {
+        User user = User.builder().
+                username(newAdmin.getEmail()).
+                roles(newAdmin.getRoles()).
+                token(newAdmin.getToken()).
+                expiryDate(newAdmin.getExpiryDate()).
+                isEnabled(false).build();
+
+        this.userRepo.save(user);
+
+    }
+
     /*public void createPasswordResetTokenForUser(User user, String token) {
 
         user.setPasstoken(token);

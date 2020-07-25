@@ -56,7 +56,14 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Route getRoutesByID(int routeID) {
+
         return routeRepo.findRouteById(routeID);
+    }
+
+    @Override
+    public RouteDTO getRoutesDTOByID(int routeID) {
+
+        return routeRepo.findRouteById(routeID).convertToRouteDTO();
     }
 
 
@@ -95,7 +102,9 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public void saveRoute(RouteDTO r) {
+
         routeRepo.save(r.convertToRoute(this.getIdR()));
+
     }
 
     @Override

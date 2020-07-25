@@ -13,7 +13,6 @@ import java.util.List;
 
 @Document(collection = "route")
 @Data
-
 public class Route {
     @Id
     private int id;
@@ -35,6 +34,7 @@ public class Route {
                 .stopListA(this.getStopListA())
                 .stopListB(this.getStopListB())
                 .usernamesAdmin(this.getUsernameAdmin())
+                .usernameMule(this.getUsernameMule())
                 .lastModified(this.getLastModified()).build();
     }
 
