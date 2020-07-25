@@ -103,10 +103,14 @@ public class User implements UserDetails {
     // TODO eliminare i duplicati se esistono
 
     public void addAdminRoutesID(ArrayList<Integer> adminRouteID) {
+        if(this.adminRoutesID == null)
+            this.adminRoutesID = new ArrayList<>();
         this.adminRoutesID.addAll(adminRouteID);
     }
 
     public void addMuleRoutesID(ArrayList<Integer> muleRouteID) {
+        if(this.muleRoutesID == null)
+            this.muleRoutesID = new ArrayList<>();
         this.muleRoutesID.addAll(muleRouteID);
     }
 }

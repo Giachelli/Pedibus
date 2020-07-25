@@ -43,7 +43,6 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ShiftCreateVM>> createShift(@RequestBody List<ShiftCreateVM> shiftVMList) {
-
         List<ShiftCreateVM> returnedList = new ArrayList<>();
 
         /*
