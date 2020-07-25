@@ -12,14 +12,14 @@
     "lng": "7.6642197"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio via Massena, fermata Bus",
+      "nome": "Corso Stati Uniti- Incrocio via Massena (fermata Bus)",
       "num_s": 2,
       "time": "8:00",
       "lat": "45.0611421",
       "lng": "7.6734554"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto, capolinea Bus",
+      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto (capolinea Bus)",
       "num_s": 3,
       "time": "8:10",
       "lat": "45.0627537",
@@ -56,14 +56,14 @@
       "lng": "7.6672473"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto, capolinea Bus",
+      "nome": "Corso Stati Uniti- Incrocio Corso Re Umberto (capolinea Bus)",
       "num_s": 3,
       "time": "16:15",
       "lat": "45.0627537",
       "lng": "7.6702514"
     },
     {
-      "nome": "Corso Stati Uniti- Incrocio via Massena, fermata Bus",
+      "nome": "Corso Stati Uniti- Incrocio via Massena (fermata Bus)",
       "num_s": 4,
       "time": "16:25",
       "lat": "45.0611421",
