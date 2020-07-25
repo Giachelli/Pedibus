@@ -116,27 +116,44 @@ public class ChildController {
                     }
                 }
                 //TODO: fare caso in cui chi iscrive il bambino vuole iscriverlo sia per l'andata che per il ritorno
-                /*else if (data.getDirection().equals("andata|ritorno")){
-                    long dataTimeStamp = new Date().getTime();
-                    for (int i = 0; i<4; i++){
-                        String direzione = "";
-                        if ( i<2){
-                            direzione = "andata";
+                /*else if (data.getDirection().equals("entrambi")) {
+                    for (int k = 0; k <= 1; k++) {
+                        String direzione ="andata";
+                        if(k==1)
+                            direzione="ritorno";
+                        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+                        Calendar today = Calendar.getInstance(timeZone);
+                        today.set(Calendar.MILLISECOND, 0);
+                        today.set(Calendar.SECOND, 0);
+                        today.set(Calendar.MINUTE, 0);
+                        today.set(Calendar.HOUR_OF_DAY, 0);
+                        int day = 0;
+                        long dataTimeStamp;
+                        int j = 7;
+                        for (int i = 0; i < j; i++) {
+                            day = today.get(Calendar.DAY_OF_WEEK);
+                            dataTimeStamp = today.getTimeInMillis();
+                            if (day == 1 || day == 7) {
+                                today.add(Calendar.DATE, 1);
+                                j++;
+                                continue;
+                            }
+                            Reservation reservation = Reservation.builder()
+                                    .childID(child.getChildID())
+                                    .familyName(child.getFamily_name())
+                                    .date(dataTimeStamp)
+                                    .direction(direzione)
+                                    .name_route(data.getNameRoute())
+                                    .routeID(routeID)
+                                    .stopID(new ObjectId(data.getStopID()))
+                                    .booked(true)
+                                    .inPlace(false)
+                                    .build();
+
+                            reservationService.save(reservation);
+                            // aggiungere tramite calendar con set + 1
+                            today.add(Calendar.DATE, 1);
                         }
-                        Reservation reservation = Reservation.builder()
-                                .childID(child.getChildID())
-                                .familyName(child.getFamily_name())
-                                .date(dataTimeStamp)
-                                .direction(data.getDirection())
-                                .routeID(routeID)
-                                .stopID(new ObjectId(data.getStopID()))
-                                .booked(true)
-                                .inPlace(false)
-                                .build();
-
-                        reservationService.save(reservation);
-
-                        dataTimeStamp= dataTimeStamp+86400000;
                     }
                 }*/
 

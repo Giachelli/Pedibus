@@ -248,9 +248,13 @@ public class ShiftController {
             message.setRead(true);
             messageService.update(message);
 
+            String stato = "";
+            if(status.equals("accepted"))
+                stato="Accettato";
+            else if(status.equals("rejected"))
+                stato="Rifiutato";
 
-
-            String action = status+" turn";
+            String action = "Turno " + stato;
 
             long day = new Date().getTime();
 
