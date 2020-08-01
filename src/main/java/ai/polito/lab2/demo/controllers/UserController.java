@@ -271,30 +271,30 @@ public class UserController {
     }*/
 
 
+    // TODO dobbiamo vedere se modificando qualcosa si riblocca il resto da altre parti
     @RequestMapping(value = "/users/{userID}/getAdminLines", method = RequestMethod.GET)
     public ResponseEntity<UserRouteVM> getUserLines(@RequestBody ObjectId userID) {
         User user = userService.getUserBy_id(userID);
-        ArrayList<Route> adminRoute = new ArrayList<>();
-        ArrayList<Route> muleRoute = new ArrayList<>();
+        ArrayList<Integer> adminRoute = new ArrayList<>();
+        ArrayList<Integer> muleRoute = new ArrayList<>();
 
         for (int i : user.getAdminRoutesID()) {
             Route r = routeService.getRoutesByID(i);
             if (r == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
             }
-            adminRoute.add(r);
+            adminRoute.add(i);
         }
         for (int i : user.getMuleRoutesID()) {
             Route r = routeService.getRoutesByID(i);
             if (r == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
             }
-            muleRoute.add(r);
+            muleRoute.add(i);
         }
 
         UserRouteVM userVM = UserRouteVM.builder()
                 .userID(user.get_id())
-                .username(user.getUsername())
                 .adminRoute(adminRoute)
                 .muleRoute(muleRoute)
                 .build();
