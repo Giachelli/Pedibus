@@ -10,9 +10,8 @@ import java.util.ArrayList;
 @Data
 @Builder
 public class UserRouteVM {
-    private String username;
     private ObjectId userID;
-    private ArrayList<Route> adminRoute;
-    private ArrayList<Route> muleRoute;
+    private ArrayList<Integer> adminRoute;
+    private ArrayList<Integer> muleRoute;
 
 }
