@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class UserRouteVM {
     private String username;
     private ObjectId userID;
-    private ArrayList<Route> adminRoute;
-    private ArrayList<Route> muleRoute;
+    private ArrayList<Integer> adminRoutes;
+    private ArrayList<Integer> muleRoutes;
 
 }

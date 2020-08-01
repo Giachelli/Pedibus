@@ -173,8 +173,8 @@ public class UserController {
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
     public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
         User user = userService.getUserBy_id(userID);
-        ArrayList<Integer> adminRoutes = modifyRoleUser.getNewAdminRoutes();
-        ArrayList<Integer> muleRoutes = modifyRoleUser.getNewMuleRoutes();
+        ArrayList<Integer> adminRoutes = modifyRoleUser.getAdminRoutes();
+        ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
 
         ArrayList<Integer> adminRouteID = new ArrayList<>();
         ArrayList<Integer> muleRouteID = new ArrayList<>();
@@ -184,10 +184,14 @@ public class UserController {
             if (r == null) {
                 System.out.println("Errore nella modify USer passo un id non esistente");
             }
-            adminRouteID.add(i);
-            Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
-            addAdminRoute.addAdmin(user.getUsername());
-            routeService.saveRoute(addAdminRoute);
+            // controllo che non sia già Admin per la linea
+            if (user.getAdminRoutesID() != null)
+                if (!user.getAdminRoutesID().contains(i)) {
+                    adminRouteID.add(i);
+                    Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
+                    addAdminRoute.addAdmin(user.getUsername());
+                    routeService.saveRoute(addAdminRoute);
+                }
         }
         if (adminRoutes.size() > 0)
             if (!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
@@ -206,10 +210,14 @@ public class UserController {
             if (r == null) {
                 System.out.println("Errore nella modify USer passo un id non esistente");
             }
-            muleRouteID.add(j);
-            Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
-            addMuleRoute.addMule(user.getUsername());
-            routeService.saveRoute(addMuleRoute);
+            // controllo che non sia già Mule per la linea
+            if (user.getMuleRoutesID() != null)
+                if (!user.getMuleRoutesID().contains(j)) {
+                    muleRouteID.add(j);
+                    Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
+                    addMuleRoute.addMule(user.getUsername());
+                    routeService.saveRoute(addMuleRoute);
+                }
         }
 
         if (muleRoutes.size() > 0)
@@ -272,31 +280,37 @@ public class UserController {
 
 
     @RequestMapping(value = "/users/{userID}/getAdminLines", method = RequestMethod.GET)
-    public ResponseEntity<UserRouteVM> getUserLines(@RequestBody ObjectId userID) {
+    public ResponseEntity<UserRouteVM> getUserLines(@PathVariable ObjectId userID) {
         User user = userService.getUserBy_id(userID);
-        ArrayList<Route> adminRoute = new ArrayList<>();
-        ArrayList<Route> muleRoute = new ArrayList<>();
+        ArrayList<Integer> adminRoute = new ArrayList<>();
+        ArrayList<Integer> muleRoute = new ArrayList<>();
+        System.out.println("GET almeno dentro ci sono");
+        if (user.getAdminRoutesID() != null)
+            for (int i : user.getAdminRoutesID()) {
+                System.out.println("GET almeno dentro Admin ci sono");
 
-        for (int i : user.getAdminRoutesID()) {
-            Route r = routeService.getRoutesByID(i);
-            if (r == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
+                Route r = routeService.getRoutesByID(i);
+                if (r == null) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
+                }
+                adminRoute.add(r.getId());
             }
-            adminRoute.add(r);
-        }
-        for (int i : user.getMuleRoutesID()) {
-            Route r = routeService.getRoutesByID(i);
-            if (r == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
+        if (user.getMuleRoutesID() != null)
+            for (int i : user.getMuleRoutesID()) {
+                System.out.println("GET almeno dentro Mules ci sono");
+
+                Route r = routeService.getRoutesByID(i);
+                if (r == null) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
+                }
+                muleRoute.add(r.getId());
             }
-            muleRoute.add(r);
-        }
 
         UserRouteVM userVM = UserRouteVM.builder()
                 .userID(user.get_id())
                 .username(user.getUsername())
-                .adminRoute(adminRoute)
-                .muleRoute(muleRoute)
+                .adminRoutes(adminRoute)
+                .muleRoutes(muleRoute)
                 .build();
 
         return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
