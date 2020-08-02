@@ -113,4 +113,9 @@ public class User implements UserDetails {
             this.muleRoutesID = new ArrayList<>();
         this.muleRoutesID.addAll(muleRouteID);
     }
+
+    public void removeRole(Role role_admin) {
+        if (this.getRolesString().contains(role_admin.getRole()))
+            this.roles.remove(role_admin);
+    }
 }

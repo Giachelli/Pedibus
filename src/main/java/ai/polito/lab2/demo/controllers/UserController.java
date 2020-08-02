@@ -179,45 +179,61 @@ public class UserController {
         ArrayList<Integer> adminRouteID = new ArrayList<>();
         ArrayList<Integer> muleRouteID = new ArrayList<>();
 
-        for (int i : adminRoutes) {
-            Route r = routeService.getRoutesByID(i);
-            if (r == null) {
-                System.out.println("Errore nella modify USer passo un id non esistente");
-            }
-            adminRouteID.add(i);
-            Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
-            addAdminRoute.addAdmin(user.getUsername());
-            routeService.saveRoute(addAdminRoute);
-        }
-        if (adminRoutes.size() > 0)
-            if (!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
-                user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
 
-        user.addAdminRoutesID(adminRouteID);
+        //Check if the array of integers passed with the request is empty (admin routes id case)
+        if (adminRoutes.size() == 0) {
+            //if the array is empty = the user isn't admin for any routes and we delete the role "admin" from his role list
+            if (user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
+                user.removeRole(roleRepository.findByRole("ROLE_ADMIN"));
+        }
+        else {
+            //add the id routes in the user list
+            for (int i : adminRoutes) {
+                Route r = routeService.getRoutesByID(i);
+                if (r == null) {
+                    System.out.println("Errore nella modify USer passo un id non esistente");
+                }
+                adminRouteID.add(i);
+                Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
+                addAdminRoute.addAdmin(user.getUsername());
+                routeService.saveRoute(addAdminRoute);
+            }
+            if (adminRoutes.size() > 0) {
+                if (!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
+                    user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
+            }
+
+            user.addAdminRoutesID(adminRouteID);
+        }
+
 
         userService.saveUser(user);
 
-
-        //controlli per lista vuota
-
-
-        for (int j : muleRoutes) {
-            Route r = routeService.getRoutesByID(j);
-            if (r == null) {
-                System.out.println("Errore nella modify USer passo un id non esistente");
-            }
-            muleRouteID.add(j);
-            Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
-            addMuleRoute.addMule(user.getUsername());
-            routeService.saveRoute(addMuleRoute);
+        //Check if the array of integers passed with the request is empty (mule routes id case)
+        if (muleRoutes.size() == 0) {
+            //the same of admin cases
+            if (user.getRoles().contains(roleRepository.findByRole("ROLE_MULE")))
+                user.removeRole(roleRepository.findByRole("ROLE_MULE"));
         }
-
-        if (muleRoutes.size() > 0)
-            if (!user.getRoles().contains(roleRepository.findByRole("ROLE_MULE"))) {
-                user.addRole(roleRepository.findByRole("ROLE_MULE"));
+        else {
+            for (int j : muleRoutes) {
+                Route r = routeService.getRoutesByID(j);
+                if (r == null) {
+                    System.out.println("Errore nella modify USer passo un id non esistente");
+                }
+                muleRouteID.add(j);
+                Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
+                addMuleRoute.addMule(user.getUsername());
+                routeService.saveRoute(addMuleRoute);
             }
 
-        user.addMuleRoutesID(muleRouteID);
+            if (muleRoutes.size() > 0)
+                if (!user.getRoles().contains(roleRepository.findByRole("ROLE_MULE"))) {
+                    user.addRole(roleRepository.findByRole("ROLE_MULE"));
+                }
+
+            user.addMuleRoutesID(muleRouteID);
+        }
 
         userService.saveUser(user);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
