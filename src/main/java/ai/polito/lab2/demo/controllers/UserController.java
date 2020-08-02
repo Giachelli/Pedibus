@@ -172,6 +172,7 @@ public class UserController {
     @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
     public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
+        System.out.println("Adesso non funzioni?");
         User user = userService.getUserBy_id(userID);
         ArrayList<Integer> adminRoutes = modifyRoleUser.getAdminRoutes();
         ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
@@ -284,11 +285,8 @@ public class UserController {
         User user = userService.getUserBy_id(userID);
         ArrayList<Integer> adminRoute = new ArrayList<>();
         ArrayList<Integer> muleRoute = new ArrayList<>();
-        System.out.println("GET almeno dentro ci sono");
         if (user.getAdminRoutesID() != null)
             for (int i : user.getAdminRoutesID()) {
-                System.out.println("GET almeno dentro Admin ci sono");
-
                 Route r = routeService.getRoutesByID(i);
                 if (r == null) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
@@ -297,8 +295,6 @@ public class UserController {
             }
         if (user.getMuleRoutesID() != null)
             for (int i : user.getMuleRoutesID()) {
-                System.out.println("GET almeno dentro Mules ci sono");
-
                 Route r = routeService.getRoutesByID(i);
                 if (r == null) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error here!! Route non esistente");
