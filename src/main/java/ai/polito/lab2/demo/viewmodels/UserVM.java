@@ -10,4 +10,5 @@ public class UserVM {
     private String username;
     private String family_name;
     private String userID;
+    private boolean isEnabled;
 }

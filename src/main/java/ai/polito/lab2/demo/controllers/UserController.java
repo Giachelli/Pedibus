@@ -75,6 +75,7 @@ public class UserController {
                     .userID(u.get_id().toString())
                     .username(u.getUsername())
                     .family_name(u.getFamily_name())
+                    .isEnabled(u.isEnabled())
                     .build();
             usersIDString.add(u.get_id().toString());
             System.out.println(u.get_id().toString());
@@ -136,8 +137,8 @@ public class UserController {
     }
 
     @Secured("ROLE_SYSTEM_ADMIN")
-    @RequestMapping(value = "/users/{userID}/disenabled", method = RequestMethod.PUT)
-    public ResponseEntity disenabledUser(@PathVariable ObjectId userID) {
+    @RequestMapping(value = "/users/{userID}/disabled", method = RequestMethod.PUT)
+    public ResponseEntity disabledUser(@PathVariable ObjectId userID) {
         User u = userService.getUserBy_id(userID);
         u.setEnabled(false);
         userService.saveUser(u);
