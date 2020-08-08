@@ -31,9 +31,9 @@ public class User implements UserDetails {
 
     private ArrayList<ObjectId> childsID;
 
-    private ArrayList<Integer> adminRoutesID;
+    private Set<Integer> adminRoutesID;
 
-    private ArrayList<Integer> muleRoutesID;
+    private Set<Integer> muleRoutesID;
 
     private String password;
 
@@ -104,13 +104,13 @@ public class User implements UserDetails {
 
     public void addAdminRoutesID(ArrayList<Integer> adminRouteID) {
         if(this.adminRoutesID == null)
-            this.adminRoutesID = new ArrayList<>();
+            this.adminRoutesID = new HashSet<>();
         this.adminRoutesID.addAll(adminRouteID);
     }
 
     public void addMuleRoutesID(ArrayList<Integer> muleRouteID) {
         if(this.muleRoutesID == null)
-            this.muleRoutesID = new ArrayList<>();
+            this.muleRoutesID = new HashSet<>();
         this.muleRoutesID.addAll(muleRouteID);
     }
 

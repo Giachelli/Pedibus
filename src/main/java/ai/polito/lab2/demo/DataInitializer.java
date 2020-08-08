@@ -20,9 +20,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -59,7 +57,7 @@ public class DataInitializer implements CommandLineRunner {
         if (users.findByUsername("admin@info.it") != null) {
             //do nothing
         } else {
-            ArrayList<Integer> routeId = new ArrayList<>();
+            Set<Integer> routeId = new HashSet<>();
             routeId.add(1);
             routeId.add(2);
             routeId.add(3);
@@ -175,12 +173,9 @@ public class DataInitializer implements CommandLineRunner {
     }
 
 
-    public void insertUserIntoDB(ArrayList<Integer> routeId) {
+    public void insertUserIntoDB(Set<Integer> routeId) {
 
         Role role = this.roleRepository.findByRole("ROLE_USER");
-
-
-
 
 
         this.users.save(User.builder()
