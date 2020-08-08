@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -177,38 +174,66 @@ public class UserController {
         ArrayList<Integer> adminRoutes = modifyRoleUser.getAdminRoutes();
         ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
 
-        ArrayList<Integer> adminRouteID = new ArrayList<>();
-        ArrayList<Integer> muleRouteID = new ArrayList<>();
+        Set<Integer> adminRouteID = new HashSet<>();
+        Set<Integer> muleRouteID = new HashSet<>();
+
+        if (user.getAdminRoutesID() != null)
+            for (int i : user.getAdminRoutesID()) {
+                Route r = routeService.getRoutesByID(i);
+                if (r == null) {
+                    System.out.println("Errore nella modify USer passo un id route non esistente");
+                    return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                r.removeAdmin(user.getUsername());
+                routeService.saveRoute(r);
+            }
+
+        if (user.getMuleRoutesID() != null)
+            for (int i : user.getMuleRoutesID()) {
+                Route r = routeService.getRoutesByID(i);
+                if (r == null) {
+                    System.out.println("Errore nella modify USer passo un id route non esistente");
+                    return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+
+                }
+                r.removeMule(user.getUsername());
+                routeService.saveRoute(r);
+            }
+
 
         //Check if the array of integers passed with the request is empty (admin routes id case)
         if (adminRoutes.size() == 0) {
             //if the array is empty = the user isn't admin for any routes and we delete the role "admin" from his role list
             if (user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
                 user.removeRole(roleRepository.findByRole("ROLE_ADMIN"));
-        }
-        else {
+        } else {
             //add the id routes in the user list
+            //todo vedere se ci sono idee migliori
             for (int i : adminRoutes) {
                 Route r = routeService.getRoutesByID(i);
                 if (r == null) {
                     System.out.println("Errore nella modify USer passo un id non esistente");
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
                 }
                 // controllo che non sia già Admin per la linea
-                if (user.getAdminRoutesID() != null)
-                    if (!user.getAdminRoutesID().contains(i)) {
-                        adminRouteID.add(i);
-                        Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
-                        addAdminRoute.addAdmin(user.getUsername());
-                        routeService.saveRoute(addAdminRoute);
-                    }
+                adminRouteID.add(i);
+                Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
+                if(addAdminRoute.getUsernameAdmin() == null)
+                {
+                    addAdminRoute.addAdmin(user.getUsername());
+                    routeService.saveRoute(addAdminRoute);
+                }
+                if (!addAdminRoute.getUsernameAdmin().contains(user.getUsername())) {
+                    addAdminRoute.addAdmin(user.getUsername());
+                    routeService.saveRoute(addAdminRoute);
+                }
             }
             if (adminRoutes.size() > 0)
                 if (!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
                     user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
-
-            user.addAdminRoutesID(adminRouteID);
         }
 
+        user.setAdminRoutesID(adminRouteID);
         userService.saveUser(user);
 
         //Check if the array of integers passed with the request is empty (mule routes id case)
@@ -216,21 +241,26 @@ public class UserController {
             //the same of admin cases
             if (user.getRoles().contains(roleRepository.findByRole("ROLE_MULE")))
                 user.removeRole(roleRepository.findByRole("ROLE_MULE"));
-        }
-        else {
+        } else {
             for (int j : muleRoutes) {
                 Route r = routeService.getRoutesByID(j);
                 if (r == null) {
                     System.out.println("Errore nella modify USer passo un id non esistente");
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
                 }
                 // controllo che non sia già Mule per la linea
-                if (user.getMuleRoutesID() != null)
-                    if (!user.getMuleRoutesID().contains(j)) {
-                        muleRouteID.add(j);
-                        Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
-                        addMuleRoute.addMule(user.getUsername());
-                        routeService.saveRoute(addMuleRoute);
-                    }
+
+                muleRouteID.add(j);
+                Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
+                if (addMuleRoute.getUsernameMule() == null)
+                {
+                    addMuleRoute.addMule(user.getUsername());
+                    routeService.saveRoute(addMuleRoute);
+                }
+                if (!addMuleRoute.getUsernameMule().contains(user.getUsername()) ) {
+                    addMuleRoute.addMule(user.getUsername());
+                    routeService.saveRoute(addMuleRoute);
+                }
             }
 
             if (muleRoutes.size() > 0)
@@ -238,9 +268,10 @@ public class UserController {
                     user.addRole(roleRepository.findByRole("ROLE_MULE"));
                 }
 
-            user.addMuleRoutesID(muleRouteID);
+
         }
 
+        user.setMuleRoutesID(muleRouteID);
         userService.saveUser(user);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

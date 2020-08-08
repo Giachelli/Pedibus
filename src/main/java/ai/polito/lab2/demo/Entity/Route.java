@@ -45,6 +45,17 @@ public class Route {
         this.usernameAdmin.add(username);
     }
 
+    public void removeAdmin (String username){
+        if(this.usernameAdmin.contains(username))
+            this.usernameAdmin.remove(username);
+    }
+
+
+    public void removeMule (String username){
+        if(this.usernameMule.contains(username))
+            this.usernameMule.remove(username);
+    }
+
 
     public void addMule(String username) {
         if(this.usernameMule == null)
