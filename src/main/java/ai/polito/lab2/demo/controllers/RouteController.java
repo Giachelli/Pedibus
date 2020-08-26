@@ -64,7 +64,7 @@ public class RouteController {
                         .stopID(stop.get_id().toString())
                         .nameStop(stop.getNome())
                         .time(stop.getTime())
-                        .num_s(stop.getNum_s())
+                        .nums(stop.getNums())
                         .lat(stop.getLat())
                         .lng(stop.getLng())
                         .build();
@@ -77,7 +77,7 @@ public class RouteController {
                         .stopID(stop.get_id().toString())
                         .nameStop(stop.getNome())
                         .time(stop.getTime())
-                        .num_s(stop.getNum_s())
+                        .nums(stop.getNums())
                         .lat(stop.getLat())
                         .lng(stop.getLng())
                         .build();
@@ -106,6 +106,9 @@ public class RouteController {
                         .userID(mule.get_id().toString())
                         .username(u)
                         .family_name(mule.getFamily_name())
+                        .availabilityVM(mule.getAvailability())
+                        .andataStop(mule.getAndataStops())
+                        .ritornoStop(mule.getRitornoStops())
                         .build();
                muleVMList.add(muleVM);
             }

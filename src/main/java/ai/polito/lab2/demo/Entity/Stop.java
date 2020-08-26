@@ -13,7 +13,7 @@ public class Stop {
     @Id
     private ObjectId _id;
     private String nome;
-    private int num_s;
+    private int nums;
     private String time;
     private double lat;
     private double lng;

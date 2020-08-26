@@ -18,4 +18,9 @@ public class StopServiceImpl implements StopService{
         return stopRepo.findStopBy_id(id);
     }
 
+    @Override
+    public Stop findStopbyNameAndNumS(String name, int nums) {
+        return stopRepo.findStopByNomeAndNums(name,nums);
+    }
+
 }

@@ -273,6 +273,9 @@ public class UserController {
         }
 
         user.setMuleRoutesID(muleRouteID);
+        user.setAvailability(modifyRoleUser.getAvailability());
+        user.setAndataStops(modifyRoleUser.getStopAndata());
+        user.setRitornoStops(modifyRoleUser.getStopRitorno());
         userService.saveUser(user);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

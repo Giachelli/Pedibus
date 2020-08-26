@@ -5,4 +5,5 @@ import org.bson.types.ObjectId;
 
 public interface StopService {
     Stop findStopbyId(ObjectId id);
+    Stop findStopbyNameAndNumS(String name, int nums);
 }

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Builder
@@ -13,6 +15,9 @@ public class UserVM {
     private String username;
     private String family_name;
     private String userID;
+    private ArrayList<Boolean> availabilityVM;
+    private HashMap<Integer, ArrayList<ObjectId>> andataStop;
+    private HashMap<Integer, ArrayList<ObjectId>> ritornoStop;
     private boolean isEnabled;
     //private List<Role> roles;
 }
