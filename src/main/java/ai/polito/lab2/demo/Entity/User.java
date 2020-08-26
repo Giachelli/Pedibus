@@ -140,7 +140,7 @@ public class User implements UserDetails {
         ArrayList<String> stops = new ArrayList<>();
         for (ObjectId objectId : o)
         {
-            stops.add(o.toString());
+            stops.add(objectId.toString());
         }
         return stops;
     }

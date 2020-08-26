@@ -226,6 +226,9 @@ public class DataInitializer implements CommandLineRunner {
                 //.roles(Arrays.asList(role))
                 .roles(Arrays.asList(role, roleRepository.findByRole("ROLE_MULE")))
                 .muleRoutesID(routeId)
+                .availability(disp)
+                .andataStops(andata)
+                .ritornoStops(ritorno)
                 .isEnabled(true)
                 .build()
         );
