@@ -16,8 +16,8 @@ public class UserVM {
     private String family_name;
     private String userID;
     private ArrayList<Boolean> availabilityVM;
-    private HashMap<Integer, ArrayList<ObjectId>> andataStop;
-    private HashMap<Integer, ArrayList<ObjectId>> ritornoStop;
+    private HashMap<Integer, ArrayList<String>> andataStop;
+    private HashMap<Integer, ArrayList<String>> ritornoStop;
     private boolean isEnabled;
     //private List<Role> roles;
 }

@@ -11,6 +11,7 @@ import ai.polito.lab2.demo.viewmodels.StopVM;
 import ai.polito.lab2.demo.viewmodels.UserVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,8 +108,8 @@ public class RouteController {
                         .username(u)
                         .family_name(mule.getFamily_name())
                         .availabilityVM(mule.getAvailability())
-                        .andataStop(mule.getAndataStops())
-                        .ritornoStop(mule.getRitornoStops())
+                        .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
+                        .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
                         .build();
                muleVMList.add(muleVM);
             }
@@ -135,5 +136,6 @@ public class RouteController {
         Route route = routeService.getRoutesByName(nome_linea);
         return new ResponseEntity<Route>(route, HttpStatus.OK);
     }
+
 
 }
