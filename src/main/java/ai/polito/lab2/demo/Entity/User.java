@@ -124,4 +124,25 @@ public class User implements UserDetails {
         if (this.getRolesString().contains(role_admin.getRole()))
             this.roles.remove(role_admin);
     }
+
+    public HashMap<Integer, ArrayList<String>> getUserVMMapStop (HashMap<Integer, ArrayList<ObjectId>> Stops){
+        HashMap<Integer, ArrayList<String>> mappaReturned = new HashMap<>();
+
+        for (Map.Entry<Integer, ArrayList<ObjectId>> entry : Stops.entrySet())
+        {
+            mappaReturned.put(entry.getKey(), convertObjectIdStop(entry.getValue()));
+        }
+
+        return mappaReturned;
+    }
+
+    public ArrayList<String> convertObjectIdStop (ArrayList<ObjectId> o){
+        ArrayList<String> stops = new ArrayList<>();
+        for (ObjectId objectId : o)
+        {
+            stops.add(o.toString());
+        }
+        return stops;
+    }
+
 }
