@@ -9,10 +9,7 @@ import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
-import ai.polito.lab2.demo.Service.MessageService;
-import ai.polito.lab2.demo.Service.ReservationService;
-import ai.polito.lab2.demo.Service.RouteService;
-import ai.polito.lab2.demo.Service.UserService;
+import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,6 +38,9 @@ public class ReservationController {
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private StopService stopService;
 
     //@Autowired
     //private EmailSenderService emailSenderService;
@@ -159,6 +159,14 @@ public class ReservationController {
     public ResponseEntity<Reservation> createNotBooked(@PathVariable String nome_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
+
+        long nowTimeStamp = getCurrentTimeStamp();
+        Stop stop = stopService.findStopbyId(stopID);
+
+        if (checkTimestamp(nowTimeStamp,data,stop))
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         if (this.controlName_RouteAndStop(nome_linea,stopID))
             return null; //TODO far tornare un errore
@@ -354,10 +362,18 @@ public class ReservationController {
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
 
+
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
 
         Reservation updatedReservation = reservationRepo.findReservationById(reservation_id);
+        long nowTimeStamp = getCurrentTimeStamp();
+        Stop stop = stopService.findStopbyId(updatedReservation.getStopID());
+
+        if (checkTimestamp(nowTimeStamp,data,stop))
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         if (data >= 0) {
             updatedReservation.setDate(data);
@@ -384,10 +400,56 @@ public class ReservationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    private boolean checkTimestamp(long nowTimeStamp, long data, Stop stop) {
+        if(nowTimeStamp > data){
+            return true;
+        }
+        else {
+            if(nowTimeStamp == data)
+            {
+                nowTimeStamp = updateTimeStamp(nowTimeStamp,stop.getTime());
+                long date = updateTimeStamp(data, stop.getTime());
+                if (nowTimeStamp > date){
+                   return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private long updateTimeStamp(long data, String time) {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        Calendar today = Calendar.getInstance(timeZone);
+        String hour = time.split(":")[0];
+        String minutes = time.split(":")[1];
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MINUTE, Integer.valueOf(minutes));
+        today.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+        return today.getTimeInMillis();
+    }
+
+    private long getCurrentTimeStamp() {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        Calendar today = Calendar.getInstance(timeZone);
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        return today.getTimeInMillis();
+    }
+
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.DELETE)
     public ResponseEntity delete(@PathVariable ObjectId reservation_id) {
+        Reservation updatedReservation = reservationRepo.findReservationById(reservation_id);
+        long nowTimeStamp = getCurrentTimeStamp();
+        Stop stop = stopService.findStopbyId(updatedReservation.getStopID());
 
+        if (checkTimestamp(nowTimeStamp,updatedReservation.getDate(),stop))
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         reservationService.delete(reservation_id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
