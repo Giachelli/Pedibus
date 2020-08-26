@@ -6,14 +6,14 @@
   [
     {
     "nome": "Corso Peschiera 191- Agos Ducato",
-    "num_s": 1,
+    "nums": 1,
     "time": "8:00",
     "lat": "45.0658943",
     "lng": "7.6456118"
     },
     {
       "nome": "Piazza Sabotino 38- Unicredit",
-      "num_s": 2,
+      "nums": 2,
       "time": "8:07",
       "lat": "45.062515",
       "lng": "7.6525057"
@@ -21,21 +21,21 @@
     },
     {
       "nome": "Corso Peschiera 145- Compass Gruppo Mediobanca",
-      "num_s": 3,
+      "nums": 3,
       "time": "8:10",
       "lat": "45.0629971",
       "lng": "7.65204"
     },
     {
       "nome": "Corso Francesco Ferrucci 112- Eaton",
-      "num_s": 4,
+      "nums": 4,
       "time": "8:20",
       "lat": "45.0619957",
       "lng": "7.6552601"
     },
     {
       "nome": "Corso Castelfidardo- Fermata 3281",
-      "num_s": 5,
+      "nums": 5,
       "time": "8:25",
       "lat": "45.061627",
       "lng": "7.658498"
@@ -44,35 +44,35 @@
   "stopListB": [
     {
       "nome": "Corso Castelfidardo- Fermata 3281",
-      "num_s": 1,
+      "nums": 1,
       "time": "16:00",
       "lat": "45.061627",
       "lng": "7.658498"
     },
     {
       "nome": "Corso Francesco Ferrucci 112- Eaton",
-      "num_s": 2,
+      "nums": 2,
       "time": "16:05",
       "lat": "45.0619957",
       "lng": "7.6552601"
     },
     {
       "nome": "Corso Peschiera 145- Compass Gruppo Mediobanca",
-      "num_s": 3,
+      "nums": 3,
       "time": "16:10",
       "lat": "45.0629971",
       "lng": "7.65204"
     },
     {
       "nome": "Piazza Sabotino 38- Unicredit",
-      "num_s": 4,
+      "nums": 4,
       "time": "16:20",
       "lat": "45.062515",
       "lng": "7.6525057"
     },
     {
       "nome": "Corso Peschiera 191- Agos Ducato",
-      "num_s": 5,
+      "nums": 5,
       "time": "16:25",
       "lat": "45.0658943",
       "lng": "7.6456118"

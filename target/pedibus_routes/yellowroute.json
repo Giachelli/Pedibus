@@ -6,35 +6,35 @@
   [
     {
     "nome": "Corso Germano Sommeiller 39- Unicredit",
-    "num_s": 1,
+    "nums": 1,
     "time": "8:00",
     "lat": "45.0567558",
     "lng": "7.6677792"
     },
     {
       "nome": "Corso Luigi Einaudi 15- Banca del Piemonte",
-      "num_s": 2,
+      "nums": 2,
       "time": "8:05",
       "lat": "45.0574455",
       "lng": "7.6655583"
     },
     {
       "nome": "Corso Luigi Einaudi 25- Krabon Pizzeria",
-      "num_s": 3,
+      "nums": 3,
       "time": "8:10",
       "lat": "45.0581958",
       "lng": "7.6642387"
     },
     {
       "nome": "Corso Luigi Einaudi- Incrocio Corso Duca Fermata Bus 616",
-      "num_s": 4,
+      "nums": 4,
       "time": "8:17",
       "lat": "45.059999",
       "lng": "7.6613676"
     },
     {
       "nome": "Corso Duca degli Abruzzi 28",
-      "num_s": 5,
+      "nums": 5,
       "time": "8:25",
       "lat": "45.0615919",
       "lng": "7.660763"
@@ -43,35 +43,35 @@
   "stopListB": [
     {
       "nome": "Corso Duca degli Abruzzi 28",
-      "num_s": 1,
+      "nums": 1,
       "time": "16:00",
       "lat": "45.0615919",
       "lng": "7.660763"
     },
     {
       "nome": "Fermata 10 Corso Duca",
-      "num_s": 2,
+      "nums": 2,
       "time": "16:07",
       "lat": "45.059999",
       "lng": "7.6613676"
     },
     {
       "nome": "Corso Luigi Einaudi 25- Krabon Pizzeria",
-      "num_s": 3,
+      "nums": 3,
       "time": "16:15",
       "lat": "45.0581958",
       "lng": "7.6642387"
     },
     {
       "nome": "Corso Luigi Einaudi 15- Banca del Piemonte",
-      "num_s": 4,
+      "nums": 4,
       "time": "16:20",
       "lat": "45.0574455",
       "lng": "7.6655583"
     },
     {
       "nome": "Corso Germano Sommeiller 39- Unicredit",
-      "num_s": 5,
+      "nums": 5,
       "time": "16:25",
       "lat": "45.0567558",
       "lng": "7.6677792"

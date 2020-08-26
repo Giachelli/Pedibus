@@ -9,7 +9,7 @@ public class StopVM {
 
     private String stopID;
     private String nameStop;
-    private int num_s;
+    private int nums;
     private String time;
     private double lat;
     private double lng;

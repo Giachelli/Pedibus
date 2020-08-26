@@ -36,6 +36,9 @@ public class DataInitializer implements CommandLineRunner {
     private RouteService routeService;
 
     @Autowired
+    private StopService stopService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -63,6 +66,7 @@ public class DataInitializer implements CommandLineRunner {
             routeId.add(3);
             routeId.add(4);
             routeId.add(6);
+
 
             this.users.save(User.builder()
                     .username("admin@info.it")
@@ -177,12 +181,37 @@ public class DataInitializer implements CommandLineRunner {
 
         Role role = this.roleRepository.findByRole("ROLE_USER");
 
+        ArrayList<Boolean> disp = new ArrayList<>();
+        disp.add(true);
+        disp.add(true);
+        disp.add(false);
+        disp.add(false);
+        disp.add(true);
+        disp.add(false);
+        disp.add(false);
+
+        HashMap<Integer, ArrayList<ObjectId>> andata = new HashMap<>();
+        HashMap<Integer, ArrayList<ObjectId>> ritorno = new HashMap<>();
+
+        Stop s1 = stopService.findStopbyNameAndNumS("Incrocio Corso Stati Uniti-Statua ",4);
+        Stop s2 = stopService.findStopbyNameAndNumS("Mixto",1);
+        ArrayList<ObjectId> andataS = new ArrayList<>();
+        ArrayList<ObjectId> ritornoS = new ArrayList<>();
+        andataS.add(s2.get_id());
+        ritornoS.add(s2.get_id());
+        andataS.add(s1.get_id());
+        ritornoS.add(s1.get_id());
+        andata.put(6,andataS);
+        ritorno.put(6,ritornoS);
 
         this.users.save(User.builder()
                 .username("user1@info.it")
                 .family_name("Malnati")
                 .password(this.passwordEncoder.encode("1user@user"))
                 .roles(Arrays.asList(role, roleRepository.findByRole("ROLE_MULE")))
+                .availability(disp)
+                .andataStops(andata)
+                .ritornoStops(ritorno)
                 .muleRoutesID(routeId)
                 //.roles(Arrays.asList(role))
                 .isEnabled(true)

@@ -31,6 +31,12 @@ public class User implements UserDetails {
 
     private ArrayList<ObjectId> childsID;
 
+    private ArrayList<Boolean> availability;
+    // la key è l'id della linea, mentre l'array contiene gli id degli stop preferiti dal mule
+    private HashMap<Integer, ArrayList<ObjectId>> andataStops;
+
+    private HashMap<Integer, ArrayList<ObjectId>> ritornoStops;
+
     private Set<Integer> adminRoutesID;
 
     private Set<Integer> muleRoutesID;
@@ -103,13 +109,13 @@ public class User implements UserDetails {
     // TODO eliminare i duplicati se esistono
 
     public void addAdminRoutesID(ArrayList<Integer> adminRouteID) {
-        if(this.adminRoutesID == null)
+        if (this.adminRoutesID == null)
             this.adminRoutesID = new HashSet<>();
         this.adminRoutesID.addAll(adminRouteID);
     }
 
     public void addMuleRoutesID(ArrayList<Integer> muleRouteID) {
-        if(this.muleRoutesID == null)
+        if (this.muleRoutesID == null)
             this.muleRoutesID = new HashSet<>();
         this.muleRoutesID.addAll(muleRouteID);
     }
