@@ -4,6 +4,7 @@ import ai.polito.lab2.demo.Dto.RouteDTO;;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Route;
+import ai.polito.lab2.demo.Repositories.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class RouteServiceImpl implements RouteService {
 
     @Autowired
     private RouteRepo routeRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     @Autowired
     private StopRepo stopRepo;
@@ -120,6 +124,11 @@ public class RouteServiceImpl implements RouteService {
 
         for (final File file : Objects.requireNonNull(folder.listFiles())) {
             Route route = objectMapper.readValue(file, Route.class);
+            if (userRepo.findByUsername(route.getEmails())==null)
+            {
+                String error = "ERROR IN EMAILS of file "+file.getName();
+                throw new IOException(error);
+            }
             route.setLastModified(file.lastModified());
             routesArray.add(route);
         }
