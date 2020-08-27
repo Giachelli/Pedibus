@@ -9,6 +9,8 @@ import org.bson.types.ObjectId;
 public class ShiftDTO {
     private ObjectId muleID;
     private ObjectId adminID;
+    private ObjectId stopShiftID;
+    private ObjectId startShiftID;
     private long data;
     private int lineId;
     private boolean direction;

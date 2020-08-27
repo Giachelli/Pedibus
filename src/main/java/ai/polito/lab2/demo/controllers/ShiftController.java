@@ -1,14 +1,8 @@
 package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Dto.ShiftDTO;
-import ai.polito.lab2.demo.Entity.Message;
-import ai.polito.lab2.demo.Entity.Route;
-import ai.polito.lab2.demo.Entity.Shift;
-import ai.polito.lab2.demo.Entity.User;
-import ai.polito.lab2.demo.Service.IUserService;
-import ai.polito.lab2.demo.Service.MessageService;
-import ai.polito.lab2.demo.Service.RouteService;
-import ai.polito.lab2.demo.Service.ShiftService;
+import ai.polito.lab2.demo.Entity.*;
+import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.viewmodels.ShiftCreateVM;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -35,6 +27,9 @@ public class ShiftController {
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private StopService stopService;
 
     @Autowired
     private MessageService messageService;
@@ -70,6 +65,8 @@ public class ShiftController {
             if (admin == null)
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+            Stop s1 = stopService.findStopbyId(new ObjectId(shiftVM.getStartShiftId()));
+            Stop s2 = stopService.findStopbyId(new ObjectId(shiftVM.getStopShiftId()));
 
             ShiftDTO t;
             t = ShiftDTO.builder()
@@ -78,6 +75,8 @@ public class ShiftController {
                     .lineId(shiftVM.getLineId())
                     .data(shiftVM.getData())
                     .direction(shiftVM.isDirection())
+                    .startShiftID(s1.get_id())
+                    .stopShiftID(s2.get_id())
                     .status("pending")
                     .build();
 
@@ -176,6 +175,16 @@ public class ShiftController {
     @RequestMapping(value = "/shift/{shiftID}/delete", method = RequestMethod.DELETE)
     public ResponseEntity deleteShift(@PathVariable final ObjectId shiftID) {
 
+        Shift s = shiftService.getTurnByID(shiftID);
+        long nowTimeStamp = getCurrentTimeStamp();
+        Stop stop = stopService.findStopbyId(s.getStartID());
+
+        if (checkTimestamp(nowTimeStamp,s.getDate(),stop))
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
         if (shiftService.getTurnByID(shiftID) != null)
             shiftService.delete(shiftID);
         else
@@ -191,6 +200,9 @@ public class ShiftController {
     public ResponseEntity editTurn(@PathVariable final ObjectId shiftID, @RequestBody ShiftCreateVM shiftVM) {
 
         Shift t = shiftService.getTurnByID(shiftID);
+
+        Stop s1 = stopService.findStopbyId(new ObjectId(shiftVM.getStartShiftId()));
+        Stop s2 = stopService.findStopbyId(new ObjectId(shiftVM.getStopShiftId()));
 
         if (t != null) {
             if (!shiftVM.control())
@@ -212,7 +224,10 @@ public class ShiftController {
             t.setDirection(shiftVM.isDirection());
             t.setLineaID(shiftVM.getLineId());
             t.setMuleID(u.get_id());
+            t.setStartID(s1.get_id());
+            t.setStopID(s2.get_id());
             t.setAdminID(admin.get_id());
+            t.setStatus("pending");
 
             shiftService.editTurn(t);
         } else {
@@ -302,6 +317,45 @@ public class ShiftController {
         }
     }
     */
+
+    private boolean checkTimestamp(long nowTimeStamp, long data, Stop stop) {
+        if(nowTimeStamp > data){
+            return true;
+        }
+        else {
+            if(nowTimeStamp == data)
+            {
+                nowTimeStamp = updateTimeStamp(data, stop.getTime());
+                long date = updateTimeStamp(data, stop.getTime());
+                if (nowTimeStamp > date){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private long updateTimeStamp(long data, String time) {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        Calendar today = Calendar.getInstance(timeZone);
+        String hour = time.split(":")[0];
+        String minutes = time.split(":")[1];
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MINUTE, Integer.valueOf(minutes));
+        today.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+        return today.getTimeInMillis();
+    }
+
+    private long getCurrentTimeStamp() {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        Calendar today = Calendar.getInstance(timeZone);
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        return today.getTimeInMillis();
+    }
 
 
 }

@@ -14,6 +14,8 @@ public class Shift {
     private ObjectId turnID; //l'id del turno
     private ObjectId muleID; //id dell'accompagnatore
     private ObjectId AdminID; //id dell'admin
+    private ObjectId startID; //id della fermata di partenza
+    private ObjectId stopID; //id della fermata di arrivo
     private int lineaID; //id della linea
     private long date;//andata o ritorno
     private boolean direction; //se è settato True = andata , false se è ritorno
