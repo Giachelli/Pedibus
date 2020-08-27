@@ -29,7 +29,7 @@ public class ShiftCreateVM { //classe che mappa l'oggetto che arriva dal frontEn
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        if(this.username == null || this.usernameAdmin==null || (this.data <= cal.getTimeInMillis() -1)|| this.lineId < 0)
+        if(this.username == null || this.usernameAdmin==null || this.startShiftId==null ||this.stopShiftId==null || (this.data <= cal.getTimeInMillis() -1)|| this.lineId < 0)
             return false;
         else return true;
     }

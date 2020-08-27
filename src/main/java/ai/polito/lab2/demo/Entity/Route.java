@@ -17,6 +17,7 @@ public class Route {
     @Id
     private int id;
     private String nameR;
+    private String emails;
     private List<String> usernameAdmin;
     private List<String> usernameMule;
     private ArrayList<Stop> stopListA;

@@ -1,7 +1,6 @@
 package ai.polito.lab2.demo;
 
 
-
 import static reactor.bus.selector.Selectors.$;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;
@@ -52,36 +51,42 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private MessageRepo messageRepo;
+
     @Override
     public void run(String... args) throws Exception {
-        routeController.PopulateDb();
+        boolean addRouteId = true;
+        Set<Integer> routeId = new HashSet<>();
+        routeId.add(1);
+        routeId.add(2);
+        routeId.add(3);
+        routeId.add(4);
+        routeId.add(6);
         setRoleDb();
-        setMule_Admin_Test();
         if (users.findByUsername("admin@info.it") != null) {
-            //do nothing
+            addRouteId = false;
         } else {
-            Set<Integer> routeId = new HashSet<>();
-            routeId.add(1);
-            routeId.add(2);
-            routeId.add(3);
-            routeId.add(4);
-            routeId.add(6);
-
-
             this.users.save(User.builder()
                     .username("admin@info.it")
-                    .family_name("admin surname")
+                    .family_name("head of school")
                     .password(this.passwordEncoder.encode("12345@dmin"))
                     .roles(Arrays.asList(roleRepository.findByRole("ROLE_USER"),
                             roleRepository.findByRole("ROLE_SYSTEM_ADMIN"),
                             roleRepository.findByRole("ROLE_MULE")))
-                    .adminRoutesID(routeId)
                     .isEnabled(true)
                     .build()
             );
+            routeController.PopulateDb();
+            if(addRouteId)
+            {
+                User u = users.findByUsername("admin@info.it");
+                u.setAdminRoutesID(routeId);
+                users.save(u);
+            }
+
+            setMule_Admin_Test();
             insertUserIntoDB(routeId);
             insertChildIntoDB();
-          //  insertMessageDb();
+            //  insertMessageDb();
         }
 /*
         log.debug("printing all users...");
@@ -90,14 +95,14 @@ public class DataInitializer implements CommandLineRunner {
 
     //funzione semplice che verrà cancellata ma che serve per testare
     private void setMule_Admin_Test() {
-        Route r1  = routeService.getRoutesByID(1);
+        Route r1 = routeService.getRoutesByID(1);
         Route r2 = routeService.getRoutesByID(2);
 
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
-        r2.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         routeService.saveRoute(r2);
         routeService.saveRoute(r1);
 
@@ -106,15 +111,15 @@ public class DataInitializer implements CommandLineRunner {
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
-        r2.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         routeService.saveRoute(r2);
         routeService.saveRoute(r1);
 
 
         r1 = routeService.getRoutesByID(6);
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it","user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         routeService.saveRoute(r1);
     }
 
@@ -193,16 +198,52 @@ public class DataInitializer implements CommandLineRunner {
         HashMap<Integer, ArrayList<ObjectId>> andata = new HashMap<>();
         HashMap<Integer, ArrayList<ObjectId>> ritorno = new HashMap<>();
 
-        Stop s1 = stopService.findStopbyNameAndNumS("Incrocio Corso Stati Uniti-Statua ",4);
-        Stop s2 = stopService.findStopbyNameAndNumS("Mixto",1);
+        Stop s1 = stopService.findStopbyNameAndNumS("Incrocio Corso Stati Uniti-Statua ", 4);
+        Stop s2 = stopService.findStopbyNameAndNumS("Mixto", 1);
         ArrayList<ObjectId> andataS = new ArrayList<>();
         ArrayList<ObjectId> ritornoS = new ArrayList<>();
-        andataS.add(s2.get_id());
-        ritornoS.add(s2.get_id());
         andataS.add(s1.get_id());
+        ritornoS.add(s2.get_id());
+        andataS.add(s2.get_id());
         ritornoS.add(s1.get_id());
-        andata.put(6,andataS);
-        ritorno.put(6,ritornoS);
+        andata.put(6, andataS);
+        ritorno.put(6, ritornoS);
+
+        andataS = new ArrayList<>();
+        ritornoS = new ArrayList<>();
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 5).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 5).get_id());
+        andata.put(4, andataS);
+        ritorno.put(4, ritornoS);
+
+        andataS = new ArrayList<>();
+        ritornoS = new ArrayList<>();
+        andataS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 2).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 5).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 4).get_id());
+        andata.put(1, andataS);
+        ritorno.put(1, ritornoS);
+
+        andataS = new ArrayList<>();
+        ritornoS = new ArrayList<>();
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 4).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 5).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 2).get_id());
+        andata.put(2, andataS);
+        ritorno.put(2, ritornoS);
+
+        andataS = new ArrayList<>();
+        ritornoS = new ArrayList<>();
+        andataS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 5).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 5).get_id());
+        andata.put(3, andataS);
+        ritorno.put(3, ritornoS);
 
         this.users.save(User.builder()
                 .username("user1@info.it")
