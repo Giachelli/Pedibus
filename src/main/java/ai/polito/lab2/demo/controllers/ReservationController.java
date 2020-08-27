@@ -407,11 +407,7 @@ public class ReservationController {
         else {
             if(nowTimeStamp == data)
             {
-                TimeZone timeZone = TimeZone.getTimeZone("UTC");
-                Calendar today = Calendar.getInstance(timeZone);
-                today.set(Calendar.MILLISECOND, 0);
-                today.set(Calendar.SECOND, 0);
-                nowTimeStamp = today.getTimeInMillis();
+                nowTimeStamp = updateTimeStamp(data, stop.getTime());
                 long date = updateTimeStamp(data, stop.getTime());
                 if (nowTimeStamp > date){
                    return true;
