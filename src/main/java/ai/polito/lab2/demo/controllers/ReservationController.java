@@ -407,7 +407,7 @@ public class ReservationController {
         else {
             if(nowTimeStamp == data)
             {
-                nowTimeStamp = updateTimeStamp(data, stop.getTime());
+                nowTimeStamp = updateTimeStamp(data, "now");
                 long date = updateTimeStamp(data, stop.getTime());
                 if (nowTimeStamp > date){
                    return true;
@@ -420,12 +420,15 @@ public class ReservationController {
     private long updateTimeStamp(long data, String time) {
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
         Calendar today = Calendar.getInstance(timeZone);
-        String hour = time.split(":")[0];
-        String minutes = time.split(":")[1];
+        if(time != "now")
+        {
+            String hour = time.split(":")[0];
+            String minutes = time.split(":")[1];
+            today.set(Calendar.MINUTE, Integer.valueOf(minutes));
+            today.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+        }
         today.set(Calendar.MILLISECOND, 0);
         today.set(Calendar.SECOND, 0);
-        today.set(Calendar.MINUTE, Integer.valueOf(minutes));
-        today.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
         return today.getTimeInMillis();
     }
 
