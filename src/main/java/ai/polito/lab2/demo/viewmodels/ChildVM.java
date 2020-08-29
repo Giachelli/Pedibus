@@ -6,6 +6,8 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
+
 @Data
 @Builder
 public class ChildVM {
@@ -16,14 +18,10 @@ public class ChildVM {
     private String nameChild;
     private boolean isMale;
     private String color;
-    private String stopID;
-    private String stopName;
-    private String nameRoute;
+    private ArrayList<String> stopID;
+    private ArrayList<String> stopName; // ["stop_andata", "stop_ritorno"]; nel caso in cui uno non sia selezionato, stringa vuota
+    private ArrayList<String> nameRoute;
     private String direction;//può essere sia solo andata, sia solo ritorno, sia entrambi -> bisogna mapparla con i true false degli altri direction
     //private date forever //da vedè come fare
-    private String nextCorsa;
-    private String hourNextCorsa;
-
-
 }
 

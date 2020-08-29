@@ -42,80 +42,97 @@ public class ChildController {
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChildVM> registerChild(@RequestBody ChildVM data) {
 
-
+        int routeID = 0;
         Child child;
+        RouteDTO r;
+        String stopName;
 
         // non sono required lo stopID, la lineaID, la direction e la data
-        if (data.getNameChild()== "" || data.getUsername() == null || data.getFamily_name()==null || data.getColor()==null)
+        if (data.getNameChild() == "" || data.getUsername() == null || data.getFamily_name() == null || data.getColor() == null)
             return badRequest().build();
-        //caso in cui il child viene iscritto con una linea e una fermata di default
-        //TODO aggiungere nel caso il ritorno solito
-        if (data.getNameRoute()!=null && data.getDirection() != null && data.getStopID()!=null) {
-            int routeID = routeService.findIDRouteByNameR(data.getNameRoute());
-            RouteDTO r = routeService.findRouteByNameR(data.getNameRoute());
 
-             child = Child.builder()
-                    .nameChild(data.getNameChild())
-                    .username(data.getUsername())
-                    .family_name(data.getFamily_name())
-                    .isMale(data.isMale())
-                    .color(data.getColor())
-                    .direction(data.getDirection())
-                    .stopID(data.getStopID())
-                    .nameRoute(data.getNameRoute())
-                    .build();
+    /* Caso in cui il child viene iscritto con una linea e una fermata di default */
 
-            System.out.println(data.getUsername());
-
-
-            // TODO: mettere nel child service, non chiamare la repo direttamente
-            childRepo.save(child);
-            System.out.println("CHILD PRIMA: " + child);
-
-
-            child = childRepo.findChildByNameChildAndUsername(data.getNameChild(), data.getUsername());
-            System.out.println("CHILD DOPO: " + child);
-            //todo controllare che entri qui quando sto a creare un bimbo
-            if (data.getDirection() != null && !data.getDirection().equals("")) {
-                if (data.getDirection().equals("andata") || data.getDirection().equals("ritorno")) {
-                    // TODO per ora lo faccio per due giorni ma è da fare per tutto il periodo scolastico
-                    // Usare Calendar che permette tramite get(Day_of_the_week) di prendere la data corretta
-                    TimeZone timeZone = TimeZone.getTimeZone("UTC");
-                    Calendar today = Calendar.getInstance(timeZone);
-                    today.set(Calendar.MILLISECOND, 0);
-                    today.set(Calendar.SECOND, 0);
-                    today.set(Calendar.MINUTE, 0);
-                    today.set(Calendar.HOUR_OF_DAY, 0);
-                    int day = 0;
-                    long dataTimeStamp;
-                    int j = 7;
-                    for (int i = 0; i < j; i++) {
-                        day = today.get(Calendar.DAY_OF_WEEK);
-                        dataTimeStamp = today.getTimeInMillis();
-                        if(day == 1 || day == 7)
-                        {
-                            today.add(Calendar.DATE,1);
-                            j++;
-                            continue;
-                        }
-                        Reservation reservation = Reservation.builder()
-                                .childID(child.getChildID())
-                                .familyName(child.getFamily_name())
-                                .date(dataTimeStamp)
-                                .direction(data.getDirection())
-                                .name_route(data.getNameRoute())
-                                .routeID(routeID)
-                                .stopID(new ObjectId(data.getStopID()))
-                                .booked(true)
-                                .inPlace(false)
-                                .build();
-
-                        reservationService.save(reservation);
-                        // aggiungere tramite calendar con set + 1
-                        today.add(Calendar.DATE,1);
+        if (!data.getNameRoute().isEmpty() && data.getDirection() != null && data.getStopID() != null) {
+            // caso in cui ci sia solo andata o solo ritorno
+            if (data.getNameRoute().contains("")) {
+                int i = 0;
+                for (String s : data.getNameRoute()) {
+                    if (!s.equals("")) {
+                        routeID = routeService.findIDRouteByNameR(data.getNameRoute().get(i));
+                        r = routeService.findRouteByNameR(data.getNameRoute().get(i));
+                        break;
                     }
+                    i++;
                 }
-                //TODO: fare caso in cui chi iscrive il bambino vuole iscriverlo sia per l'andata che per il ritorno
+                child = Child.builder()
+                        .nameChild(data.getNameChild())
+                        .username(data.getUsername())
+                        .family_name(data.getFamily_name())
+                        .isMale(data.isMale())
+                        .color(data.getColor())
+                        .direction(data.getDirection())
+                        .stopID(data.getStopID())
+                        .nameRoute(data.getNameRoute())
+                        .build();
+
+                System.out.println(data.getUsername());
+
+
+                // TODO: mettere nel child service, non chiamare la repo direttamente
+                childRepo.save(child);
+                System.out.println("CHILD PRIMA: " + child);
+
+
+                child = childRepo.findChildByNameChildAndUsername(data.getNameChild(), data.getUsername());
+                System.out.println("CHILD DOPO: " + child);
+                //todo controllare che entri qui quando sto a creare un bimbo
+                if (data.getDirection() != null && !data.getDirection().equals("")) {
+                    if (data.getDirection().equals("andata") || data.getDirection().equals("ritorno")) {
+                        // TODO per ora lo faccio per due giorni ma è da fare per tutto il periodo scolastico
+                        // Usare Calendar che permette tramite get(Day_of_the_week) di prendere la data corretta
+                        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+                        Calendar today = Calendar.getInstance(timeZone);
+                        today.set(Calendar.MILLISECOND, 0);
+                        today.set(Calendar.SECOND, 0);
+                        today.set(Calendar.MINUTE, 0);
+                        today.set(Calendar.HOUR_OF_DAY, 0);
+                        int day = 0;
+                        long dataTimeStamp;
+                        int j = 7;
+                        for (int k = 0; k < j; k++) {
+                            day = today.get(Calendar.DAY_OF_WEEK);
+                            dataTimeStamp = today.getTimeInMillis();
+                            if (day == 1 || day == 7) {
+                                today.add(Calendar.DATE, 1);
+                                j++;
+                                continue;
+                            }
+                            Reservation reservation = Reservation.builder()
+                                    .childID(child.getChildID())
+                                    .familyName(child.getFamily_name())
+                                    .date(dataTimeStamp)
+                                    .direction(data.getDirection())
+                                    .name_route(data.getNameRoute().get(i))
+                                    .routeID(routeID)
+                                    .stopID(new ObjectId(data.getStopID().get(i)))
+                                    .booked(true)
+                                    .inPlace(false)
+                                    .build();
+
+                            reservationService.save(reservation);
+                            // aggiungere tramite calendar con set + 1
+                            today.add(Calendar.DATE, 1);
+                        }
+                    }else{
+                        return badRequest().build();
+                    }
+
+
+                    // TODO: il 27/08 arrivato qui (stavo facendo la possibilità di mettere andata e ritorno)
+
+
+                    //TODO: fare caso in cui chi iscrive il bambino vuole iscriverlo sia per l'andata che per il ritorno
                 /*else if (data.getDirection().equals("entrambi")) {
                     for (int k = 0; k <= 1; k++) {
                         String direzione ="andata";
@@ -158,26 +175,106 @@ public class ChildController {
                 }*/
 
 
+                }else{
+                    return badRequest().build();
+                }
+            }else if(!data.getNameRoute().contains("") && data.getNameRoute().size()==2) {
+                if (data.getDirection().equals("entrambi")) {
+                    System.out.println("COMUNQUE QUI ENTRO");
+                    child = Child.builder()
+                            .nameChild(data.getNameChild())
+                            .username(data.getUsername())
+                            .family_name(data.getFamily_name())
+                            .isMale(data.isMale())
+                            .color(data.getColor())
+                            .direction(data.getDirection())
+                            .stopID(data.getStopID())
+                            .nameRoute(data.getNameRoute())
+                            .build();
+
+                    childRepo.save(child);
+
+                    for (int k = 0; k < data.getNameRoute().size(); k++) {
+                        routeID = routeService.findIDRouteByNameR(data.getNameRoute().get(k));
+                        r = routeService.findRouteByNameR(data.getNameRoute().get(k));
+                        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+                        Calendar today = Calendar.getInstance(timeZone);
+                        today.set(Calendar.MILLISECOND, 0);
+                        today.set(Calendar.SECOND, 0);
+                        today.set(Calendar.MINUTE, 0);
+                        today.set(Calendar.HOUR_OF_DAY, 0);
+                        int day = 0;
+                        long dataTimeStamp;
+                        int j = 7;
+                        for (int h = 0; h < j; h++) {
+                            day = today.get(Calendar.DAY_OF_WEEK);
+                            dataTimeStamp = today.getTimeInMillis();
+                            if (day == 1 || day == 7) {
+                                today.add(Calendar.DATE, 1);
+                                j++;
+                                continue;
+                            }
+                            if (k==1){
+                                Reservation reservation = Reservation.builder()
+                                        .childID(child.getChildID())
+                                        .familyName(child.getFamily_name())
+                                        .date(dataTimeStamp)
+                                        .direction("ritorno")
+                                        .name_route(data.getNameRoute().get(k))
+                                        .routeID(routeID)
+                                        .stopID(new ObjectId(data.getStopID().get(k)))
+                                        .booked(true)
+                                        .inPlace(false)
+                                        .build();
+
+                                reservationService.save(reservation);
+                                // aggiungere tramite calendar con set + 1
+                                today.add(Calendar.DATE, 1);
+                            }else{
+                                Reservation reservation = Reservation.builder()
+                                        .childID(child.getChildID())
+                                        .familyName(child.getFamily_name())
+                                        .date(dataTimeStamp)
+                                        .direction("andata")
+                                        .name_route(data.getNameRoute().get(k))
+                                        .routeID(routeID)
+                                        .stopID(new ObjectId(data.getStopID().get(k)))
+                                        .booked(true)
+                                        .inPlace(false)
+                                        .build();
+
+                                reservationService.save(reservation);
+                                // aggiungere tramite calendar con set + 1
+                                today.add(Calendar.DATE, 1);
+                            }
+                        }
+                    }
+                }else{
+                    return badRequest().build();
+                }
+            }else{
+                return badRequest().build();
             }
-        }else{ // caso in cui il bambino è iscritto senza fermata e linea di default
-             child = Child.builder()
-                    .nameChild(data.getNameChild())
-                    .username(data.getUsername())
-                    .family_name(data.getFamily_name())
-                    .isMale(data.isMale())
-                    .color(data.getColor())
-                    .build();
+        }else { // caso in cui il bambino è iscritto senza fermata e linea di default
+                child = Child.builder()
+                        .nameChild(data.getNameChild())
+                        .username(data.getUsername())
+                        .family_name(data.getFamily_name())
+                        .isMale(data.isMale())
+                        .color(data.getColor())
+                        .build();
 
-            System.out.println(data.getUsername());
-
-
-            // mettere nel child service, non chiamare la repo direttamente
-            childRepo.save(child);
-            System.out.println("CHILD PRIMA: " + child);
+                System.out.println(data.getUsername());
 
 
-            child = childRepo.findChildByNameChildAndUsername(data.getNameChild(), data.getUsername());
-            System.out.println("CHILD DOPO: " + child);
+                // mettere nel child service, non chiamare la repo direttamente
+                childRepo.save(child);
+                System.out.println("CHILD PRIMA: " + child);
+
+
+                child = childRepo.findChildByNameChildAndUsername(data.getNameChild(), data.getUsername());
+                System.out.println("CHILD DOPO: " + child);
+            }
             String action = "Bambino creato";
             long day = new Date().getTime();
             //TODO: da inviare sia all'admin di linea che all'systemAdmin (quindi da mettere anche nell'if sopra con un array per i più receiver)
@@ -186,14 +283,15 @@ public class ChildController {
                     action,
                     day
             );
-        }
 
 
-        ChildVM data_return = data;
-        data_return.setChildID(child.getChildID().toString());
-        System.out.println("Arrivo qui e ed esco");
-        return ok().body(data_return);
-    }
+            ChildVM data_return = data;
+            data_return.setChildID(child.getChildID().toString());
+            System.out.println("Arrivo qui e ed esco");
+            return ok().body(data_return);
+        };
+
+
 
     @RequestMapping(value = "/user/{userID}/children", method = RequestMethod.GET)
     public ResponseEntity getMyChilds(@PathVariable String userID) {
@@ -214,6 +312,7 @@ public class ChildController {
     // vanno aggiunti più query params
     @RequestMapping(value = "/user/children", method = RequestMethod.GET)
     public ResponseEntity getMyChildren(@RequestParam(required = false) String username) {
+        ArrayList<String> stopName = new ArrayList<String>();
         System.out.println("entro qui "+username);
         ArrayList<Child> children ;
 
@@ -233,22 +332,53 @@ public class ChildController {
             System.out.println("name: " + r.getNameChild());
             Reservation reservation= reservationService.findRecentReservation(r.getChildID(),new Date().getTime());
             if (r.getStopID()!=null && r.getNameRoute()!=null && r.getDirection()!=null){
-                String stopName = stopService.findStopbyId(new ObjectId(r.getStopID())).getNome();
-                childrenVM.add(
-                        ChildVM.builder()
-                                .childID(r.getChildID().toString())
-                                .nameChild(r.getNameChild())
-                                .family_name(r.getFamily_name())
-                                .color(r.getColor())
-                                .username(r.getUsername())
-                                .isMale(r.isMale())
-                                .direction(r.getDirection())
-                                .nameRoute(r.getNameRoute())
-                                .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
-                                .stopID(r.getStopID())
-                                .stopName(stopName)
-                                .build()
-                );
+                if ( r.getNameRoute().contains("")){
+                    int i = 0;
+                    for (String s : r.getNameRoute()) {
+                        if (!s.equals("")) {
+                            stopName.add(stopService.findStopbyId(new ObjectId(r.getStopID().get(i))).getNome());
+                            break;
+                        }
+                        i++;
+                    }
+                    if (r.getDirection().equals("andata") || r.getDirection().equals("ritorno")){
+                        childrenVM.add(
+                                ChildVM.builder()
+                                        .childID(r.getChildID().toString())
+                                        .nameChild(r.getNameChild())
+                                        .family_name(r.getFamily_name())
+                                        .color(r.getColor())
+                                        .username(r.getUsername())
+                                        .isMale(r.isMale())
+                                        .direction(r.getDirection())
+                                        .nameRoute(r.getNameRoute())
+                                        //      .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
+                                        .stopID(r.getStopID())
+                                        .stopName(stopName)
+                                        .build()
+                        );
+                    }
+
+                }else if(r.getDirection().equals("entrambi")){
+                    for (int i = 0; i<r.getStopID().size(); i++){
+                       stopName.add(stopService.findStopbyId(new ObjectId(r.getStopID().get(i))).getNome());
+                    }
+                    childrenVM.add(
+                            ChildVM.builder()
+                                    .childID(r.getChildID().toString())
+                                    .nameChild(r.getNameChild())
+                                    .family_name(r.getFamily_name())
+                                    .color(r.getColor())
+                                    .username(r.getUsername())
+                                    .isMale(r.isMale())
+                                    .direction(r.getDirection())
+                                    .nameRoute(r.getNameRoute())
+                                    //      .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
+                                    .stopID(r.getStopID())
+                                    .stopName(stopName)
+                                    .build()
+                    );
+                }
             }else{
                 childrenVM.add(
                         ChildVM.builder()
@@ -256,7 +386,7 @@ public class ChildController {
                                 .nameChild(r.getNameChild())
                                 .family_name(r.getFamily_name())
                                 .color(r.getColor())
-                                .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
+                             //   .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
                                 .username(r.getUsername())
                                 .isMale(r.isMale())
                         .build());

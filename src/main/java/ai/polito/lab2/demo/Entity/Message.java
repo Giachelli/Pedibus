@@ -22,4 +22,5 @@ public class Message {
     ObjectId reservationID;
     Boolean read;
     String status; // pending, accepted, rejected
+    //String commento;
 }

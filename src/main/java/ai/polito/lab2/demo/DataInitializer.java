@@ -126,6 +126,24 @@ public class DataInitializer implements CommandLineRunner {
     private void insertChildIntoDB() {
         System.out.println("creano il child");
         Route r1 = routeService.getRoutesByID(2);
+        ArrayList<String> bubba = new ArrayList<>();
+        bubba.add(r1.getStopListA().get(1).get_id().toString());
+        bubba.add(r1.getStopListB().get(4).get_id().toString());
+        ArrayList<String> bubba1 = new ArrayList<>();
+        bubba1.add(r1.getStopListA().get(1).getNome());
+        bubba1.add(r1.getStopListB().get(4).getNome());
+        ArrayList<String> bubba2 = new ArrayList<>();
+        bubba2.add(r1.getNameR());
+        bubba2.add(r1.getNameR());
+        ArrayList<String> bubba_ = new ArrayList<>();
+        bubba_.add("");
+        bubba_.add(r1.getStopListB().get(4).get_id().toString());
+        ArrayList<String> bubba_1 = new ArrayList<>();
+        bubba_1.add("");
+        bubba_1.add(r1.getStopListB().get(4).getNome());
+        ArrayList<String> bubba_2 = new ArrayList<>();
+        bubba_2.add("");
+        bubba_2.add(r1.getNameR());
         this.childController.registerChild(
                 ChildVM.builder()
                         .nameChild("Luigi")
@@ -133,10 +151,10 @@ public class DataInitializer implements CommandLineRunner {
                         .family_name("Malnati")
                         .color("#B0C4DE")
                         .isMale(true)
-                        .stopID(r1.getStopListA().get(0).get_id().toString())
-                        .stopName(r1.getStopListA().get(0).getNome())
-                        .nameRoute(r1.getNameR())
-                        .direction("andata")
+                        .stopID(bubba)
+                        .stopName(bubba1)
+                        .nameRoute(bubba2)
+                        .direction("entrambi")
                         .build()
         );
         this.childController.registerChild(
@@ -146,12 +164,12 @@ public class DataInitializer implements CommandLineRunner {
                         .family_name("Servetti")
                         .color("#F4D8CD")
                         .isMale(true)
-                        .stopID(r1.getStopListA().get(1).get_id().toString())
-                        .stopName(r1.getStopListA().get(1).getNome())
-                        .nameRoute(r1.getNameR())
+                        .stopID(bubba_)
+                        .stopName(bubba_1)
+                        .nameRoute(bubba_2)
                         .direction("andata")
                         .build()
-        );
+        ); /*
         this.childController.registerChild(
                 ChildVM.builder()
                         .nameChild("Carla")
@@ -179,6 +197,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
+    */
     }
 
 
