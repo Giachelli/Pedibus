@@ -2,6 +2,7 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.ShiftDTO;
 import ai.polito.lab2.demo.Entity.Shift;
+import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ShiftRepo;
 import ai.polito.lab2.demo.viewmodels.ShiftCreateVM;
 import org.bson.types.ObjectId;
@@ -75,6 +76,12 @@ public class ShiftServiceImpl implements ShiftService {
             listShifts.add(shiftCreateVM);
         }
         return listShifts;
+    }
+
+    @Override
+    public Shift getTurnByMuleDateDirection(String mule, long date, boolean dir) {
+        User u = userService.getUserByUsername(mule);
+        return shiftRepo.getTurnByMuleIDAndDateAndDirection(u.get_id(),date,dir);
     }
 
     @Override
