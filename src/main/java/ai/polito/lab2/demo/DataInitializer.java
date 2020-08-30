@@ -231,8 +231,8 @@ public class DataInitializer implements CommandLineRunner {
         andataS = new ArrayList<>();
         ritornoS = new ArrayList<>();
         andataS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 1).get_id());
-        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 5).get_id());
-        andataS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 1).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 5).get_id());
         ritornoS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 5).get_id());
         andata.put(4, andataS);
         ritorno.put(4, ritornoS);
@@ -240,8 +240,8 @@ public class DataInitializer implements CommandLineRunner {
         andataS = new ArrayList<>();
         ritornoS = new ArrayList<>();
         andataS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 2).get_id());
-        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 5).get_id());
-        andataS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 1).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 5).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 1).get_id());
         ritornoS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 4).get_id());
         andata.put(1, andataS);
         ritorno.put(1, ritornoS);
@@ -249,8 +249,8 @@ public class DataInitializer implements CommandLineRunner {
         andataS = new ArrayList<>();
         ritornoS = new ArrayList<>();
         andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 4).get_id());
-        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 5).get_id());
-        andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 1).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 5).get_id());
         ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 2).get_id());
         andata.put(2, andataS);
         ritorno.put(2, ritornoS);
@@ -258,8 +258,8 @@ public class DataInitializer implements CommandLineRunner {
         andataS = new ArrayList<>();
         ritornoS = new ArrayList<>();
         andataS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 1).get_id());
-        ritornoS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 5).get_id());
-        andataS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 1).get_id());
+        ritornoS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 1).get_id());
+        andataS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 5).get_id());
         ritornoS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 5).get_id());
         andata.put(3, andataS);
         ritorno.put(3, ritornoS);

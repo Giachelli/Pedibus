@@ -40,6 +40,10 @@ public class ShiftController {
     public ResponseEntity<List<ShiftCreateVM>> createShift(@RequestBody List<ShiftCreateVM> shiftVMList) {
         List<ShiftCreateVM> returnedList = new ArrayList<>();
 
+        if (controlDoubleShift(shiftVMList)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         /*
         if(shiftVMList.size() > 25)
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -101,6 +105,18 @@ public class ShiftController {
 
 
         return new ResponseEntity<List<ShiftCreateVM>>(returnedList, HttpStatus.CREATED);
+    }
+
+    private boolean controlDoubleShift(List<ShiftCreateVM> shiftVMList) {
+
+        for(ShiftCreateVM shift : shiftVMList){
+
+            if (shiftService.getTurnByMuleDateDirection(shift.getUsername(),shift.getData(),shift.isDirection()) != null){
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
