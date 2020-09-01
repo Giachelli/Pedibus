@@ -53,7 +53,7 @@ public class ChildController {
 
     /* Caso in cui il child viene iscritto con una linea e una fermata di default */
 
-        if (!data.getNameRoute().isEmpty() && data.getDirection() != null && data.getStopID() != null) {
+        if (data.getNameRoute()!= null && !data.getNameRoute().isEmpty() && data.getDirection() != null && data.getStopID() != null) {
             // caso in cui ci sia solo andata o solo ritorno
             if (data.getNameRoute().contains("")) {
                 int i = 0;
@@ -312,10 +312,11 @@ public class ChildController {
     // vanno aggiunti più query params
     @RequestMapping(value = "/user/children", method = RequestMethod.GET)
     public ResponseEntity getMyChildren(@RequestParam(required = false) String username) {
-        ArrayList<String> stopName = new ArrayList<String>();
+        HashMap<Integer,ArrayList<String>> stopName = new HashMap<>();
+        ArrayList<String> stopName1 = new ArrayList<String>();
         System.out.println("entro qui "+username);
         ArrayList<Child> children ;
-
+        Integer count_bimbi = 0;
         ArrayList<ChildVM> childrenVM = new ArrayList<>();
 
 
@@ -329,6 +330,7 @@ public class ChildController {
 
         System.out.println("arrivo qui "+ children.size());
         for (Child r : children) {
+            stopName1.clear();
             System.out.println("name: " + r.getNameChild());
             Reservation reservation= reservationService.findRecentReservation(r.getChildID(),new Date().getTime());
             if (r.getStopID()!=null && r.getNameRoute()!=null && r.getDirection()!=null){
@@ -336,11 +338,14 @@ public class ChildController {
                     int i = 0;
                     for (String s : r.getNameRoute()) {
                         if (!s.equals("")) {
-                            stopName.add(stopService.findStopbyId(new ObjectId(r.getStopID().get(i))).getNome());
+                            stopName1.add(stopService.findStopbyId(new ObjectId(r.getStopID().get(i))).getNome());
                             break;
                         }
                         i++;
                     }
+                    System.out.println("stopname1" + stopName1);
+                    System.out.println("count_bimbi" + count_bimbi);
+                    stopName.put(count_bimbi,new ArrayList<>(stopName1));
                     if (r.getDirection().equals("andata") || r.getDirection().equals("ritorno")){
                         childrenVM.add(
                                 ChildVM.builder()
@@ -354,15 +359,17 @@ public class ChildController {
                                         .nameRoute(r.getNameRoute())
                                         //      .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
                                         .stopID(r.getStopID())
-                                        .stopName(stopName)
+                                        .stopName(stopName.get(count_bimbi))
                                         .build()
                         );
+                    System.out.println("stop name del child" + childrenVM.get(count_bimbi).getStopName());
                     }
 
                 }else if(r.getDirection().equals("entrambi")){
                     for (int i = 0; i<r.getStopID().size(); i++){
-                       stopName.add(stopService.findStopbyId(new ObjectId(r.getStopID().get(i))).getNome());
+                       stopName1.add(stopService.findStopbyId(new ObjectId(r.getStopID().get(i))).getNome());
                     }
+                    stopName.put(count_bimbi,new ArrayList<>(stopName1));
                     childrenVM.add(
                             ChildVM.builder()
                                     .childID(r.getChildID().toString())
@@ -375,10 +382,12 @@ public class ChildController {
                                     .nameRoute(r.getNameRoute())
                                     //      .nextCorsa(reservation.getName_route() + reservation.getStopID() + reservation.getDirection())
                                     .stopID(r.getStopID())
-                                    .stopName(stopName)
+                                    .stopName(stopName.get(count_bimbi))
                                     .build()
                     );
                 }
+                System.out.println("stop name del child" + childrenVM.get(count_bimbi).getStopName());
+
             }else{
                 childrenVM.add(
                         ChildVM.builder()
@@ -391,7 +400,9 @@ public class ChildController {
                                 .isMale(r.isMale())
                         .build());
             }
+         count_bimbi++;
         }
+        System.out.println("stopName" + stopName);
 
         Map<Object, Object> model = new HashMap<>();
         model.put("childrenVM", childrenVM);
