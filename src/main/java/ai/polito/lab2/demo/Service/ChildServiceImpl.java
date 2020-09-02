@@ -77,4 +77,11 @@ public class ChildServiceImpl implements ChildService {
         System.out.println("child list size::::::::" + child.size());
         return child.get(0);
     }
+
+    @Override
+    public ArrayList<Child> findAllChild() {
+        return (ArrayList<Child>) childRepo.findAll();
+    }
+
+
 }

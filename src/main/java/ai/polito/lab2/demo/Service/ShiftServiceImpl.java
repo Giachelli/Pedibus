@@ -140,7 +140,7 @@ public class ShiftServiceImpl implements ShiftService {
         if (s == null)
             return false;
         else{
-            if (s.getStatus()=="rejected")
+            if (s.getStatus().equals("rejected"))
                 return false;
         }
         return true;
