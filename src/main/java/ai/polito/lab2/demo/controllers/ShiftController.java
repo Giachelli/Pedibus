@@ -45,11 +45,6 @@ public class ShiftController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "PRENOTAZIONE MULE GIA' PRESENTE NEL DB");
         }
 
-        /*
-        if(shiftVMList.size() > 25)
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-         */
 
         for (ShiftCreateVM shiftVM : shiftVMList) {
             if (!shiftVM.control())
@@ -72,8 +67,6 @@ public class ShiftController {
 
             if ((!route.getUsernameMule().contains(shiftVM.getUsername())) || (!route.getUsernameAdmin().contains(shiftVM.getUsernameAdmin())))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'utente selezionato non è mule per questa linea o l'admin non è admin per questa linea");
-
-
 
 
             Stop s1 = stopService.findStopbyId(new ObjectId(shiftVM.getStartShiftId()));
