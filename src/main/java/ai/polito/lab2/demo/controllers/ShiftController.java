@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -41,7 +42,7 @@ public class ShiftController {
         List<ShiftCreateVM> returnedList = new ArrayList<>();
 
         if (controlDoubleShift(shiftVMList)){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "PRENOTAZIONE MULE GIA' PRESENTE NEL DB");
         }
 
         /*
@@ -52,22 +53,28 @@ public class ShiftController {
 
         for (ShiftCreateVM shiftVM : shiftVMList) {
             if (!shiftVM.control())
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "PRENOTAZIONE MULE GIA' PRESENTE NEL DB");
+
 
             Route route = routeService.getRoutesByID(shiftVM.getLineId());
             if (route == null)
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-            if ((!route.getUsernameMule().contains(shiftVM.getUsername())) || (!route.getUsernameAdmin().contains(shiftVM.getUsernameAdmin())))
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Route non presente nel db, controlla l'id");
 
             User u = userService.getUserByUsername(shiftVM.getUsername());
             if (u == null)
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il mule selezionato non esiste");
+
 
             User admin = userService.getUserByUsername(shiftVM.getUsernameAdmin());
             if (admin == null)
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'admin richiedente non esiste");
+
+
+            if ((!route.getUsernameMule().contains(shiftVM.getUsername())) || (!route.getUsernameAdmin().contains(shiftVM.getUsernameAdmin())))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'utente selezionato non è mule per questa linea o l'admin non è admin per questa linea");
+
+
+
 
             Stop s1 = stopService.findStopbyId(new ObjectId(shiftVM.getStartShiftId()));
             Stop s2 = stopService.findStopbyId(new ObjectId(shiftVM.getStopShiftId()));
@@ -111,7 +118,7 @@ public class ShiftController {
 
         for(ShiftCreateVM shift : shiftVMList){
 
-            if (shiftService.getTurnByMuleDateDirection(shift.getUsername(),shift.getData(),shift.isDirection()) != null){
+            if (shiftService.controlDoubleTurn(shift.getUsername(),shift.getData(),shift.isDirection())){
                 return true;
             }
         }
