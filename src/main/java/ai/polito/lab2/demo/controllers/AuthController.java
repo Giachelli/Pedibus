@@ -122,11 +122,11 @@ public class AuthController {
         }
 
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
-    public void confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
+    public ResponseEntity confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
         if (!userVM.getPassword().equals(userVM.getConfirmPassword()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are differents");
         if (userService.manageUser(randomUUID, userVM)) {
-            throw new ResponseStatusException(HttpStatus.OK, "OK");
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
         }

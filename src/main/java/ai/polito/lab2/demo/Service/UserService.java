@@ -49,7 +49,6 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserByUUID(String UUID) {
-
         return userRepo.findByToken(UUID);
     }
 
@@ -109,18 +108,16 @@ public class UserService implements IUserService {
     @Override
     public boolean manageUser(String randomUUID, ConfirmUserVM userVM) {
 
-        User user = this.getUserByUUID(randomUUID);
+        User user = getUserByUUID(randomUUID);
 
-        //capire se dal momento che lo faccimao con
-
-        /*
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: User not found");
         }
         if (user.isEnabled()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already active");
         }
-        Calendar cal = Calendar.getInstance();
+
+       /* Calendar cal = Calendar.getInstance();
         // in questo caso l'admin deve mandare di nuovo una mail perchè è scaduto il token
         if ((user.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expired token");

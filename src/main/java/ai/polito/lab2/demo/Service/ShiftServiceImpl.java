@@ -133,4 +133,16 @@ public class ShiftServiceImpl implements ShiftService {
         }
         return listShifts;
     }
+
+    @Override
+    public boolean controlDoubleTurn(String username, long data, boolean direction) {
+        Shift s = this.getTurnByMuleDateDirection(username,data,direction);
+        if (s == null)
+            return false;
+        else{
+            if (s.getStatus()=="rejected")
+                return false;
+        }
+        return true;
+    }
 }
