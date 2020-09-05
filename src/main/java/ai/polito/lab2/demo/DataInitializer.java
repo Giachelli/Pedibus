@@ -6,6 +6,7 @@ import static reactor.bus.selector.Selectors.$;
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.*;
 import ai.polito.lab2.demo.Repositories.*;
+import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.StopService;
 import ai.polito.lab2.demo.controllers.ChildController;
@@ -47,6 +48,9 @@ public class DataInitializer implements CommandLineRunner {
     private ChildRepo childRepo;
 
     @Autowired
+    private ReservationService reservationService;
+
+    @Autowired
     private ChildController childController;
 
     @Autowired
@@ -54,6 +58,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        reservationService.setFirstDay("15/09/2020");
         boolean addRouteId = true;
         Set<Integer> routeId = new HashSet<>();
         routeId.add(1);
@@ -107,7 +112,7 @@ public class DataInitializer implements CommandLineRunner {
         routeService.saveRoute(r1);
 
         r1 = routeService.getRoutesByID(3);
-        r1 = routeService.getRoutesByID(4);
+        r2 = routeService.getRoutesByID(4);
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));

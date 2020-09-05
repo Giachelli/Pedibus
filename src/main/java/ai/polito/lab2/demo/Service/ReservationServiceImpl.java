@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -40,6 +41,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private ChildRepo childRepo;
+
+    String firstDay;
 
     /*
     public Reservation createReservation(ReservationDTO r) throws JsonProcessingException {
@@ -69,6 +72,31 @@ public class ReservationServiceImpl implements ReservationService {
             System.out.println("sono nel else del size = 0::::::::::::"+ data);
             return res.get(0);
         }
+    }
+
+    @Override
+    public int calculateFirstDay() {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        Calendar today = Calendar.getInstance(timeZone);
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        int day = Integer.parseInt(this.firstDay.split("/")[0]);
+        int month = Integer.parseInt(this.firstDay.split("/")[1]);
+        int year = Integer.parseInt(this.firstDay.split("/")[2]);
+        Calendar startSchool = new Calendar.Builder().setDate(year,month,day).build();
+        startSchool.set(Calendar.MILLISECOND, 0);
+        startSchool.set(Calendar.SECOND, 0);
+        startSchool.set(Calendar.MINUTE, 0);
+        startSchool.set(Calendar.HOUR_OF_DAY, 0);
+        int daysBetween = (int)ChronoUnit.DAYS.between( startSchool.toInstant(),today.toInstant());
+        return daysBetween;
+    }
+
+    @Override
+    public void setFirstDay(String s) {
+        this.firstDay=s;
     }
 
     public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
