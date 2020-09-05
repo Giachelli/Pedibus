@@ -170,7 +170,11 @@ public class UserController {
     @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
     public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
-        System.out.println("Adesso non funzioni?");
+        if((modifyRoleUser.getAvailability() == null)||(modifyRoleUser.getStopAndata() == null) || (modifyRoleUser.getStopRitorno() == null))
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+        //if(controlData())
+
         User user = userService.getUserBy_id(userID);
         ArrayList<Integer> adminRoutes = modifyRoleUser.getAdminRoutes();
         ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
@@ -182,10 +186,15 @@ public class UserController {
             for (int i : user.getAdminRoutesID()) {
                 Route r = routeService.getRoutesByID(i);
                 if (r == null) {
-                    System.out.println("Errore nella modify USer passo un id route non esistente");
-                    return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+                    System.out.println("Errore nella modify User passo un id route non esistente");
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
                 }
-                r.removeAdmin(user.getUsername());
+                if(r.getUsernameAdmin().contains(user.getUsername()))
+                    r.removeAdmin(user.getUsername());
+                else
+                {
+                    throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Settaggio db errore");
+                }
                 routeService.saveRoute(r);
             }
 
@@ -194,10 +203,17 @@ public class UserController {
                 Route r = routeService.getRoutesByID(i);
                 if (r == null) {
                     System.out.println("Errore nella modify USer passo un id route non esistente");
-                    return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
                 }
-                r.removeMule(user.getUsername());
+
+                if(r.getUsernameMule().contains(user.getUsername()))
+                    r.removeMule(user.getUsername());
+                else
+                {
+                    throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Settaggio db errore");
+                }
+
                 routeService.saveRoute(r);
             }
 
@@ -279,56 +295,9 @@ public class UserController {
         userService.saveUser(user);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-/*
-    @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"}) //aggiungere ruoli all'utente tramite username
-    @RequestMapping(value = "/users/modify/{username}", method = RequestMethod.PUT)
-    public ResponseEntity modifyUser(@PathVariable String username, @RequestBody modifyRoleUserVM modifyRoleUser) {
-        User user = userService.getUserByUsername(username);
-        ArrayList<Integer> adminRoutes = modifyRoleUser.getNewAdminRoutes();
-        ArrayList<Integer> muleRoutes = modifyRoleUser.getNewMuleRoutes();
-
-        ArrayList<Integer> adminRouteID = new ArrayList<>();
-        ArrayList<Integer> muleRouteID = new ArrayList<>();
-
-        for (Route r : adminRoutes) {
-            adminRouteID.add(r.getId());
-            Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
-            addAdminRoute.addAdmin(user.getUsername());
-            routeService.saveRoute(addAdminRoute);
-        }
-        if (adminRoutes.size() > 0)
-            if (!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
-                user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
-
-        user.addAdminRoutesID(adminRouteID);
-
-        //todo questo secondo me è superfluo e inutile 21/03
-        userService.saveUser(user);
-
-        //controlli per lista vuota
 
 
-        for (Route r : muleRoutes) {
-            muleRouteID.add(r.getId());
-            Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
-            addMuleRoute.addMule(user.getUsername());
-            routeService.saveRoute(addMuleRoute);
-        }
-
-        if (muleRoutes.size() > 0)
-            if (!user.getRoles().contains(roleRepository.findByRole("ROLE_MULE"))) {
-                user.addRole(roleRepository.findByRole("ROLE_MULE"));
-            }
-
-        user.addMuleRoutesID(muleRouteID);
-
-        userService.saveUser(user);
-
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }*/
-
-
-    @RequestMapping(value = "/users/{userID}/getAdminLines", method = RequestMethod.GET)
+    @RequestMapping(value = "/users/{userID}/getLines", method = RequestMethod.GET)
     public ResponseEntity<UserRouteVM> getUserLines(@PathVariable ObjectId userID) {
         User user = userService.getUserBy_id(userID);
         ArrayList<Integer> adminRoute = new ArrayList<>();

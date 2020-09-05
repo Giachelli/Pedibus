@@ -37,4 +37,8 @@ public interface ReservationService {
     Reservation findReservationByChildIDAndData(ObjectId childID, long data);
 
     Reservation findRecentReservation(ObjectId childID, long data);
+
+    int calculateFirstDay();
+
+    void setFirstDay(String s);
 }

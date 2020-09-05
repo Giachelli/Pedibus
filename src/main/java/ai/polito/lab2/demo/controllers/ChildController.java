@@ -99,8 +99,15 @@ public class ChildController {
                         today.set(Calendar.HOUR_OF_DAY, 0);
                         int day = 0;
                         long dataTimeStamp;
-                        int j = 7;
+                        int j = 200;
+                        int offsetDayOne = reservationService.calculateFirstDay();
                         for (int k = 0; k < j; k++) {
+                            if(offsetDayOne > 0 ){
+                                today.add(Calendar.DATE, offsetDayOne);
+                            } else {
+                                j = j - offsetDayOne;
+                                today.add(Calendar.DATE, 1);
+                            }
                             day = today.get(Calendar.DAY_OF_WEEK);
                             dataTimeStamp = today.getTimeInMillis();
                             if (day == 1 || day == 7) {
