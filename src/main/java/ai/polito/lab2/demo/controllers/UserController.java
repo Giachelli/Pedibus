@@ -170,8 +170,9 @@ public class UserController {
     @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
     public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
+
         if((modifyRoleUser.getAvailability() == null)||(modifyRoleUser.getStopAndata() == null) || (modifyRoleUser.getStopRitorno() == null))
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Errore nel passaggio dei parametri",HttpStatus.BAD_REQUEST);
 
         //if(controlData())
 
