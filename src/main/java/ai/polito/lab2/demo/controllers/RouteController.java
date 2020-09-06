@@ -2,6 +2,11 @@ package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.RouteService;
@@ -17,10 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +31,6 @@ import java.security.Principal;
 import java.util.*;
 
 import static org.springframework.http.ResponseEntity.ok;
-
-
-
-/* TODO fare geolocalizzazione */
 
 
 @Controller
@@ -54,8 +53,8 @@ public class RouteController {
         String user = Principal.class.getName();
         List<Route> routes = routeService.getAllRoutes();
         ArrayList<RouteVM> routeVMs = new ArrayList<>();
-        System.out.println(user+ " Request GET Lines. The lines are: routes\n");
-                routes.forEach(route -> System.out.println(route.getNameR()));
+        System.out.println(user + " Request GET Lines. The lines are: routes\n");
+        routes.forEach(route -> System.out.println(route.getNameR()));
         routes.forEach(route -> {
             ArrayList<StopVM> stopVMsA = new ArrayList<>();
             ArrayList<StopVM> stopVMsB = new ArrayList<>();
@@ -87,32 +86,30 @@ public class RouteController {
             List<UserVM> muleVMList = new ArrayList<>();
             List<UserVM> adminVMList = new ArrayList<>();
 
-            if(route.getUsernameAdmin() != null)
-            for(String u : route.getUsernameAdmin())
-            {
-                User admin = userService.getUserByUsername(u);
-                UserVM adminVM = UserVM.builder()
-                        .userID(admin.get_id().toString())
-                        .username(u)
-                        .family_name(admin.getFamily_name())
-                        .build();
-                adminVMList.add(adminVM);
-            }
+            if (route.getUsernameAdmin() != null)
+                for (String u : route.getUsernameAdmin()) {
+                    User admin = userService.getUserByUsername(u);
+                    UserVM adminVM = UserVM.builder()
+                            .userID(admin.get_id().toString())
+                            .username(u)
+                            .family_name(admin.getFamily_name())
+                            .build();
+                    adminVMList.add(adminVM);
+                }
 
-            if(route.getUsernameMule() != null)
-            for(String u : route.getUsernameMule())
-            {
-                User mule = userService.getUserByUsername(u);
-                UserVM muleVM = UserVM.builder()
-                        .userID(mule.get_id().toString())
-                        .username(u)
-                        .family_name(mule.getFamily_name())
-                        .availabilityVM(mule.getAvailability())
-                        .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
-                        .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
-                        .build();
-               muleVMList.add(muleVM);
-            }
+            if (route.getUsernameMule() != null)
+                for (String u : route.getUsernameMule()) {
+                    User mule = userService.getUserByUsername(u);
+                    UserVM muleVM = UserVM.builder()
+                            .userID(mule.get_id().toString())
+                            .username(u)
+                            .family_name(mule.getFamily_name())
+                            .availabilityVM(mule.getAvailability())
+                            .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
+                            .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
+                            .build();
+                    muleVMList.add(muleVM);
+                }
 
             RouteVM r = RouteVM.builder()
                     .id(route.getId())
@@ -137,5 +134,42 @@ public class RouteController {
         return new ResponseEntity<Route>(route, HttpStatus.OK);
     }
 
+    @Secured("ROLE_SYSTEM_ADMIN")
+    @RequestMapping(value = "/routes/addRoute", method = RequestMethod.POST)
+    public ResponseEntity createRoute(@RequestPart("file") MultipartFile file) throws JsonProcessingException {
+        if (null == file.getOriginalFilename()) {
+            return new ResponseEntity<>("File senza titolo",HttpStatus.BAD_REQUEST);
+        }
+        try {
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(file.getOriginalFilename());
+            Files.write(path, bytes);
+            System.out.println(path.getFileName());
+            routeService.readSingle(path.toFile());
+            /*File myObj = new File(path.getFileName().toString());
+            if (myObj.delete()) {
+                System.out.println("Deleted the file: " + myObj.getName());
+            } else {
+                System.out.println("Failed to delete the file.");
+            }*/
+            Path result = null;
+            try {
+                result = Files.move(Paths.get(path.getFileName().toString()), Paths.get("./target/pedibus_routes/"+path.getFileName().toString()));
+            } catch (IOException e) {
+                System.out.println("Exception while moving file: " + e.getMessage());
+            }
+            if(result != null) {
+                System.out.println("File moved successfully.");
+            }else{
+                System.out.println("File movement failed.");
+            }
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Errore nel file passato",HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Good Job", HttpStatus.CREATED);
+
+    }
 
 }

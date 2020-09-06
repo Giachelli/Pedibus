@@ -92,7 +92,7 @@ public class AuthController {
             }
             String token = jwtTokenProvider.createToken(username, this.userRepo.findByUsername(username).getRolesString());
 
-            User u= userService.getUserByUsername(username);
+            User u = userService.getUserByUsername(username);
 
             Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
@@ -108,9 +108,9 @@ public class AuthController {
 
     //TODO fare la get da inviare tramite mail
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.GET)
-    public void getPage(@PathVariable String randomUUID) {
-        if (userService.getVerificationToken(randomUUID)){
-            throw new ResponseStatusException(HttpStatus.OK, "OK");
+    public ResponseEntity getPage(@PathVariable String randomUUID) {
+        if (userService.getVerificationToken(randomUUID)) {
+            return new ResponseEntity(HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
         }
@@ -119,12 +119,23 @@ public class AuthController {
         model.put("message", "create the page");
         return ok(model);
         */
-        }
+    }
 
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
     public ResponseEntity confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
+        if (!userService.getVerificationToken(randomUUID))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token non valido");
+
+        if ((userVM.getPassword().length())<8)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password corta");
+
         if (!userVM.getPassword().equals(userVM.getConfirmPassword()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are differents");
+
+        if (!userVM.getPassword().matches(regex)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password non ha tutti i caratteri richiesti");
+        }
+
         if (userService.manageUser(randomUUID, userVM)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {

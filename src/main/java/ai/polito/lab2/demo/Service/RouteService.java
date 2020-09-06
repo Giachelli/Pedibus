@@ -4,6 +4,7 @@ import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
 import org.bson.types.ObjectId;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,9 @@ public interface RouteService {
 
        void readAll() throws IOException;
 
-       List<String> getAccompagnaotori(int lineaID);
+    void readSingle(File file) throws IOException;
+
+    List<String> getAccompagnaotori(int lineaID);
 
       /*  Route getReservationByDate(Route route);      //addNewUser
 

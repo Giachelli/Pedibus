@@ -5,7 +5,10 @@ import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Repositories.UserRepo;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.jni.Time;
+import org.bson.json.JsonParseException;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,7 +19,9 @@ import org.thymeleaf.util.ArrayUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -124,9 +129,8 @@ public class RouteServiceImpl implements RouteService {
 
         for (final File file : Objects.requireNonNull(folder.listFiles())) {
             Route route = objectMapper.readValue(file, Route.class);
-            if (userRepo.findByUsername(route.getEmails())==null)
-            {
-                String error = "ERROR IN EMAILS of file "+file.getName();
+            if (userRepo.findByUsername(route.getEmails()) == null) {
+                String error = "ERROR IN EMAILS of file " + file.getName();
                 throw new IOException(error);
             }
             route.setLastModified(file.lastModified());
@@ -138,17 +142,72 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public void readSingle(File file) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Route route = objectMapper.readValue(file, Route.class);
+            if (!controlRoute(route)) {
+                String error = "Error in new route of file " + file.getName();
+                throw new IOException(error);
+            }
+            route.setUsernameAdmin(new ArrayList<>());
+            route.setUsernameMule(new ArrayList<>());
+            route.getUsernameAdmin().add(route.getEmails());
+            Date date= new Date();
+            long time = date.getTime();
+            route.setLastModified(time);
+            routeRepo.save(route);
+
+        } catch (JsonMappingException | JsonParseException jsonException) {
+            throw new IOException("errore nel parsing json");
+        }
+
+    }
+
+    private boolean controlRoute(Route route) {
+        if (routeRepo.findRouteByNameR(route.getNameR()) != null)
+            return false;
+        if (routeRepo.findRouteById(route.getId()) != null)
+            return false;
+        if (userRepo.findByUsername(route.getEmails()) == null)
+            return false;
+        if (route.getStopListA() == null || route.getStopListA().size() == 0 || route.getStopListB() == null || route.getStopListB().size() == 0)
+            return false;
+
+        for (int i = 0; i < route.getStopListA().size(); i++) {
+            if (route.getStopListA().get(i).getTime() == "" ||
+                    route.getStopListA().get(i).getLat() < 0 ||
+                    route.getStopListA().get(i).getLng() < 0 ||
+                    route.getStopListA().get(i).getNome() == "" ||
+                    route.getStopListA().get(i).getNums() < 0)
+                return false;
+        }
+
+
+        for (int i = 0; i < route.getStopListB().size(); i++) {
+            if (route.getStopListB().get(i).getTime() == "" ||
+                    route.getStopListB().get(i).getLat() < 0 ||
+                    route.getStopListB().get(i).getLng() < 0 ||
+                    route.getStopListB().get(i).getNome() == "" ||
+                    route.getStopListB().get(i).getNums() < 0)
+                return false;
+        }
+
+        return true;
+    }
+
+    @Override
     public List<String> getAccompagnaotori(int lineaID) {
         List<String> accompagnatori = new ArrayList<>();
 
         Route route = routeRepo.findRouteById(lineaID);
 
-            // da verificare se questo accompagnatori si comporta bene
-        accompagnatori=route.getUsernameAdmin();
+        // da verificare se questo accompagnatori si comporta bene
+        accompagnatori = route.getUsernameAdmin();
 
         accompagnatori.addAll(route.getUsernameMule());
 
-        accompagnatori.forEach((x) ->{
+        accompagnatori.forEach((x) -> {
             System.out.println(x);
         });
 
