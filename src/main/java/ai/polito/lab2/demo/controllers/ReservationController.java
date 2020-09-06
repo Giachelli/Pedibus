@@ -153,7 +153,7 @@ public class ReservationController {
     //RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata
     @Secured("ROLE_MULE")
     @RequestMapping(value = "/reservations/add/{id_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reservation> createNotBooked(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+    public ResponseEntity createNotBooked(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
 
@@ -162,11 +162,12 @@ public class ReservationController {
 
         if (checkTimestamp(nowTimeStamp,data,stop))
         {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Errore nella data",HttpStatus.BAD_REQUEST);
         }
 
         if (this.controlName_RouteAndStop(id_linea,stopID))
-            return null; //TODO far tornare un errore
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         Reservation r = Reservation.builder()
                 .childID(childID)
                 .stopID(stopID)
@@ -186,7 +187,16 @@ public class ReservationController {
         reservationService.save(r);
         //  Reservation r = reservationService.createReservation(reservationDTO);
         //  String idReservation = r.getId().toString();
-        return new ResponseEntity<>(r,HttpStatus.CREATED);
+        ChildReservationVM childReservationVM =
+                ChildReservationVM.builder()
+                .childID(childID.toString())
+                .nameChild(childService.findChildbyID(childID).getNameChild())
+                .nameFamily(reservationVM.getFamily_name())
+                .booked(false)
+                .inPlace(true)
+                .build();
+
+        return new ResponseEntity<>(childReservationVM,HttpStatus.CREATED);
     }
 
     //TODO rivevedere implementazione objectID ChildID in base ad angular
