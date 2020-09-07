@@ -22,6 +22,7 @@ public class UserDTO {
     private List<Role> roles;
     private String token;  //capire se salva il token del jwt e se serve
     private Date expiryDate;
+    private String passtoken;
 
     public void addRole(Role userRole) {
         if (!this.getRolesString().contains(userRole.getRole()))
