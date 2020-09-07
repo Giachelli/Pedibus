@@ -123,7 +123,8 @@ public class UserService implements IUserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expired token");
         }
         */
-
+        System.out.println("USER MANAGE USER");
+        System.out.println(user);
         user.setFamily_name(userVM.getFamily_name());
         user.setPassword(this.passwordEncoder.encode(userVM.getPassword()));
         user.setToken(null);

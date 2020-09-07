@@ -48,6 +48,7 @@ public class RouteController {
 
     }
 
+
     @RequestMapping(value = "/routes", method = RequestMethod.GET)
     public ResponseEntity getAllRoutes() throws JsonProcessingException {
         String user = Principal.class.getName();
@@ -93,6 +94,7 @@ public class RouteController {
                             .userID(admin.get_id().toString())
                             .username(u)
                             .family_name(admin.getFamily_name())
+                            .isEnabled(admin.isEnabled())
                             .build();
                     adminVMList.add(adminVM);
                 }
@@ -104,6 +106,7 @@ public class RouteController {
                             .userID(mule.get_id().toString())
                             .username(u)
                             .family_name(mule.getFamily_name())
+                            .isEnabled(mule.isEnabled())
                             .availabilityVM(mule.getAvailability())
                             .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
                             .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))

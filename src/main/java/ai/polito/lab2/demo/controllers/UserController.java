@@ -72,6 +72,7 @@ public class UserController {
                     .userID(u.get_id().toString())
                     .username(u.getUsername())
                     .family_name(u.getFamily_name())
+                    .availabilityVM((u.getAvailability()))
                     .isEnabled(u.isEnabled())
                     .build();
             usersIDString.add(u.get_id().toString());
