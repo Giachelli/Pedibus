@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Dto.UserDTO;
+import ai.polito.lab2.demo.OnRecoverCompleteEvent;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.OnRegistrationCompleteEvent;
 import ai.polito.lab2.demo.Repositories.UserRepo;
@@ -144,19 +145,35 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/recover", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity recoverPassword(@RequestBody User username, WebRequest request) {
+    public ResponseEntity recoverPassword(@RequestBody String email, WebRequest request) {
 
-        User user = userRepo.findByUsername(username.getUsername());
+        User user = userRepo.findByUsername(email);
         if (user == null) {
-            //do something
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        String token = UUID.randomUUID().toString();
-        //service.createPasswordResetTokenForUser(user, token);
-        return new ResponseEntity<>(HttpStatus.OK);
+        // TODO: vedere se continuare a passare il DTO come il /register sopra o qui passare direttamente lo user poichè si va a salvarlo in db
+
+        /*
+        UserDTO userDTO = UserDTO.builder()
+
+                            .email(user.getUsername())
+                            .roles(Arrays.asList(roleRepo.findByRole(user.getRoles().toString())))
+                            .passtoken(user.getPasstoken())
+                            .build();
+         */
+
+        try {
+            String appUrl = request.getContextPath();
+            eventPublisher.publishEvent(new OnRecoverCompleteEvent
+                    (user, request.getLocale(), appUrl));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception me) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Some problems occurred when sending the email", me);
+        }
     }
 
     @RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, @ModelAttribute("vm") RecoverVM vm) {
+    public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, RecoverVM vm) {
         //TO DO: CHECK TOKEN VALIDITY
 
 
