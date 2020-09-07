@@ -103,14 +103,19 @@ public class ChildController {
                         today.set(Calendar.HOUR_OF_DAY, 0);
                         int day = 0;
                         long dataTimeStamp;
-                        int j = 200;
+                        int j = 10;
+                        boolean correct = false;
                         int offsetDayOne = reservationService.calculateFirstDay();
                         for (int k = 0; k < j; k++) {
-                            if(offsetDayOne > 0 ){
-                                today.add(Calendar.DATE, offsetDayOne);
-                            } else {
-                                j = j - offsetDayOne;
-                                today.add(Calendar.DATE, 1);
+                            if(!correct){
+                                if(offsetDayOne > 0){
+                                    today.add(Calendar.DATE, offsetDayOne);
+                                    correct = true;
+                                } else {
+                                    j = j + offsetDayOne;
+                                    today.add(Calendar.DATE, 1);
+                                    correct = true;
+                                }
                             }
                             day = today.get(Calendar.DAY_OF_WEEK);
                             dataTimeStamp = today.getTimeInMillis();
@@ -216,16 +221,27 @@ public class ChildController {
                         today.set(Calendar.HOUR_OF_DAY, 0);
                         int day = 0;
                         long dataTimeStamp;
-                        int j = 7;
+                        int j = 10;
+                        boolean correct = false;
+                        int offsetDayOne = reservationService.calculateFirstDay();
                         for (int h = 0; h < j; h++) {
+                            if(!correct) {
+                                if (offsetDayOne > 0) {
+                                    today.add(Calendar.DATE, offsetDayOne);
+                                    correct = true;
+                                } else {
+                                    j = j + offsetDayOne;
+                                    today.add(Calendar.DATE, 1);
+                                    correct = true;
+                                }
+                            }
                             day = today.get(Calendar.DAY_OF_WEEK);
                             dataTimeStamp = today.getTimeInMillis();
                             if (day == 1 || day == 7) {
                                 today.add(Calendar.DATE, 1);
                                 j++;
                                 continue;
-                            }
-                            if (k==1){
+                            }if (k==1){
                                 Reservation reservation = Reservation.builder()
                                         .childID(child.getChildID())
                                         .familyName(child.getFamily_name())

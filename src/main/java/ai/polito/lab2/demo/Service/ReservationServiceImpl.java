@@ -84,14 +84,14 @@ public class ReservationServiceImpl implements ReservationService {
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.HOUR_OF_DAY, 0);
         int day = Integer.parseInt(this.firstDay.split("/")[0]);
-        int month = Integer.parseInt(this.firstDay.split("/")[1]);
+        int month = Integer.parseInt(this.firstDay.split("/")[1])-1;
         int year = Integer.parseInt(this.firstDay.split("/")[2]);
         Calendar startSchool = new Calendar.Builder().setDate(year,month,day).build();
         startSchool.set(Calendar.MILLISECOND, 0);
         startSchool.set(Calendar.SECOND, 0);
         startSchool.set(Calendar.MINUTE, 0);
         startSchool.set(Calendar.HOUR_OF_DAY, 0);
-        int daysBetween = (int) ChronoUnit.DAYS.between( startSchool.toInstant(),today.toInstant());
+        int daysBetween = (int) ChronoUnit.DAYS.between(today.toInstant(),startSchool.toInstant());
         return daysBetween;
     }
 
