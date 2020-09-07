@@ -44,6 +44,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     String firstDay;
 
+
+
     /*
     public Reservation createReservation(ReservationDTO r) throws JsonProcessingException {
 
@@ -73,7 +75,6 @@ public class ReservationServiceImpl implements ReservationService {
             return res.get(0);
         }
     }
-
     @Override
     public int calculateFirstDay() {
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
@@ -90,7 +91,7 @@ public class ReservationServiceImpl implements ReservationService {
         startSchool.set(Calendar.SECOND, 0);
         startSchool.set(Calendar.MINUTE, 0);
         startSchool.set(Calendar.HOUR_OF_DAY, 0);
-        int daysBetween = (int)ChronoUnit.DAYS.between( startSchool.toInstant(),today.toInstant());
+        int daysBetween = (int) ChronoUnit.DAYS.between( startSchool.toInstant(),today.toInstant());
         return daysBetween;
     }
 
@@ -213,11 +214,18 @@ public class ReservationServiceImpl implements ReservationService {
        res.forEach(bubba -> System.out.println("BUBBAAA:::" + bubba.getName_route()));
 
        res.forEach(reservation -> {
-        Date data= null;
-        Stop s = stopRepo.findStopBy_id(reservation.getStopID());
+        SimpleDateFormat data= null;
+           Date d = null;
+           Stop s = stopRepo.findStopBy_id(reservation.getStopID());
         try{
-            data = new SimpleDateFormat("h:mm").parse(s.getTime());
-            System.out.println(data.getTime());
+            data = new SimpleDateFormat("h:mm");
+
+            d = data.parse(s.getTime());
+            data.setTimeZone(TimeZone.getTimeZone("UTC"));
+           // d = data.parse(s.getTime());
+            System.out.println("DDDD" + d.getTime());
+
+            //System.out.println("IIIIIII" + i);
         } catch (ParseException e) {
             System.out.println("ParseException occured: " + e.getMessage());
         }
@@ -229,12 +237,48 @@ public class ReservationServiceImpl implements ReservationService {
                                      .nameChild(childRepo.findChildByChildID(reservation.getChildID()).getNameChild())
                                      .color(childRepo.findChildByChildID(reservation.getChildID()).getColor())
                                      .date(reservation.getDate())
-                                     .hour(data.getTime())
+                                     .hour(d.getTime())
                                      .build();
 
         rcvms.add(rcvm);
        });
        return rcvms;
+    }
+
+    public ArrayList<ReservationCalendarVM> reservationsChild (ObjectId childID){
+        List<Reservation> res = reservationRepo.findReservationByChildID(childID);
+        ArrayList<ReservationCalendarVM> rcvms= new ArrayList<>();
+        res.forEach(bubba -> System.out.println("BUBBAAA:::" + bubba.getName_route()));
+
+        res.forEach(reservation -> {
+            SimpleDateFormat data= new SimpleDateFormat("hh:mm");
+
+            Date d = null;
+            Stop s = stopRepo.findStopBy_id(reservation.getStopID());
+            try{
+                data = new SimpleDateFormat("hh:mm");
+
+                data.setTimeZone(TimeZone.getTimeZone("UTC"));
+                d = data.parse(s.getTime());
+                System.out.println("DDDD" + d);
+
+            } catch (ParseException e) {
+                System.out.println("ParseException occured: " + e.getMessage());
+            }
+            ReservationCalendarVM rcvm = ReservationCalendarVM.builder()
+                    .id(reservation.getId().toString())
+                    .name_route(reservation.getName_route())
+                    .direction(reservation.getDirection())
+                    .name_stop(s.getNome())
+                    .nameChild(childRepo.findChildByChildID(reservation.getChildID()).getNameChild())
+                    .color(childRepo.findChildByChildID(reservation.getChildID()).getColor())
+                    .date(reservation.getDate())
+                    .hour(d.getTime())
+                    .build();
+
+            rcvms.add(rcvm);
+        });
+        return rcvms;
     }
 
     @Override

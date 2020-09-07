@@ -214,7 +214,7 @@ public class ReservationController {
 
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{id_linea}/{data}", method = RequestMethod.GET)
-    public ResponseEntity getPeople(@PathVariable int id_linea, @PathVariable long data) throws JsonProcessingException, ParseException {
+    public ResponseEntity getPeople(@PathVariable int id_linea, @PathVariable long  data) throws JsonProcessingException, ParseException {
         System.out.println("data richiesta "+data);
         Route route = routeService.getRoutesByID(id_linea);
         ArrayList<ChildReservationVM> notBookedA = new ArrayList<>();
@@ -491,6 +491,15 @@ public class ReservationController {
         System.out.println("family_name :" + family_name);
         ArrayList<ReservationCalendarVM> reservationCalendarVMS = new ArrayList<>();
         reservationCalendarVMS = reservationService.reservationFamily(family_name);
+        return ok().body(reservationCalendarVMS);
+    }
+
+    @Secured({"ROLE_SYSTEM_ADMIN"})
+    @RequestMapping(value = "/reservations/child/{childID}", method = RequestMethod.GET)
+    public ResponseEntity getChildListReservations(@PathVariable ObjectId childID) throws JsonProcessingException {
+        System.out.println("childID :" + childID);
+        ArrayList<ReservationCalendarVM> reservationCalendarVMS = new ArrayList<>();
+        reservationCalendarVMS = reservationService.reservationsChild(childID);
         return ok().body(reservationCalendarVMS);
     }
 

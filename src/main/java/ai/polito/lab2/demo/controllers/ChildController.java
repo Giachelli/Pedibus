@@ -9,9 +9,11 @@ import ai.polito.lab2.demo.Repositories.ChildRepo;
 import ai.polito.lab2.demo.Repositories.ReservationRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.*;
+import ai.polito.lab2.demo.viewmodels.ChildAllVM;
 import ai.polito.lab2.demo.viewmodels.ChildVM;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,8 @@ public class ChildController {
     private MessageService messageService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ChildService childService;
 
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChildVM> registerChild(@RequestBody ChildVM data) {
@@ -319,6 +323,7 @@ public class ChildController {
     // vanno aggiunti più query params
     @RequestMapping(value = "/user/children", method = RequestMethod.GET)
     public ResponseEntity getMyChildren(@RequestParam(required = false) String username) {
+
         HashMap<Integer,ArrayList<String>> stopName = new HashMap<>();
         ArrayList<String> stopName1 = new ArrayList<String>();
         System.out.println("entro qui "+username);
@@ -429,6 +434,26 @@ public class ChildController {
             reservationService.delete(x);
         });
         childRepo.deleteById(childID);
+    }
+
+    @RequestMapping(value = "/children/all", method = RequestMethod.GET)
+    public ResponseEntity getChildren() {
+            ArrayList<Child> children = childService.findAllChild();
+            ArrayList<ChildAllVM> childrenVM = new ArrayList<>();
+
+            for (Child c: children){
+                childrenVM.add(
+                        ChildAllVM.builder()
+                                .childID(c.getChildID().toString())
+                                .nameChild(c.getNameChild())
+                                .family_name(c.getFamily_name())
+                                .isMale(c.isMale())
+                                .username(c.getUsername())
+                                .build()
+                );
+            }
+        return new ResponseEntity<ArrayList<ChildAllVM>>(childrenVM, HttpStatus.OK);
+
     }
 }
 
