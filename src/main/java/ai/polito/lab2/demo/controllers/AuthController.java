@@ -143,7 +143,6 @@ public class AuthController {
         }
     }
 
-    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/recover", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity recoverPassword(@RequestBody User username, WebRequest request) {
 
@@ -156,7 +155,6 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, @ModelAttribute("vm") RecoverVM vm) {
         //TO DO: CHECK TOKEN VALIDITY
