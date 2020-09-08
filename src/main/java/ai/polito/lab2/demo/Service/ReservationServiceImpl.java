@@ -138,6 +138,11 @@ public class ReservationServiceImpl implements ReservationService {
         return mappa;
     }
 
+    @Override
+    public Map<String, List<ChildReservationVM>> findReservationAndataNotBooked(int linea, long data) {
+        return null;
+    }
+
     public Map<String, List<ChildReservationVM>> findReservationRitorno(int linea, long data) {
         int i = 0;
         Query query = new Query();
@@ -172,6 +177,11 @@ public class ReservationServiceImpl implements ReservationService {
             System.out.println("key " + key + " values: " + mappa.get(key));
         }
         return mappa;
+    }
+
+    @Override
+    public Map<String, List<ChildReservationVM>> findReservationRitornoNotBooked(int linea, long data) {
+        return null;
     }
 
     public Reservation update(Reservation reservation) {

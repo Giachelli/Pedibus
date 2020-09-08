@@ -145,4 +145,35 @@ public class ShiftServiceImpl implements ShiftService {
         }
         return true;
     }
+
+    @Override
+    public List<ShiftCreateVM> getAllTurnsDate(int routeID) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -7);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        List<Shift> shifts = shiftRepo.findByLineaIDAndDateAfter(routeID, cal.getTimeInMillis());
+
+        ArrayList<ShiftCreateVM> listShifts = new ArrayList<>();
+        for (Shift s : shifts) {
+            ShiftCreateVM shiftCreateVM = ShiftCreateVM.builder()
+                    .shiftId(s.getTurnID().toString())
+                    .data(s.getDate())
+                    .direction(s.isDirection())
+                    .lineId(s.getLineaID())
+                    .username(userService.getUserBy_id(s.getMuleID()).getUsername())
+                    .usernameAdmin(userService.getUserBy_id(s.getAdminID()).getUsername())
+                    .status(s.getStatus())
+                    .startShiftId(s.getStartID().toString())
+                    .stopShiftId(s.getStopID().toString())
+                    .build();
+            listShifts.add(shiftCreateVM);
+        }
+
+
+        return listShifts;
+    }
 }

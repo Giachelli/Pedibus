@@ -16,7 +16,11 @@ public interface ReservationService {
     // Reservation createReservation( ReservationDTO r) throws JsonProcessingException;
     Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data);
 
+    Map<String, List<ChildReservationVM>> findReservationAndataNotBooked(int linea, long data);
+
     Map<String, List<ChildReservationVM>> findReservationRitorno(int linea, long data);
+
+    Map<String, List<ChildReservationVM>> findReservationRitornoNotBooked(int linea, long data);
 
     Reservation update(Reservation r);
 
