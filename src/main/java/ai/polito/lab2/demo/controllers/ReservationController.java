@@ -209,7 +209,13 @@ public class ReservationController {
         System.out.println("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
         r.setInPlace(!r.isInPlace());
         reservationService.save(r);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        ChildReservationVM childReservationVM = ChildReservationVM.builder()
+                .childID(r.getChildID().toString())
+                .inPlace(r.isInPlace())
+                .booked(r.isBooked())
+                .nameFamily(r.getFamilyName())
+                .nameChild(childService.findChildbyID(r.getChildID()).getNameChild()).build();
+        return new ResponseEntity(childReservationVM, HttpStatus.OK);
     }
 
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
@@ -358,8 +364,6 @@ public class ReservationController {
         model.put("pathR", ritorno);
         model.put("resnotBookedA", notBookedA);
         model.put("resnotBookedR", notBookedR);
-        System.out.println(andata);
-        System.out.println(notBookedA);
         return ok().body(model);
     }
 
@@ -368,7 +372,6 @@ public class ReservationController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
-
 
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
