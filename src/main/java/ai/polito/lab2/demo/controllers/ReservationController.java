@@ -167,11 +167,13 @@ public class ReservationController {
 
         if (this.controlName_RouteAndStop(id_linea,stopID))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        String direction;
 
         Reservation r = Reservation.builder()
                 .childID(childID)
                 .stopID(stopID)
-                .familyName(reservationVM.getFamily_name())
+                .direction(reservationVM.getDirection())
+                .familyName(childService.findChildbyID(childID).getFamily_name())
                 .name_route(routeService.getRoutesByID(id_linea).getNameR())
                 .direction(reservationVM.getDirection())
                 .date(data)
@@ -232,6 +234,7 @@ public class ReservationController {
         // nella MAPPA salire ci sono tutti i bimbi prenotati per una certa linea in una certa data
         // la chiave della mappa è il nome della fermata, value è una lista di utenti prenotati per quella fermata.
         Map<String, List<ChildReservationVM>> salire = reservationService.findReservationAndata(route.getId(), data);
+        Map<String, List<ChildReservationVM>> presentiNotBookedA = reservationService.findReservationAndataNotBooked(route.getId(), data);
         salire.forEach((key,value) -> {
             System.out.println("KEEEEEEEEY:::::" + key);
             System.out.println("Valueeeeeeee::::" + value);
@@ -306,6 +309,7 @@ public class ReservationController {
         }
 
         Map<String, List<ChildReservationVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
+        Map<String, List<ChildReservationVM>> scendereNotBooked = reservationService.findReservationRitornoNotBooked(route.getId(), data);
         ArrayList<Stop_RegistrationVM> ritorno = new ArrayList<>();
         children.clear();
         children.addAll(allChildren);
