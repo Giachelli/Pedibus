@@ -309,7 +309,7 @@ public class ReservationController {
         }
 
         Map<String, List<ChildReservationVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
-        Map<String, List<ChildReservationVM>> scendereNotBooked = reservationService.findReservationRitornoNotBooked(route.getId(), data);
+        //Map<String, List<ChildReservationVM>> scendereNotBooked = reservationService.findReservationRitornoNotBooked(route.getId(), data);
         ArrayList<Stop_RegistrationVM> ritorno = new ArrayList<>();
         children.clear();
         children.addAll(allChildren);
