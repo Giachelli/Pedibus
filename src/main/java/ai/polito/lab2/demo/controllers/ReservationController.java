@@ -170,11 +170,13 @@ public class ReservationController {
 
         if (this.controlName_RouteAndStop(id_linea,stopID))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        String direction;
 
         Reservation r = Reservation.builder()
                 .childID(childID)
                 .stopID(stopID)
-                .familyName(reservationVM.getFamily_name())
+                .direction(reservationVM.getDirection())
+                .familyName(childService.findChildbyID(childID).getFamily_name())
                 .name_route(routeService.getRoutesByID(id_linea).getNameR())
                 .direction(reservationVM.getDirection())
                 .date(data)
@@ -215,7 +217,13 @@ public class ReservationController {
         System.out.println("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
         r.setInPlace(!r.isInPlace());
         reservationService.save(r);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        ChildReservationVM childReservationVM = ChildReservationVM.builder()
+                .childID(r.getChildID().toString())
+                .inPlace(r.isInPlace())
+                .booked(r.isBooked())
+                .nameFamily(r.getFamilyName())
+                .nameChild(childService.findChildbyID(r.getChildID()).getNameChild()).build();
+        return new ResponseEntity(childReservationVM, HttpStatus.OK);
     }
 
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
@@ -232,6 +240,7 @@ public class ReservationController {
         // nella MAPPA salire ci sono tutti i bimbi prenotati per una certa linea in una certa data
         // la chiave della mappa è il nome della fermata, value è una lista di utenti prenotati per quella fermata.
         Map<String, List<ChildReservationVM>> salire = reservationService.findReservationAndata(route.getId(), data);
+        //Map<String, List<ChildReservationVM>> presentiNotBookedA = reservationService.findReservationAndataNotBooked(route.getId(), data);
         salire.forEach((key,value) -> {
             System.out.println("KEEEEEEEEY:::::" + key);
             System.out.println("Valueeeeeeee::::" + value);
@@ -278,21 +287,14 @@ public class ReservationController {
 
                             if (c.getChildID().toString().equals(p.getChildID())) {
                                 children.remove(c);
-                                continue;
                             }
                             i++;
                         }
                     }
 
-                    for (Child c : children)
-                        notBookedA.add(ChildReservationVM.builder()
-                                .childID(c.getChildID().toString())
-                                .nameChild(c.getNameChild())
-                                .nameFamily(c.getFamily_name())
-                                .booked(false)
-                                .inPlace(false)
-                                .build());
+
                 }
+
 
                 andata.add(Stop_RegistrationVM.builder()
                         .stopID(stop.get_id().toString())
@@ -304,8 +306,18 @@ public class ReservationController {
 
             }
         }
+        for (Child c : children)
+            notBookedA.add(ChildReservationVM.builder()
+                    .childID(c.getChildID().toString())
+                    .nameChild(c.getNameChild())
+                    .nameFamily(c.getFamily_name())
+                    .booked(false)
+                    .inPlace(false)
+                    .build());
+
 
         Map<String, List<ChildReservationVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
+        //Map<String, List<ChildReservationVM>> scendereNotBooked = reservationService.findReservationRitornoNotBooked(route.getId(), data);
         ArrayList<Stop_RegistrationVM> ritorno = new ArrayList<>();
         children.clear();
         children.addAll(allChildren);
@@ -333,17 +345,11 @@ public class ReservationController {
                     passeggeri.addAll(scendere.get(stop.getNome()));
                     for (ChildReservationVM p : passeggeri) {
                         for (Child c : allChildren) {
-                            if (c.getChildID().equals(p.getChildID()))
+                            if (c.getChildID().toString().equals(p.getChildID()))
                                 children.remove(c);
                         }
                     }
 
-                    for (Child c : children)
-                        notBookedR.add(ChildReservationVM.builder()
-                                .childID(c.getChildID().toString())
-                                .nameChild(c.getNameChild())
-                                .nameFamily(c.getFamily_name())
-                                .build());
                 }
                 ritorno.add(Stop_RegistrationVM.builder()
                         .stopID(stop.get_id().toString())
@@ -357,6 +363,13 @@ public class ReservationController {
             }
         }
 
+        for (Child c : children)
+            notBookedR.add(ChildReservationVM.builder()
+                    .childID(c.getChildID().toString())
+                    .nameChild(c.getNameChild())
+                    .nameFamily(c.getFamily_name())
+                    .build());
+
         Map<Object, Object> model = new TreeMap<>();
         model.put("nameRoute", route.getNameR());
         model.put("date", data);
@@ -364,8 +377,6 @@ public class ReservationController {
         model.put("pathR", ritorno);
         model.put("resnotBookedA", notBookedA);
         model.put("resnotBookedR", notBookedR);
-        System.out.println(andata);
-        System.out.println(notBookedA);
         return ok().body(model);
     }
 
@@ -374,7 +385,6 @@ public class ReservationController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
-
 
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());

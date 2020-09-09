@@ -187,6 +187,20 @@ public class ShiftController {
         return new ResponseEntity(shifts, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/shift/present/{routeID}", method = RequestMethod.GET)
+    public ResponseEntity getShiftsAfter(@PathVariable final int routeID){
+        Route r = routeService.getRoutesByID(routeID);
+        if(r == null)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<ShiftCreateVM> shifts = shiftService.getAllTurnsDate(routeID);
+
+        return new ResponseEntity(shifts, HttpStatus.OK);
+    }
+
+
     // delete del turno
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/{shiftID}/delete", method = RequestMethod.DELETE)

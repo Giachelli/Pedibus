@@ -60,7 +60,7 @@ public class AuthController {
     private IUserService userService;
 
 
-    String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+    String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}";
 
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -134,7 +134,7 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are differents");
 
         if (!userVM.getPassword().matches(regex)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password non ha tutti i caratteri richiesti");
+            return new ResponseEntity("Password non ha tutti i caratteri richiesti",HttpStatus.BAD_REQUEST );
         }
 
         if (userService.manageUser(randomUUID, userVM)) {
