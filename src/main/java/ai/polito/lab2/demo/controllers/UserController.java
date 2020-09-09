@@ -330,4 +330,14 @@ public class UserController {
     }
 
 
+    /*
+    @Secured("ROLE_SYSTEM_ADMIN")
+    @RequestMapping(value = "/users/info", method = RequestMethod.GET)
+    public ResponseEntity<> getInfoAboutPedibus() {
+
+
+        return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
+    }
+*/
+
 }
