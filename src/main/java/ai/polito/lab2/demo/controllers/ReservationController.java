@@ -234,7 +234,7 @@ public class ReservationController {
         // nella MAPPA salire ci sono tutti i bimbi prenotati per una certa linea in una certa data
         // la chiave della mappa è il nome della fermata, value è una lista di utenti prenotati per quella fermata.
         Map<String, List<ChildReservationVM>> salire = reservationService.findReservationAndata(route.getId(), data);
-        Map<String, List<ChildReservationVM>> presentiNotBookedA = reservationService.findReservationAndataNotBooked(route.getId(), data);
+        //Map<String, List<ChildReservationVM>> presentiNotBookedA = reservationService.findReservationAndataNotBooked(route.getId(), data);
         salire.forEach((key,value) -> {
             System.out.println("KEEEEEEEEY:::::" + key);
             System.out.println("Valueeeeeeee::::" + value);
@@ -281,21 +281,14 @@ public class ReservationController {
 
                             if (c.getChildID().toString().equals(p.getChildID())) {
                                 children.remove(c);
-                                continue;
                             }
                             i++;
                         }
                     }
 
-                    for (Child c : children)
-                        notBookedA.add(ChildReservationVM.builder()
-                                .childID(c.getChildID().toString())
-                                .nameChild(c.getNameChild())
-                                .nameFamily(c.getFamily_name())
-                                .booked(false)
-                                .inPlace(false)
-                                .build());
+
                 }
+
 
                 andata.add(Stop_RegistrationVM.builder()
                         .stopID(stop.get_id().toString())
@@ -307,9 +300,18 @@ public class ReservationController {
 
             }
         }
+        for (Child c : children)
+            notBookedA.add(ChildReservationVM.builder()
+                    .childID(c.getChildID().toString())
+                    .nameChild(c.getNameChild())
+                    .nameFamily(c.getFamily_name())
+                    .booked(false)
+                    .inPlace(false)
+                    .build());
+
 
         Map<String, List<ChildReservationVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
-        Map<String, List<ChildReservationVM>> scendereNotBooked = reservationService.findReservationRitornoNotBooked(route.getId(), data);
+        //Map<String, List<ChildReservationVM>> scendereNotBooked = reservationService.findReservationRitornoNotBooked(route.getId(), data);
         ArrayList<Stop_RegistrationVM> ritorno = new ArrayList<>();
         children.clear();
         children.addAll(allChildren);
@@ -337,17 +339,11 @@ public class ReservationController {
                     passeggeri.addAll(scendere.get(stop.getNome()));
                     for (ChildReservationVM p : passeggeri) {
                         for (Child c : allChildren) {
-                            if (c.getChildID().equals(p.getChildID()))
+                            if (c.getChildID().toString().equals(p.getChildID()))
                                 children.remove(c);
                         }
                     }
 
-                    for (Child c : children)
-                        notBookedR.add(ChildReservationVM.builder()
-                                .childID(c.getChildID().toString())
-                                .nameChild(c.getNameChild())
-                                .nameFamily(c.getFamily_name())
-                                .build());
                 }
                 ritorno.add(Stop_RegistrationVM.builder()
                         .stopID(stop.get_id().toString())
@@ -360,6 +356,13 @@ public class ReservationController {
 
             }
         }
+
+        for (Child c : children)
+            notBookedR.add(ChildReservationVM.builder()
+                    .childID(c.getChildID().toString())
+                    .nameChild(c.getNameChild())
+                    .nameFamily(c.getFamily_name())
+                    .build());
 
         Map<Object, Object> model = new TreeMap<>();
         model.put("nameRoute", route.getNameR());

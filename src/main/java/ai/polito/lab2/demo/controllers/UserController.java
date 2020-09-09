@@ -287,9 +287,7 @@ public class UserController {
                     user.addRole(roleRepository.findByRole("ROLE_MULE"));
                 }
 
-
         }
-
         user.setMuleRoutesID(muleRouteID);
         user.setAvailability(modifyRoleUser.getAvailability());
         user.setAndataStops(modifyRoleUser.getStopAndata());
@@ -331,5 +329,15 @@ public class UserController {
         return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
     }
 
+
+    /*
+    @Secured("ROLE_SYSTEM_ADMIN")
+    @RequestMapping(value = "/users/info", method = RequestMethod.GET)
+    public ResponseEntity<> getInfoAboutPedibus() {
+
+
+        return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
+    }
+*/
 
 }

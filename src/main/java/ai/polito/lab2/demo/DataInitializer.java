@@ -131,6 +131,7 @@ public class DataInitializer implements CommandLineRunner {
     private void insertChildIntoDB() {
         System.out.println("creano il child");
         Route r1 = routeService.getRoutesByID(2);
+        Route r2 = routeService.getRoutesByID(3);
         ArrayList<String> bubba = new ArrayList<>();
         bubba.add(r1.getStopListA().get(1).get_id().toString());
         bubba.add(r1.getStopListB().get(4).get_id().toString());
@@ -174,7 +175,17 @@ public class DataInitializer implements CommandLineRunner {
                         .nameRoute(bubba_2)
                         .direction("andata")
                         .build()
-        ); /*
+        );
+        bubba_ = new ArrayList<>();
+        bubba_.add("");
+        bubba_.add(r2.getStopListB().get(4).get_id().toString());
+        bubba_1 = new ArrayList<>();
+        bubba_1.add("");
+        bubba_1.add(r2.getStopListB().get(4).getNome());
+        bubba_2 = new ArrayList<>();
+        bubba_2.add("");
+        bubba_2.add(r2.getNameR());
+
         this.childController.registerChild(
                 ChildVM.builder()
                         .nameChild("Carla")
@@ -182,13 +193,13 @@ public class DataInitializer implements CommandLineRunner {
                         .family_name("Malnati")
                         .color("#2F4F4F")
                         .isMale(true)
-                        .stopID(r1.getStopListA().get(0).get_id().toString())
-                        .stopName(r1.getStopListA().get(0).getNome())
-                        .nameRoute(r1.getNameR())
+                        .stopID(bubba_)
+                        .stopName(bubba_1)
+                        .nameRoute(bubba_2)
                         .direction("andata")
                         .build()
         );
-        this.childController.registerChild(
+      /*  this.childController.registerChild(
                 ChildVM.builder()
                         .nameChild("Alice")
                         .username("user2@info.it")
