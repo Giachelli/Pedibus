@@ -11,6 +11,7 @@ import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.Service.MessageService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.UserService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.AbstractMappingJacksonResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -45,6 +47,9 @@ public class UserController {
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     RoleRepo roleRepository;
@@ -98,7 +103,7 @@ public class UserController {
         if (newAdmin == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
 
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
+        String token = jwtTokenProvider.resolveToken(req);
         String username = jwtTokenProvider.getUsername(token);
         UserDTO u = userService.getUserDTOByUsername(username);
         ArrayList<Integer> ids = new ArrayList<>();
@@ -181,18 +186,24 @@ public class UserController {
         ArrayList<Integer> adminRoutes = modifyRoleUser.getAdminRoutes();
         ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
 
+        ArrayList<Integer> adminBefore = new ArrayList<>();
+        ArrayList<Integer> muleBefore = new ArrayList<>();
+
+
         Set<Integer> adminRouteID = new HashSet<>();
         Set<Integer> muleRouteID = new HashSet<>();
 
-        if (user.getAdminRoutesID() != null)
+        if (user.getAdminRoutesID() != null) // lo user è admin di qualche linea
             for (int i : user.getAdminRoutesID()) {
                 Route r = routeService.getRoutesByID(i);
                 if (r == null) {
                     System.out.println("Errore nella modify User passo un id route non esistente");
                     return new ResponseEntity(HttpStatus.BAD_REQUEST);
                 }
-                if(r.getUsernameAdmin().contains(user.getUsername()))
+                if(r.getUsernameAdmin().contains(user.getUsername())) {
                     r.removeAdmin(user.getUsername());
+                    adminBefore.add(i);
+                }
                 else
                 {
                     throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Settaggio db errore");
@@ -209,9 +220,10 @@ public class UserController {
 
                 }
 
-                if(r.getUsernameMule().contains(user.getUsername()))
+                if(r.getUsernameMule().contains(user.getUsername())) {
                     r.removeMule(user.getUsername());
-                else
+                    muleBefore.add(i);
+                }else
                 {
                     throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Settaggio db errore");
                 }
@@ -223,8 +235,10 @@ public class UserController {
         //Check if the array of integers passed with the request is empty (admin routes id case)
         if (adminRoutes.size() == 0) {
             //if the array is empty = the user isn't admin for any routes and we delete the role "admin" from his role list
-            if (user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
+            if (user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN"))){
                 user.removeRole(roleRepository.findByRole("ROLE_ADMIN"));
+            }
+
         } else {
             //add the id routes in the user list
             //todo vedere se ci sono idee migliori
@@ -258,8 +272,9 @@ public class UserController {
         //Check if the array of integers passed with the request is empty (mule routes id case)
         if (muleRoutes.size() == 0) {
             //the same of admin cases
-            if (user.getRoles().contains(roleRepository.findByRole("ROLE_MULE")))
+            if (user.getRoles().contains(roleRepository.findByRole("ROLE_MULE"))){
                 user.removeRole(roleRepository.findByRole("ROLE_MULE"));
+            }
         } else {
             for (int j : muleRoutes) {
                 Route r = routeService.getRoutesByID(j);
@@ -295,6 +310,53 @@ public class UserController {
         user.setAndataStops(modifyRoleUser.getStopAndata());
         user.setRitornoStops(modifyRoleUser.getStopRitorno());
         userService.saveUser(user);
+
+            long day = new Date().getTime();
+            HashMap<Integer,ArrayList<String>> otherAdmins = new HashMap<Integer, ArrayList<String>>(); // mappa che contiene le linee a cui non sarò più admin e i relativi admin
+            ArrayList<Integer> old_newRoute = new ArrayList<>();
+            old_newRoute.addAll(adminBefore);
+            old_newRoute.addAll(adminRoutes);
+            old_newRoute.addAll(muleBefore);
+            old_newRoute.addAll(muleRoutes);
+
+            /* messaggio che deve arrivare agli admin di linea */
+
+            for (Integer i : old_newRoute){
+                if(otherAdmins.containsKey(i)) //evito di mandare due notifiche agli admin delle linee che rimangono invariate
+                    continue;
+                Route r = routeService.getRoutesByID(i);
+                if (r.getUsernameAdmin()!=null && r.getUsernameAdmin().size()!=0){
+                    for ( String s : r.getUsernameAdmin()){
+                        if (s.equals(user.getUsername()))
+                            continue;
+                        if (otherAdmins.containsKey(i)) //entra dalla seconda volta in poi
+                            otherAdmins.get(i).add(s);
+                        else{ // entra la prima volta
+                            otherAdmins.put(i,new ArrayList<String>());
+                            otherAdmins.get(i).add(s);
+                        }
+                    }
+                }
+            }
+            for (Map.Entry<Integer,ArrayList<String>> entry: otherAdmins.entrySet()){
+                String action = "I privilegi relativi allo user " + user.getUsername() + " aggiornati.";
+                // mettere controllo che se entry.getValue è uguale al sender, allora il messaggio non va inviato
+                messageService.createMessageNewRolesOtherAdmins("admin@info.it",
+                        entry.getValue(),
+                        action,
+                        day,
+                        entry.getKey());
+            }
+
+        /* seconda parte che riguarda lo user stesso */
+            String action= "Privilegi aggiornati";
+            messageService.createMessageNewRoles("admin@info.it",
+                    user.get_id(),
+                    action,
+                    day,
+                    adminRoutes,
+                    muleRoutes);
+
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

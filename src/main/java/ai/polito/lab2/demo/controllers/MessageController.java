@@ -32,6 +32,9 @@ public class MessageController {
     private RouteService routeService;
 
     @Autowired
+    private ChildService childService;
+
+    @Autowired
     private ShiftService shiftService;
 
     @Autowired
@@ -63,6 +66,7 @@ public class MessageController {
                         .read(message.getRead())
                         .date(message.getDate())
                         .shiftID(message.getShiftID().toString())
+                        .messageShiftRequest(true) //TODO: dopo aver parlato con gli altri
                         .status(message.getStatus())
                         .dateShift(date)
                         .direction(shift.isDirection())
@@ -83,25 +87,64 @@ public class MessageController {
                             .date(message.getDate())
                             .reservationID(message.getReservationID().toString())
                             .dateShift(date)
+                            .messageChildPrenotation(true)
                             .directionReservation(reservation.getDirection())
                             .nameLinea(routeService.getRoutesByID(reservation.getRouteID()).getNameR())
                             .build();
                     messageVMS.add(messageVM);
                 }
-            }else{ //get messaggio che concerne il bimbo
-                {
+            }else if(message.getChildID()!= null){       //get messaggio che concerne il bimbo (creazione / cancellazione)
+                    if (message.getMessageChildCreation()!=null) {
+                        Child child = childService.findChildbyID(message.getChildID());
+                        MessageVM messageVM = MessageVM.builder()
+                                .sender(senderName)
+                                .messageID(message.getMessageID().toString())
+                                .text(message.getAction())
+                                .read(message.getRead())
+                                .date(message.getDate())
+                                .nameChild(child.getNameChild())
+                                .familyName(child.getFamily_name())
+                                .messageChildCreation(true)
+                                .build();
+                        messageVMS.add(messageVM);
+                    }else if (message.getMessageChildDelete()){
+                        MessageVM messageVM = MessageVM.builder()
+                                .sender(senderName)
+                                .messageID(message.getMessageID().toString())
+                                .text(message.getAction())
+                                .read(message.getRead())
+                                .date(message.getDate())
+                                .nameChild(message.getNameChild())
+                                .familyName(message.getFamilyName())
+                                .messageChildDelete(true)
+                                .build();
+                        messageVMS.add(messageVM);
+                    }
+            }else if (message.getMessageUpdateOtherUser()!=null){
                     MessageVM messageVM = MessageVM.builder()
                             .sender(senderName)
                             .messageID(message.getMessageID().toString())
                             .text(message.getAction())
                             .read(message.getRead())
                             .date(message.getDate())
+                            .messageUpdateOtherUser(true)
+                            .nameLinea(routeService.getRoutesByID(message.getRoute()).getNameR())
                             .build();
-                    messageVMS.add(messageVM);
-                };
+                messageVMS.add(messageVM);
+            }else if (message.getMessageUpdateUser()!=null){
+                MessageVM messageVM = MessageVM.builder()
+                        .sender(senderName)
+                        .messageID(message.getMessageID().toString())
+                        .text(message.getAction())
+                        .read(message.getRead())
+                        .date(message.getDate())
+                        .messageUpdateUser(true)
+                        .adminRoutes(message.getAdminRoutes())
+                        .muleRoutes(message.getMuleRoutes())
+                        .build();
+                messageVMS.add(messageVM);
             }
         }
-
         return ok().body(messageVMS);
     }
 
@@ -135,5 +178,16 @@ public class MessageController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/messages/{messageID}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteChild(@PathVariable ObjectId messageID ) {
+
+        //TODO fare controllo se messageID è buono
+        messageService.deleteByMessageID(messageID);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+    }
+
+
 
 }

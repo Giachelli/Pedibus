@@ -17,4 +17,5 @@ public class modifyRoleUserVM {
     ArrayList<Boolean> availability;
     HashMap<Integer, ArrayList<ObjectId>> stopAndata;
     HashMap<Integer, ArrayList<ObjectId>> stopRitorno;
+    String modifiedBy;
 }

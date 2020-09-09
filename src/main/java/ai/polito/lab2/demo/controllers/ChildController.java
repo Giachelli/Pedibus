@@ -307,8 +307,10 @@ public class ChildController {
             //TODO: da inviare sia all'admin di linea che all'systemAdmin (quindi da mettere anche nell'if sopra con un array per i più receiver)
             messageService.createMessageResponse(userService.getUserByUsername(child.getUsername()).get_id(),
                     userService.getUserByUsername("admin@info.it").get_id(),
+                    child.getChildID(),
                     action,
-                    day
+                    day,
+                    "messageChildCreation"
             );
 
 
@@ -449,7 +451,20 @@ public class ChildController {
         reservations_id.forEach( (x) -> {
             reservationService.delete(x);
         });
+
+        String action = "Bambino precedentemente creato cancellato";
+        long day = new Date().getTime();
+        //TODO: da inviare sia all'admin di linea che all'systemAdmin (quindi da mettere anche nell'if sopra con un array per i più receiver)
+        Child child = childRepo.findChildByChildID(childID);
+        messageService.createMessageResponse(userService.getUserByUsername(child.getUsername()).get_id(),
+                userService.getUserByUsername("admin@info.it").get_id(),
+                child.getChildID(),
+                action,
+                day,
+                "messageChildDelete"
+        );
         childRepo.deleteById(childID);
+
     }
 
     @RequestMapping(value = "/children/all", method = RequestMethod.GET)

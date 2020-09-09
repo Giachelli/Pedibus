@@ -135,7 +135,10 @@ public class ReservationController {
                 receiverID,
                 action,
                 day,
-                r.getId());
+                r.getId(),
+         "messageChildPrenotation"
+        );
+
 
       /*
         System.out.println("Prima di ricercare la prenotazione nel DB::::::::::" + r);
@@ -187,6 +190,8 @@ public class ReservationController {
         reservationService.save(r);
         //  Reservation r = reservationService.createReservation(reservationDTO);
         //  String idReservation = r.getId().toString();
+
+        //TODO: messaggio per bimbo preso in carico al genitore
         ChildReservationVM childReservationVM =
                 ChildReservationVM.builder()
                 .childID(childID.toString())
@@ -206,6 +211,7 @@ public class ReservationController {
     @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
     public ResponseEntity confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody final String childID) throws JsonProcessingException, ParseException {
         Reservation r = reservationService.findReservationByStopIDAndDataAndChildID(new ObjectId(id_fermata), data, new ObjectId(childID));
+        // if (inplace = true) => fai partire messaggio
         System.out.println("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
         r.setInPlace(!r.isInPlace());
         reservationService.save(r);

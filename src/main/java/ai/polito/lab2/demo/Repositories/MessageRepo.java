@@ -13,5 +13,7 @@ public interface MessageRepo extends MongoRepository<Message, ObjectId>{
     ArrayList<Message> findAllByReceiverID(ObjectId receiverID);
     Message findMessageByMessageID(ObjectId messageID);
     Message findMessageByShiftID(ObjectId messageID);
+    void deleteByMessageID(ObjectId messageID);
+    Message findMessageByChildID(ObjectId childID);
 }
 

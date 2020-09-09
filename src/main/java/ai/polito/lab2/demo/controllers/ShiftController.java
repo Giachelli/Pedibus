@@ -96,7 +96,8 @@ public class ShiftController {
             messageService.createMessageShift(admin.get_id(), u.get_id(),
                     action,
                     day,
-                    shift.getTurnID()
+                    shift.getTurnID(),
+                    "messageShiftRequest"
             );
 
             shiftVM.setShiftId(shift.getTurnID().toString());
@@ -293,7 +294,8 @@ public class ShiftController {
                     action,
                     day,
                     t.getTurnID(),
-                    status);
+                    status,
+                    "messageShiftResponse");
 
             // TODO: fare crezione messaggio per un/più admin di linea(se ce ne sono più di uno (come risposta all'accettazione))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

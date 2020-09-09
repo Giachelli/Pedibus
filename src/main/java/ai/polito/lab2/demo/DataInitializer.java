@@ -283,6 +283,20 @@ public class DataInitializer implements CommandLineRunner {
                 .build()
         );
 
+        this.users.save(User.builder()
+                .username("giacomo.chelli4@gmail.com")
+                .family_name("Chelli")
+                .password(this.passwordEncoder.encode("1user@user"))
+                .roles(Arrays.asList(role, roleRepository.findByRole("ROLE_MULE")))
+                .availability(disp)
+                .andataStops(andata)
+                .ritornoStops(ritorno)
+                .muleRoutesID(routeId)
+                //.roles(Arrays.asList(role))
+                .isEnabled(true)
+                .build()
+        );
+
 
         this.users.save(User.builder()
                 .username("user2@info.it")

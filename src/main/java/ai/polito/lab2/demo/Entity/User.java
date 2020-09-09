@@ -37,9 +37,9 @@ public class User implements UserDetails {
 
     private HashMap<Integer, ArrayList<ObjectId>> ritornoStops;
 
-    private Set<Integer> adminRoutesID;
+    private Set<Integer> adminRoutesID; //route di cui sono admin
 
-    private Set<Integer> muleRoutesID;
+    private Set<Integer> muleRoutesID; //route di cui sono mule
 
     private String password;
 
