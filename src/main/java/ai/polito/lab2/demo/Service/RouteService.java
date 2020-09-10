@@ -32,7 +32,7 @@ public interface RouteService {
 
        void readAll() throws IOException;
 
-    void readSingle(File file) throws IOException;
+    Route readSingle(File file) throws IOException;
 
     List<String> getAccompagnaotori(int lineaID);
 

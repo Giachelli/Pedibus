@@ -15,9 +15,11 @@ import ai.polito.lab2.demo.Service.MessageService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.UserService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
+import ai.polito.lab2.demo.viewmodels.DashboardVM;
 import ai.polito.lab2.demo.viewmodels.UserRouteVM;
 import ai.polito.lab2.demo.viewmodels.UserVM;
 import ai.polito.lab2.demo.viewmodels.modifyRoleUserVM;
+import io.swagger.annotations.ApiOperation;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -391,15 +393,40 @@ public class UserController {
         return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
     }
 
-
-    /*
-    @Secured("ROLE_SYSTEM_ADMIN")
-    @RequestMapping(value = "/users/info", method = RequestMethod.GET)
-    public ResponseEntity<> getInfoAboutPedibus() {
-
-
-        return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
-    }
+/*
+*
+*
+* Rice
+*
 */
+
+    @Secured("ROLE_SYSTEM_ADMIN")
+    @ApiOperation("Restituisce al solo system admin le informazioni generali sdll'app, numero di bimbi iscritti, numero di utenti presenti")
+    @RequestMapping(value = "/users/info", method = RequestMethod.GET)
+    public ResponseEntity getInfoAboutPedibus() {
+
+        List<Route> routes = routeService.getAllRoutes();
+        int numberRoutes = routes.size();
+
+        int numberMule = 0;
+        int numberAdmin = 0;
+
+        for (Route r : routes)
+        {
+            numberAdmin = numberAdmin + r.getUsernameAdmin().size();
+
+            if(r.getUsernameMule() != null)
+            {
+                numberMule = numberMule + r.getUsernameMule().size();
+            }
+        }
+
+
+        DashboardVM dashboardVM = DashboardVM.builder()
+                .numberRoutes(numberRoutes)
+                .numberAdmin(numberAdmin).numberMules(numberMule).build();
+        return new ResponseEntity<DashboardVM>(dashboardVM,HttpStatus.OK);
+    }
+
 
 }

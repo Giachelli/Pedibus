@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;;
+import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Route;
@@ -142,7 +143,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public void readSingle(File file) throws IOException {
+    public Route readSingle(File file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Route route = objectMapper.readValue(file, Route.class);
@@ -150,6 +151,9 @@ public class RouteServiceImpl implements RouteService {
                 String error = "Error in new route of file " + file.getName();
                 throw new IOException(error);
             }
+            List<Stop> saved = stopRepo.saveAll(route.getStopListA());
+
+            stopRepo.saveAll(route.getStopListB());
             route.setUsernameAdmin(new ArrayList<>());
             route.setUsernameMule(new ArrayList<>());
             route.getUsernameAdmin().add(route.getEmails());
@@ -157,6 +161,7 @@ public class RouteServiceImpl implements RouteService {
             long time = date.getTime();
             route.setLastModified(time);
             routeRepo.save(route);
+            return route;
 
         } catch (JsonMappingException | JsonParseException jsonException) {
             throw new IOException("errore nel parsing json");
