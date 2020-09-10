@@ -100,6 +100,8 @@ public class AuthController {
             model.put("token", token);
             model.put("roles", u.getRolesString());
             model.put("family_name", u.getFamily_name());
+            model.put("adminRoutes", u.getAdminRoutesID());
+            model.put("muleRoutes", u.getMuleRoutesID());
             System.out.println("User: " + username + " is logged");
             return ok(model);
         } catch (AuthenticationException e) {

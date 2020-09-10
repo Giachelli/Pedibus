@@ -173,7 +173,7 @@ public class UserController {
 
 
     //TODO
-    @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"})
+//    @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
     public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
 
