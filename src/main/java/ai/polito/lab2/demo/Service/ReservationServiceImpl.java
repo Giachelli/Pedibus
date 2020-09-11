@@ -215,9 +215,14 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepo.save(r);
     }
 
+    public Reservation saveAndGet(Reservation r){
+        return reservationRepo.save(r);
+    }
+
     public Reservation findReservationById(ObjectId reservation_id) {
         return reservationRepo.findReservationById(reservation_id);
     }
+
 
 
     public Reservation findReservationByStopIDAndDataAndChildID(ObjectId id_fermata, long data, ObjectId childID) {

@@ -124,15 +124,13 @@ public class ReservationController {
         Child child = childRepo.findChildByChildID(childID);
 
         ObjectId senderID = userService.getUserByUsername(child.getUsername()).get_id();
-        ObjectId receiverID=userService.getUserByUsername("admin@info.it").get_id();
 
 
         String action = "Prenotazione bimbo";
         long day = new Date().getTime();
 
-        //TODO: far si che i messaggi vengano inviati agli admin di linea (quindi secondo argomento deve essere un array)
         messageService.createMessageReservation(senderID,
-                receiverID,
+                new ArrayList<>(routeService.getAccompagnaotori(routeID)),
                 action,
                 day,
                 r.getId(),
@@ -170,7 +168,6 @@ public class ReservationController {
 
         if (this.controlName_RouteAndStop(id_linea,stopID))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        String direction;
 
         Reservation r = Reservation.builder()
                 .childID(childID)
@@ -178,7 +175,6 @@ public class ReservationController {
                 .direction(reservationVM.getDirection())
                 .familyName(childService.findChildbyID(childID).getFamily_name())
                 .name_route(routeService.getRoutesByID(id_linea).getNameR())
-                .direction(reservationVM.getDirection())
                 .date(data)
                 .build();
 
@@ -189,7 +185,10 @@ public class ReservationController {
         r.setInPlace(true);
 
 
-        reservationService.save(r);
+        r = reservationService.saveAndGet(r);
+
+        System.out.println("RESEERVATIOOON appena SALVATAAAAAA:" + r.getDirection());
+
         //  Reservation r = reservationService.createReservation(reservationDTO);
         //  String idReservation = r.getId().toString();
 
@@ -202,6 +201,16 @@ public class ReservationController {
                 .booked(false)
                 .inPlace(true)
                 .build();
+
+        String action= "Bambino non prenotato ma preso in carico";
+        long day = new Date().getTime();
+        messageService.createMessageChildinPlace("admin@info.it", // deve essere il mule che effettua l'azione
+                childService.findChildbyID(childID).getUsername(),
+                action,
+                day,
+                childService.findChildbyID(childID).getChildID(),
+                r.getId()
+                );
 
         return new ResponseEntity<>(childReservationVM,HttpStatus.CREATED);
     }
@@ -216,6 +225,17 @@ public class ReservationController {
         // if (inplace = true) => fai partire messaggio
         System.out.println("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
         r.setInPlace(!r.isInPlace());
+        if (r.isInPlace()){
+            String action= "Bambino preso in carico";
+            long day = new Date().getTime();
+            messageService.createMessageChildinPlace("admin@info.it", // deve essere il mule che effettua l'azione
+                    childService.findChildbyID(r.getChildID()).getUsername(),
+                    action,
+                    day,
+                    childService.findChildbyID(r.getChildID()).getChildID(),
+                    r.getId());
+        }
+
         reservationService.save(r);
         ChildReservationVM childReservationVM = ChildReservationVM.builder()
                 .childID(r.getChildID().toString())

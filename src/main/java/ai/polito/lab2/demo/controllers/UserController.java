@@ -348,7 +348,10 @@ public class UserController {
             for (Map.Entry<Integer,ArrayList<String>> entry: otherAdmins.entrySet()){
                 String action = "I privilegi relativi allo user " + user.getUsername() + " aggiornati.";
                 // mettere controllo che se entry.getValue è uguale al sender, allora il messaggio non va inviato
-                messageService.createMessageNewRolesOtherAdmins("admin@info.it",
+                if (entry.getValue().contains(modifyRoleUser.getModifiedBy())){
+                    entry.getValue().remove(modifyRoleUser.getModifiedBy());  // in questo modo il messaggio non dovrebbe arrivare a chi ha fatto l'operazione anche se admin di un altra linea per cui lo user ha subito delle variazioni
+                }
+                messageService.createMessageNewRolesOtherAdmins(modifyRoleUser.getModifiedBy(),
                         entry.getValue(),
                         action,
                         day,
@@ -357,7 +360,7 @@ public class UserController {
 
         /* seconda parte che riguarda lo user stesso */
             String action= "Privilegi aggiornati";
-            messageService.createMessageNewRoles("admin@info.it",
+            messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
                     user.get_id(),
                     action,
                     day,

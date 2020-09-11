@@ -26,6 +26,9 @@ public class MessageController {
     private UserService userService;
 
     @Autowired
+    private StopService stopService;
+
+    @Autowired
     private MessageService messageService;
 
     @Autowired
@@ -73,7 +76,34 @@ public class MessageController {
                         .nameLinea(routeService.getRoutesByID(shift.getLineaID()).getNameR())
                         .build();
                 messageVMS.add(messageVM);
-            }else if(message.getReservationID()!=null){ //get messaggio che concerne le reservation
+
+                /* get messaggio che concerne le reservation. Due tipi di messaggi per tre azioni differenti:
+                prenotazione bimbo da calendario, bimbo prenotato preso in carica,
+                bimbo non prenotato preso in carica
+                 */
+
+            }else if(message.getReservationID()!=null) {
+                if (message.getMessageChildPlace() != null) {
+                    Reservation r = reservationService.findReservationById(message.getReservationID());
+                    if (r != null) {
+                        Boolean direction = ((r.getDirection().equals("andata")) ? true : false);
+                        System.out.println("stopService.findStopbyId(r.getStopID()).getNome()!!!" + stopService.findStopbyId(r.getStopID()).getNome());
+                        MessageVM messageVM = MessageVM.builder()
+                            .sender(senderName)
+                            .messageID(message.getMessageID().toString())
+                            .text(message.getAction())
+                            .read(message.getRead())
+                            .date(message.getDate())
+                            .messageChildPlace(true)
+                            .nameChild(childService.findChildbyID(message.getChildID()).getNameChild())
+                            .direction(direction)
+                            .nameLinea(routeService.getRoutesByID(r.getRouteID()).getNameR())
+                            .nameStop(stopService.findStopbyId(r.getStopID()).getNome())
+                            .oraFermata(stopService.findStopbyId(r.getStopID()).getTime())
+                            .build();
+                    messageVMS.add(messageVM);
+                    }
+                }else if(message.getMessageChildPrenotation()!= null){
                 Reservation reservation = reservationService.findReservationById(message.getReservationID());
                 if(reservation != null){
                     String pattern = "dd/MM";
@@ -90,10 +120,13 @@ public class MessageController {
                             .messageChildPrenotation(true)
                             .directionReservation(reservation.getDirection())
                             .nameLinea(routeService.getRoutesByID(reservation.getRouteID()).getNameR())
+                            .nameStop(stopService.findStopbyId(reservation.getStopID()).getNome())
+                            .oraFermata(stopService.findStopbyId(reservation.getStopID()).getTime())
                             .build();
                     messageVMS.add(messageVM);
                 }
-            }else if(message.getChildID()!= null){       //get messaggio che concerne il bimbo (creazione / cancellazione)
+            }
+        }else if(message.getChildID()!= null){       //get messaggio che concerne il bimbo (creazione / cancellazione)
                     if (message.getMessageChildCreation()!=null) {
                         Child child = childService.findChildbyID(message.getChildID());
                         MessageVM messageVM = MessageVM.builder()
@@ -120,6 +153,7 @@ public class MessageController {
                                 .build();
                         messageVMS.add(messageVM);
                     }
+                    // messaggio che concerne il cambio di privilegi visto da un altro user
             }else if (message.getMessageUpdateOtherUser()!=null){
                     MessageVM messageVM = MessageVM.builder()
                             .sender(senderName)
@@ -131,6 +165,7 @@ public class MessageController {
                             .nameLinea(routeService.getRoutesByID(message.getRoute()).getNameR())
                             .build();
                 messageVMS.add(messageVM);
+                // messaggio che concerne il cambio di privilegi visto dallo user stesso
             }else if (message.getMessageUpdateUser()!=null){
                 MessageVM messageVM = MessageVM.builder()
                         .sender(senderName)
@@ -141,6 +176,25 @@ public class MessageController {
                         .messageUpdateUser(true)
                         .adminRoutes(message.getAdminRoutes())
                         .muleRoutes(message.getMuleRoutes())
+                        .build();
+                messageVMS.add(messageVM);
+
+            }else if(message.getMessageChildPrenotation()!=null){
+                Reservation r = reservationService.findReservationById(message.getReservationID());
+                Boolean direction = ((r.getDirection().equals("andata")) ? true : false);
+                System.out.println("stopService.findStopbyId(r.getStopID()).getNome()!!!" +stopService.findStopbyId(r.getStopID()).getNome());
+                MessageVM messageVM = MessageVM.builder()
+                        .sender(senderName)
+                        .messageID(message.getMessageID().toString())
+                        .text(message.getAction())
+                        .read(message.getRead())
+                        .date(message.getDate())
+                        .messageChildPrenotation(true)
+                        .nameChild(childService.findChildbyID(message.getChildID()).getNameChild())
+                        .direction(direction)
+                        .nameLinea(routeService.getRoutesByID(r.getRouteID()).getNameR())
+                        .nameStop(stopService.findStopbyId(r.getStopID()).getNome())
+                        .oraFermata(stopService.findStopbyId(r.getStopID()).getTime())
                         .build();
                 messageVMS.add(messageVM);
             }

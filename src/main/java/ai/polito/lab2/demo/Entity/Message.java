@@ -31,6 +31,7 @@ public class Message {
     Boolean messageUpdateOtherUser; //indica che è un messaggio relativo alla definizione di un nuovo accompagnatore
     Boolean messageUpdateUser; //indica che è un messaggio relativo alla definizione di un nuovo admin
     Boolean messageShiftResponse;
+    Boolean messageChildPlace;
     Boolean read;
     ArrayList<Integer> adminRoutes = new ArrayList<>();
     ArrayList<Integer> muleRoutes = new ArrayList<>();
