@@ -276,6 +276,10 @@ public class ShiftController {
 
         Shift t = shiftService.getTurnByID(shiftID);
 
+        Route route = routeService.getRoutesByID(t.getLineaID());
+
+
+
         //caso in cui il turno in questione è già stato modificato
         if(!t.getStatus().equals("pending")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -302,9 +306,13 @@ public class ShiftController {
             String action = "Turno " + stato;
 
             long day = new Date().getTime();
-
+            ArrayList<String> accompagnatori = new ArrayList<>(route.getUsernameAdmin());
+            // messaggio che arriva a tutti gli admin di linea (non lo faccio arrivare ai muli, che sarebbe un bordello andare a vedere i doppioni (mi creo altirmenti un altra struttura) tranne a quello che ha appena accettato
+            if (accompagnatori.contains(userService.getUserBy_id(t.getMuleID()).getUsername())){
+                accompagnatori.remove(userService.getUserBy_id(t.getMuleID()).getUsername());  // in questo modo il messaggio non dovrebbe arrivare a chi ha fatto l'operazione anche se admin di un altra linea per cui lo user ha subito delle variazioni
+            }
             messageService.createMessageResponse(t.getMuleID(),
-                    t.getAdminID(),
+                    accompagnatori,
                     action,
                     day,
                     t.getTurnID(),

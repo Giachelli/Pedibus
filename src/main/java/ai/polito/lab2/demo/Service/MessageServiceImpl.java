@@ -59,21 +59,23 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
-    public void createMessageResponse(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId shiftID,String status,String typeMessage){
+    public void createMessageResponse(ObjectId senderID, ArrayList<String> receivers, String action, long time, ObjectId shiftID,String status,String typeMessage){
 
+        for (String s : receivers) {
+            ObjectId receiverID = userRepo.findByUsername(s).get_id();
 
-        Message message = Message.builder()
-                .senderID(senderID)
-                .receiverID(receiverID)
-                .action(action)
-                .read(false)
-                .date(time)
-                .shiftID(shiftID)
-                .status(status)
-                .build();
+            Message message = Message.builder()
+                    .senderID(senderID)
+                    .receiverID(receiverID)
+                    .action(action)
+                    .read(false)
+                    .date(time)
+                    .shiftID(shiftID)
+                    .status(status)
+                    .build();
 
-        messageRepo.save(message);
-
+            messageRepo.save(message);
+        }
     }
 
     public void createMessageResponse(ObjectId senderID, ObjectId receiverID, ObjectId childID, String action, long time,String typeMessage){

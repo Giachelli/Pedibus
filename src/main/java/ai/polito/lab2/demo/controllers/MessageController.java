@@ -167,6 +167,15 @@ public class MessageController {
                 messageVMS.add(messageVM);
                 // messaggio che concerne il cambio di privilegi visto dallo user stesso
             }else if (message.getMessageUpdateUser()!=null){
+                ArrayList<String> adminRoutesName = new ArrayList<>();
+                ArrayList<String> muleRoutesName = new ArrayList<>();
+                for (int routeID : message.getAdminRoutes()){
+                    adminRoutesName.add(routeService.getRoutesByID(routeID).getNameR());
+                }
+                for (int routeID : message.getMuleRoutes()){
+                    muleRoutesName.add(routeService.getRoutesByID(routeID).getNameR());
+                }
+
                 MessageVM messageVM = MessageVM.builder()
                         .sender(senderName)
                         .messageID(message.getMessageID().toString())
@@ -174,8 +183,8 @@ public class MessageController {
                         .read(message.getRead())
                         .date(message.getDate())
                         .messageUpdateUser(true)
-                        .adminRoutes(message.getAdminRoutes())
-                        .muleRoutes(message.getMuleRoutes())
+                        .adminRoutes(adminRoutesName)
+                        .muleRoutes(muleRoutesName)
                         .build();
                 messageVMS.add(messageVM);
 

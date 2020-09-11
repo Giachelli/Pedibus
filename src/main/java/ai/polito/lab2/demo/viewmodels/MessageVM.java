@@ -21,8 +21,8 @@ public class MessageVM {
     Boolean messageChildDelete; //indica che è un messaggio relativo alla cancellazione di un bimbo
     Boolean messageUpdateOtherUser; //indica agli admin di una linea che l'admin o un mule della medesima linea ha subito delle variazioni
     Boolean messageUpdateUser; //indica allo user che sono stati modificati i suoi privilegi
-    ArrayList<Integer> adminRoutes = new ArrayList<>();
-    ArrayList<Integer> muleRoutes = new ArrayList<>();
+    ArrayList<String> adminRoutes = new ArrayList<>();
+    ArrayList<String> muleRoutes = new ArrayList<>();
     Boolean messageShiftResponse; // indica il turno accettato dall'admin
     Boolean messageChildPlace; // indica il bambino che (prenotato o non prenotato) è stato preso in consegna
     Boolean read;
