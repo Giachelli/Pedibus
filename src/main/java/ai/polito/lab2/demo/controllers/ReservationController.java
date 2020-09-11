@@ -7,14 +7,11 @@ import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Repositories.ChildRepo;
-import ai.polito.lab2.demo.Repositories.ReservationRepo;
-import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import io.swagger.annotations.ApiOperation;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,8 +77,7 @@ public class ReservationController {
         ObjectId childID = new ObjectId(reservationVM.getChildID());
 
         Reservation r = reservationService.findReservationByChildIDAndData(childID, data);
-        if(r != null)
-        {
+        if (r != null) {
             reservationService.delete(r.getId());
         }
 
@@ -124,7 +120,7 @@ public class ReservationController {
         Child child = childRepo.findChildByChildID(childID);
 
         ObjectId senderID = userService.getUserByUsername(child.getUsername()).get_id();
-        ObjectId receiverID=userService.getUserByUsername("admin@info.it").get_id();
+        ObjectId receiverID = userService.getUserByUsername("admin@info.it").get_id();
 
 
         String action = "Prenotazione bimbo";
@@ -149,7 +145,7 @@ public class ReservationController {
         //        Reservation r = reservationService.createReservation(reservationDTO);
         // String idReservation = r.getId().toString();
       */
-        return new ResponseEntity<Reservation>(r,HttpStatus.CREATED);
+        return new ResponseEntity<Reservation>(r, HttpStatus.CREATED);
 
     }
 
@@ -163,12 +159,11 @@ public class ReservationController {
         long nowTimeStamp = getCurrentTimeStamp();
         Stop stop = stopService.findStopbyId(stopID);
 
-        if (checkTimestamp(nowTimeStamp,data,stop))
-        {
-            return new ResponseEntity("Errore nella data",HttpStatus.BAD_REQUEST);
+        if (checkTimestamp(nowTimeStamp, data, stop)) {
+            return new ResponseEntity("Errore nella data", HttpStatus.BAD_REQUEST);
         }
 
-        if (this.controlName_RouteAndStop(id_linea,stopID))
+        if (this.controlName_RouteAndStop(id_linea, stopID))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         String direction;
 
@@ -196,14 +191,14 @@ public class ReservationController {
         //TODO: messaggio per bimbo preso in carico al genitore
         ChildReservationVM childReservationVM =
                 ChildReservationVM.builder()
-                .childID(childID.toString())
-                .nameChild(childService.findChildbyID(childID).getNameChild())
-                .nameFamily(reservationVM.getFamily_name())
-                .booked(false)
-                .inPlace(true)
-                .build();
+                        .childID(childID.toString())
+                        .nameChild(childService.findChildbyID(childID).getNameChild())
+                        .nameFamily(reservationVM.getFamily_name())
+                        .booked(false)
+                        .inPlace(true)
+                        .build();
 
-        return new ResponseEntity<>(childReservationVM,HttpStatus.CREATED);
+        return new ResponseEntity<>(childReservationVM, HttpStatus.CREATED);
     }
 
     //TODO rivevedere implementazione objectID ChildID in base ad angular
@@ -226,10 +221,17 @@ public class ReservationController {
         return new ResponseEntity(childReservationVM, HttpStatus.OK);
     }
 
+    /**
+    *
+    * @param id_linea è l'id che rappresenta la linea richiesta
+    * @param data un log che va a rappresentare i millesecondi della data chiesta
+    * @return ritorna le prenotazioni per andata e ritorno per la linea e per la data con l'aggiunta dei bambini non prenotati
+     */
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
+    @ApiOperation("ritorna tutti i bambini prenotati per la linea per quella data e tutti i bimbi non prenotati")
     @RequestMapping(value = "/reservations/{id_linea}/{data}", method = RequestMethod.GET)
-    public ResponseEntity getPeople(@PathVariable int id_linea, @PathVariable long  data) throws JsonProcessingException, ParseException {
-        System.out.println("data richiesta "+data);
+    public ResponseEntity getPeople(@PathVariable int id_linea, @PathVariable long data) throws JsonProcessingException, ParseException {
+        System.out.println("data richiesta " + data);
         Route route = routeService.getRoutesByID(id_linea);
         ArrayList<ChildReservationVM> notBookedA = new ArrayList<>();
         ArrayList<ChildReservationVM> notBookedR = new ArrayList<>();
@@ -241,7 +243,7 @@ public class ReservationController {
         // la chiave della mappa è il nome della fermata, value è una lista di utenti prenotati per quella fermata.
         Map<String, List<ChildReservationVM>> salire = reservationService.findReservationAndata(route.getId(), data);
         //Map<String, List<ChildReservationVM>> presentiNotBookedA = reservationService.findReservationAndataNotBooked(route.getId(), data);
-        salire.forEach((key,value) -> {
+        salire.forEach((key, value) -> {
             System.out.println("KEEEEEEEEY:::::" + key);
             System.out.println("Valueeeeeeee::::" + value);
         });
@@ -306,14 +308,15 @@ public class ReservationController {
 
             }
         }
-        for (Child c : children)
-            notBookedA.add(ChildReservationVM.builder()
-                    .childID(c.getChildID().toString())
-                    .nameChild(c.getNameChild())
-                    .nameFamily(c.getFamily_name())
-                    .booked(false)
-                    .inPlace(false)
-                    .build());
+        if (salire.size() != 0)
+            for (Child c : children)
+                notBookedA.add(ChildReservationVM.builder()
+                        .childID(c.getChildID().toString())
+                        .nameChild(c.getNameChild())
+                        .nameFamily(c.getFamily_name())
+                        .booked(false)
+                        .inPlace(false)
+                        .build());
 
 
         Map<String, List<ChildReservationVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
@@ -363,12 +366,13 @@ public class ReservationController {
             }
         }
 
-        for (Child c : children)
-            notBookedR.add(ChildReservationVM.builder()
-                    .childID(c.getChildID().toString())
-                    .nameChild(c.getNameChild())
-                    .nameFamily(c.getFamily_name())
-                    .build());
+        if (scendere.size() != 0)
+            for (Child c : children)
+                notBookedR.add(ChildReservationVM.builder()
+                        .childID(c.getChildID().toString())
+                        .nameChild(c.getNameChild())
+                        .nameFamily(c.getFamily_name())
+                        .build());
 
         Map<Object, Object> model = new TreeMap<>();
         model.put("nameRoute", route.getNameR());
@@ -392,8 +396,7 @@ public class ReservationController {
         long nowTimeStamp = getCurrentTimeStamp();
         Stop stop = stopService.findStopbyId(updatedReservation.getStopID());
 
-        if (checkTimestamp(nowTimeStamp,data,stop))
-        {
+        if (checkTimestamp(nowTimeStamp, data, stop)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -423,16 +426,14 @@ public class ReservationController {
     }
 
     private boolean checkTimestamp(long nowTimeStamp, long data, Stop stop) {
-        if(nowTimeStamp > data){
+        if (nowTimeStamp > data) {
             return true;
-        }
-        else {
-            if(nowTimeStamp == data)
-            {
+        } else {
+            if (nowTimeStamp == data) {
                 nowTimeStamp = updateTimeStamp(data, "now");
                 long date = updateTimeStamp(data, stop.getTime());
-                if (nowTimeStamp > date){
-                   return true;
+                if (nowTimeStamp > date) {
+                    return true;
                 }
             }
         }
@@ -442,8 +443,7 @@ public class ReservationController {
     private long updateTimeStamp(long data, String time) {
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
         Calendar today = Calendar.getInstance(timeZone);
-        if(time != "now")
-        {
+        if (time != "now") {
             String hour = time.split(":")[0];
             String minutes = time.split(":")[1];
             today.set(Calendar.MINUTE, Integer.valueOf(minutes));
@@ -471,8 +471,7 @@ public class ReservationController {
         long nowTimeStamp = getCurrentTimeStamp();
         Stop stop = stopService.findStopbyId(updatedReservation.getStopID());
 
-        if (checkTimestamp(nowTimeStamp,updatedReservation.getDate(),stop))
-        {
+        if (checkTimestamp(nowTimeStamp, updatedReservation.getDate(), stop)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         reservationService.delete(reservation_id);
@@ -484,7 +483,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> getPeople(@PathVariable ObjectId reservation_id) throws JsonProcessingException {
         Reservation request = reservationService.findReservationById(reservation_id);
 
-        return new ResponseEntity<>(request,HttpStatus.OK);
+        return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
 
@@ -500,10 +499,10 @@ public class ReservationController {
         return new ResponseEntity<>(request,HttpStatus.OK);
     }*/
 
-   // TODO: prendersi anche l'ora della fermata
+    // TODO: prendersi anche l'ora della fermata
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
-    public ResponseEntity getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
+    public ResponseEntity getChildReservation(@RequestParam(required = true) String family_name) throws JsonProcessingException {
         System.out.println("family_name :" + family_name);
         ArrayList<ReservationCalendarVM> reservationCalendarVMS = new ArrayList<>();
         reservationCalendarVMS = reservationService.reservationFamily(family_name);
@@ -523,7 +522,7 @@ public class ReservationController {
     // A livello stilistico era meglio farlo con il PathParam ma funziona anche così
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.DELETE)
-    public ResponseEntity deleteChildReservation(@RequestParam (required = true) ObjectId id) throws JsonProcessingException {
+    public ResponseEntity deleteChildReservation(@RequestParam(required = true) ObjectId id) throws JsonProcessingException {
 
         reservationService.delete(id);
 
@@ -534,17 +533,15 @@ public class ReservationController {
     private boolean controlName_RouteAndStop(int id_route, ObjectId stopID) {
         Route route = routeService.getRoutesByID(id_route);
         boolean found = false;
-        if(route == null)
+        if (route == null)
             return true;
         else {
-            for (Stop s : route.getStopListA())
-            {
-                if(s.get_id().toString().equals(stopID.toString()))
+            for (Stop s : route.getStopListA()) {
+                if (s.get_id().toString().equals(stopID.toString()))
                     found = true;
             }
-            for (Stop s : route.getStopListB())
-            {
-                if(s.get_id().toString().equals(stopID.toString()))
+            for (Stop s : route.getStopListB()) {
+                if (s.get_id().toString().equals(stopID.toString()))
                     found = true;
             }
             return !found;
