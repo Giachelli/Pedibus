@@ -20,4 +20,5 @@ public interface ChildService {
     Child findChildByNameChildAndUsername(String nameChild, String username);
 
     ArrayList<Child> findAllChild();
+
 }

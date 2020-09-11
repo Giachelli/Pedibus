@@ -26,6 +26,8 @@ public interface ReservationService {
 
     void save(Reservation r);
 
+    Reservation saveAndGet(Reservation r);
+
     void delete(ObjectId id);
 
     Reservation findReservationById(ObjectId reservation_id);

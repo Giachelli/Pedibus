@@ -114,20 +114,23 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
-    public void createMessageReservation(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId reservationID,String typeMessage){
+    public void createMessageReservation(ObjectId senderID, ArrayList<String> receivers, String action, long time, ObjectId reservationID,String typeMessage){
 
+        for (String s : receivers){
+            ObjectId receiverID = userRepo.findByUsername(s).get_id();
 
-        Message message = Message.builder()
-                .senderID(senderID)
-                .receiverID(receiverID)
-                .action(action)
-                .read(false)
-                .date(time)
-                .reservationID(reservationID)
-                .build();
+            Message message = Message.builder()
+                    .senderID(senderID)
+                    .receiverID(receiverID)
+                    .action(action)
+                    .read(false)
+                    .date(time)
+                    .reservationID(reservationID)
+                    .messageChildPrenotation(true)
+                    .build();
 
-        messageRepo.save(message);
-
+            messageRepo.save(message);
+        }
     }
 
 
@@ -165,6 +168,28 @@ public class MessageServiceImpl implements MessageService {
                     .build();
 
             messageRepo.save(message);
+    }
+
+    public void createMessageChildinPlace(String sender, String receiver, String action, long time, ObjectId childID, ObjectId reservationID){
+        ObjectId senderID = userRepo.findByUsername(sender).get_id();
+        ObjectId receiverID = userRepo.findByUsername(receiver).get_id();
+
+
+
+        Message message = Message.builder()
+                .senderID(senderID)
+                .receiverID(receiverID)
+                .reservationID(reservationID)
+                .childID(childID)
+                .action(action)
+                .messageChildPlace(true)
+                .read(false)
+                .date(time)
+                .build();
+
+        messageRepo.save(message);
+
+
     }
 
     public Message findMessageByShiftID(ObjectId shiftID){
