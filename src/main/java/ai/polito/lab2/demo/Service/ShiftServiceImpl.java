@@ -1,6 +1,7 @@
 package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.ShiftDTO;
+import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Shift;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.ShiftRepo;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class ShiftServiceImpl implements ShiftService {
@@ -175,5 +177,22 @@ public class ShiftServiceImpl implements ShiftService {
 
 
         return listShifts;
+    }
+
+    @Override
+    public int findNumberShiftToday() {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        Calendar today = Calendar.getInstance(timeZone);
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+
+        List<Shift> reservationList = shiftRepo.findByDate(today.getTimeInMillis());
+
+        if(reservationList != null)
+            return reservationList.size();
+        else
+            return 0;
     }
 }
