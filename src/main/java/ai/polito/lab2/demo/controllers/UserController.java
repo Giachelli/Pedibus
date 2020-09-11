@@ -11,9 +11,7 @@ import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.User;
-import ai.polito.lab2.demo.Service.MessageService;
-import ai.polito.lab2.demo.Service.RouteService;
-import ai.polito.lab2.demo.Service.UserService;
+import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.DashboardVM;
 import ai.polito.lab2.demo.viewmodels.UserRouteVM;
@@ -51,7 +49,16 @@ public class UserController {
     private RouteService routeService;
 
     @Autowired
+    private ChildService childService;
+
+    @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private ReservationService reservationService;
+
+    @Autowired
+    private ShiftService shiftService;
 
     @Autowired
     RoleRepo roleRepository;
@@ -396,19 +403,20 @@ public class UserController {
         return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
     }
 
-/*
+/**
 *
 *
 * Rice
 *
 */
-
     @Secured("ROLE_SYSTEM_ADMIN")
     @ApiOperation("Restituisce al solo system admin le informazioni generali sdll'app, numero di bimbi iscritti, numero di utenti presenti")
     @RequestMapping(value = "/users/info", method = RequestMethod.GET)
     public ResponseEntity getInfoAboutPedibus() {
 
         List<Route> routes = routeService.getAllRoutes();
+        Set<String> admin = new HashSet<>();
+        Set<String> mule = new HashSet<>();
         int numberRoutes = routes.size();
 
         int numberMule = 0;
@@ -416,18 +424,35 @@ public class UserController {
 
         for (Route r : routes)
         {
-            numberAdmin = numberAdmin + r.getUsernameAdmin().size();
-
-            if(r.getUsernameMule() != null)
+            for (String adminName : r.getUsernameAdmin())
             {
-                numberMule = numberMule + r.getUsernameMule().size();
+                admin.add(adminName);
+            }
+
+            for (String muleName : r.getUsernameMule())
+            {
+                mule.add(muleName);
             }
         }
+
+        int userNumber = userService.findAll().size() -1;
+        int childNumber = childService.findAllChild().size();
+
+        numberAdmin = admin.size();
+        numberMule = mule.size();
+
+        int reservationToday = reservationService.findNumberReservationToday();
+        int muleToday = shiftService.findNumberShiftToday();
 
 
         DashboardVM dashboardVM = DashboardVM.builder()
                 .numberRoutes(numberRoutes)
-                .numberAdmin(numberAdmin).numberMules(numberMule).build();
+                .numberAdmin(numberAdmin).numberMules(numberMule)
+                .numberChild(childNumber)
+                .numberUser(userNumber)
+                .reservationToday(reservationToday)
+                .muleActiveToday(muleToday)
+                .build();
         return new ResponseEntity<DashboardVM>(dashboardVM,HttpStatus.OK);
     }
 

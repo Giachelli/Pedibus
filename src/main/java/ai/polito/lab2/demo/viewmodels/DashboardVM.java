@@ -9,4 +9,8 @@ public class DashboardVM {
     int numberRoutes;
     int numberAdmin;
     int numberMules;
+    int numberChild;
+    int numberUser;
+    int muleActiveToday;
+    int reservationToday;
 }
