@@ -100,6 +100,23 @@ public class ReservationServiceImpl implements ReservationService {
         this.firstDay=s;
     }
 
+    @Override
+    public int findNumberReservationToday() {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        Calendar today = Calendar.getInstance(timeZone);
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+
+        List<Reservation> reservationList = reservationRepo.findReservationByDate(today.getTimeInMillis());
+
+        if(reservationList != null)
+            return reservationList.size();
+        else
+            return 0;
+    }
+
     public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
         System.out.println("Entro in findReservationAndata con date "+ data);
         int i = 0;

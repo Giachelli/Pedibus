@@ -49,4 +49,7 @@ public interface ReservationService {
     int calculateFirstDay();
 
     void setFirstDay(String s);
+
+    int findNumberReservationToday();
+
 }
