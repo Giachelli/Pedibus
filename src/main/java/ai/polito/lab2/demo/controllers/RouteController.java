@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.OnNewFileCompleteEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.UserService;
@@ -23,7 +25,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +45,9 @@ public class RouteController {
     private RouteService routeService;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
 
     public void PopulateDb() throws IOException {
 
@@ -139,10 +146,11 @@ public class RouteController {
 
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/routes/addRoute", method = RequestMethod.POST)
-    public ResponseEntity createRoute(@RequestPart("file") MultipartFile file) throws JsonProcessingException {
+    public ResponseEntity createRoute(@RequestPart("file") MultipartFile file, WebRequest request) throws JsonProcessingException {
         if (null == file.getOriginalFilename()) {
             return new ResponseEntity<>("File senza titolo",HttpStatus.BAD_REQUEST);
         }
+        List<UserVM> adminVMList = new ArrayList<>();
         RouteVM routeVM;
         try {
             byte[] bytes = file.getBytes();
@@ -160,7 +168,6 @@ public class RouteController {
             ArrayList<StopVM> stopVMsA = new ArrayList<>();
             ArrayList<StopVM> stopVMsB = new ArrayList<>();
             List<UserVM> muleVMList = new ArrayList<>();
-            List<UserVM> adminVMList = new ArrayList<>();
 
             r.getStopListA().forEach(stop -> {
                 StopVM stopVM = StopVM.builder()
@@ -238,7 +245,19 @@ public class RouteController {
             return new ResponseEntity<>("Errore nel file passato",HttpStatus.BAD_REQUEST);
         }
 
-        //TODO mettere mail qui
+        try {
+            System.out.println("AAAAADMIN VM LIST: " + adminVMList);
+
+            if (adminVMList!= null){
+                for ( UserVM user : adminVMList){
+                    String appUrl = request.getContextPath();
+                    eventPublisher.publishEvent(new OnNewFileCompleteEvent
+                            (user, request.getLocale(), appUrl));
+                }
+            }
+        } catch (Exception me) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Some problems occurred when sending the email", me);
+        }
 
         return new ResponseEntity<>(routeVM, HttpStatus.CREATED);
 
