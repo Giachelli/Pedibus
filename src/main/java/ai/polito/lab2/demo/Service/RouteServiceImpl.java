@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.thymeleaf.util.ArrayUtils;
 
 import java.io.File;
@@ -125,7 +126,8 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public void readAll() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        final File folder = new File("target/pedibus_routes");
+        System.out.println("SIAMOMOMOMOM QUI");
+        final File folder = ResourceUtils.getFile("classpath:pedibus_routes//");
         ArrayList<Route> routesArray = new ArrayList<>();
 
         for (final File file : Objects.requireNonNull(folder.listFiles())) {
@@ -136,6 +138,7 @@ public class RouteServiceImpl implements RouteService {
             }
             route.setLastModified(file.lastModified());
             routesArray.add(route);
+            System.out.println("ROOOOOUTEEEEE INSERTED!!!!");
         }
 
         this.saveAll(routesArray);

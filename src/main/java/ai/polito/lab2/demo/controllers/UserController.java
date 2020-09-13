@@ -406,7 +406,7 @@ public class UserController {
 /**
 *
 *
-* Rice
+* @return totale informazioni di sistema
 *
 */
     @Secured("ROLE_SYSTEM_ADMIN")

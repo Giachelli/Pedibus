@@ -58,6 +58,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("Entro nel run");
         reservationService.setFirstDay("15/09/2020");
         boolean addRouteId = true;
         Set<Integer> routeId = new HashSet<>();
@@ -80,6 +81,7 @@ public class DataInitializer implements CommandLineRunner {
                     .isEnabled(true)
                     .build()
             );
+            System.out.println("Siamo sopra al populateDB");
             routeController.PopulateDb();
             if(addRouteId)
             {
