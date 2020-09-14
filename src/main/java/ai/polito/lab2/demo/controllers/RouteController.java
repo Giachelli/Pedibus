@@ -255,7 +255,7 @@ public class RouteController {
                     .usernameMule(muleVMList)
                     .build();
             try {
-                System.out.println(ResourceUtils.getFile("classpath:pedibus_routes//"));
+                //System.out.println(ResourceUtils.getFile("classpath:pedibus_routes/"));
                 result = Files.move(Paths.get(path.getFileName().toString()), Paths.get(ResourceUtils.getFile("classpath:pedibus_routes//")+path.getFileName().toString()));
             } catch (IOException e) {
                 logger.error("Exception while moving file: " + e.getMessage());
