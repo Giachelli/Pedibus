@@ -40,40 +40,54 @@
       "time": "8:25",
       "lat": "45.061627",
       "lng": "7.658498"
+    },
+    {
+      "nome": "Scuola Entrata-Infermeria",
+      "nums": 6,
+      "time": "8:28",
+      "lat": "45.0616503",
+      "lng": "7.6591118"
     }
   ],
   "stopListB": [
     {
-      "nome": "Corso Castelfidardo- Fermata 3281",
+      "nome": "Scuola Entrata-Infermeria",
       "nums": 1,
+      "time": "15:58",
+      "lat": "45.0616503",
+      "lng": "7.6591118"
+    },
+    {
+      "nome": "Corso Castelfidardo- Fermata 3281",
+      "nums": 2,
       "time": "16:00",
       "lat": "45.061627",
       "lng": "7.658498"
     },
     {
       "nome": "Corso Francesco Ferrucci 112- Eaton",
-      "nums": 2,
+      "nums": 3,
       "time": "16:05",
       "lat": "45.0619957",
       "lng": "7.6552601"
     },
     {
       "nome": "Corso Peschiera 145- Compass Gruppo Mediobanca",
-      "nums": 3,
+      "nums": 4,
       "time": "16:10",
       "lat": "45.0629971",
       "lng": "7.65204"
     },
     {
       "nome": "Piazza Sabotino 38- Unicredit",
-      "nums": 4,
+      "nums": 5,
       "time": "16:20",
       "lat": "45.062515",
       "lng": "7.6525057"
     },
     {
       "nome": "Corso Peschiera 191- Agos Ducato",
-      "nums": 5,
+      "nums": 6,
       "time": "16:25",
       "lat": "45.0658943",
       "lng": "7.6456118"

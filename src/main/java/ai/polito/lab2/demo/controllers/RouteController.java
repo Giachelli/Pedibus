@@ -1,6 +1,5 @@
 package ai.polito.lab2.demo.controllers;
 
-import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
 
 import java.nio.file.Files;
@@ -9,27 +8,27 @@ import java.nio.file.Paths;
 
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.OnNewFileCompleteEvent;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.ApplicationEventPublisher;
-import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.UserService;
 import ai.polito.lab2.demo.viewmodels.RouteVM;
 import ai.polito.lab2.demo.viewmodels.StopVM;
 import ai.polito.lab2.demo.viewmodels.UserVM;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
@@ -49,19 +48,30 @@ public class RouteController {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
+    private final static Logger logger = LoggerFactory.getLogger(RouteController.class);
+
+    /**
+     * funzione chiamata in fase di inizializzazione che legge da file e salva tutte le linee su mongo
+     * @throws IOException
+     */
     public void PopulateDb() throws IOException {
 
         routeService.readAll();
 
     }
 
-
+    /**
+     * ritorna tutte le linee presenti sul db
+     * @return ritorna varie informazioni sulle linee presenti nel db
+     * @throws JsonProcessingException
+     */
     @RequestMapping(value = "/routes", method = RequestMethod.GET)
+    @ApiOperation("ritorna tutte le linee presenti sul db")
     public ResponseEntity getAllRoutes() throws JsonProcessingException {
         String user = Principal.class.getName();
         List<Route> routes = routeService.getAllRoutes();
         ArrayList<RouteVM> routeVMs = new ArrayList<>();
-        System.out.println(user + " Request GET Lines. The lines are: routes\n");
+        logger.info(user + " Request GET Lines. The lines are: routes\n");
         routes.forEach(route -> System.out.println(route.getNameR()));
         routes.forEach(route -> {
             ArrayList<StopVM> stopVMsA = new ArrayList<>();
@@ -138,13 +148,28 @@ public class RouteController {
         return ok().body(model);
     }
 
+    /**
+     * ritorna una linea dal nome
+     * @param nome_linea nome della linea richiesta
+     * @return linea per intero
+     * @throws JsonProcessingException
+     */
     @RequestMapping(value = "/routes/{nome_linea}", method = RequestMethod.GET)
+    @ApiOperation("ritorna una linea in base al nome")
     public ResponseEntity<Route> getAllStopsForRoute(@PathVariable String nome_linea) throws JsonProcessingException {
         Route route = routeService.getRoutesByName(nome_linea);
         return new ResponseEntity<Route>(route, HttpStatus.OK);
     }
 
+    /**
+     * aggiunta di una linea tramite file json
+     * @param file file contenente la linea da aggiungere
+     * @param request
+     * @return
+     * @throws JsonProcessingException
+     */
     @Secured("ROLE_SYSTEM_ADMIN")
+    @ApiOperation("aggiunta di una linea tramite file json")
     @RequestMapping(value = "/routes/addRoute", method = RequestMethod.POST)
     public ResponseEntity createRoute(@RequestPart("file") MultipartFile file, WebRequest request) throws JsonProcessingException {
         if (null == file.getOriginalFilename()) {
@@ -230,14 +255,15 @@ public class RouteController {
                     .usernameMule(muleVMList)
                     .build();
             try {
-                result = Files.move(Paths.get(path.getFileName().toString()), Paths.get("./target/pedibus_routes/"+path.getFileName().toString()));
+                System.out.println(ResourceUtils.getFile("classpath:pedibus_routes//"));
+                result = Files.move(Paths.get(path.getFileName().toString()), Paths.get(ResourceUtils.getFile("classpath:pedibus_routes//")+path.getFileName().toString()));
             } catch (IOException e) {
-                System.out.println("Exception while moving file: " + e.getMessage());
+                logger.error("Exception while moving file: " + e.getMessage());
             }
             if(result != null) {
-                System.out.println("File moved successfully.");
+                logger.info("File moved successfully.");
             }else{
-                System.out.println("File movement failed.");
+                logger.error("File movement failed.");
             }
 
         } catch (IOException e) {

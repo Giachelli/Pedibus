@@ -38,40 +38,54 @@
       "time": "8:20",
       "lat": "45.061142",
       "lng": "7.658117"
+    },
+    {
+      "nome": "Scuola Entrata-Einaudi",
+      "nums": 6,
+      "time": "8:25",
+      "lat": "45.0606094",
+      "lng": "7.659048"
     }
   ],
   "stopListB": [
     {
-      "nome": "Corso Mediterraneo- Incrocio Corso Peschiera",
+      "nome": "Scuola Entrata-Einaudi",
       "nums": 1,
+      "time": "16:00",
+      "lat": "45.0606094",
+      "lng": "7.659048"
+    },
+    {
+      "nome": "Corso Mediterraneo- Incrocio Corso Peschiera",
+      "nums": 2,
       "time": "16:10",
       "lat": "45.061142",
       "lng": "7.658117"
     },
     {
       "nome": "Corso Mediterraneo 124- Fermata 3550",
-      "nums": 2,
+      "nums": 3,
       "time": "16:15",
       "lat": "45.059077",
       "lng": "7.6553165"
     },
     {
       "nome": "Corso Lione 40- Pizzeria Il Picchio",
-      "nums": 3,
+      "nums": 4,
       "time": "16:20",
       "lat": "45.0575786",
       "lng": "7.6544575"
     },
     {
       "nome": "Corso Lione 74- Trattoria-Pizzeria da Totò e Martina",
-      "nums": 4,
+      "nums": 5,
       "time": "16:25",
       "lat": "45.0551422",
       "lng": "7.6503551"
     },
     {
       "nome": "Piazza Marmolada- Incrocio via Spalato- Degustazione The",
-      "nums": 5,
+      "nums": 6,
       "time": "16:30",
       "lat": "45.054883",
       "lng": "7.649337"
