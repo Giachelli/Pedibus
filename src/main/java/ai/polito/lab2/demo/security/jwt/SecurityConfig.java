@@ -104,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/routes/addRoute").hasRole("SYSTEM_ADMIN")
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/reservations/**").hasRole("USER")
+                    .antMatchers("/reservations/**").hasAnyRole("SYSTEM_ADMIN","MULE","ADMIN")
                     .and()
                     .authorizeRequests()
                     .antMatchers("/shift/**").hasAnyRole("SYSTEM_ADMIN", "ADMIN","MULE")

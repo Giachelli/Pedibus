@@ -23,12 +23,19 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
 
         final String expired = (String) httpServletRequest.getAttribute("expired");
-        System.out.println(expired);
+        System.out.println("EXPIRED" + expired);
+        /* da capire perchè avremmo fatto cosi */
+        /*
         if (expired!=null){
             logger.error("Responding with unauthorized error. Message - {}", expired);
             httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,expired);
             System.out.println("HEI CI SONO");
         }else{
+            logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
+            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());
+        }
+        */
+        if (expired!=null) {
             logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
             httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());
         }

@@ -105,6 +105,20 @@ public class UserService implements IUserService {
         return true;
     }
 
+    public boolean getVerificationPassToken(String randomUUID) {
+        User user = this.getUserByPassUUID(randomUUID);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR: User not found");
+        }
+        Calendar cal = Calendar.getInstance();
+        // in questo caso l'admin deve mandare di nuovo una mail perchè è scaduto il token
+        if ((user.getExpiry_passToken().getTime() - cal.getTime().getTime()) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expired token");
+        }
+        return true;
+    }
+
     @Override
     public boolean manageUser(String randomUUID, ConfirmUserVM userVM) {
 

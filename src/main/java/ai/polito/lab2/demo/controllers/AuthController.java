@@ -14,6 +14,7 @@ import ai.polito.lab2.demo.viewmodels.AuthenticationRequestVM;
 import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
 import ai.polito.lab2.demo.viewmodels.RecoverVM;
 import ai.polito.lab2.demo.viewmodels.RegisterVM;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -64,9 +65,20 @@ public class AuthController {
 
     String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}";
 
+    /**
+     *
+     * @param register Oggetto fornito con i campi necessari per la registrazione dello user
+     * @param request
+     * @return
+     */
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("Enpoint per la registrazione")
     public ResponseEntity registerUser(@RequestBody RegisterVM register, WebRequest request) {
+
+        if (userService.getUserByUsername(register.getEmail())!=null){
+            return new ResponseEntity("Lo user è già presente",HttpStatus.BAD_REQUEST );
+        }
 
         ArrayList<Role> userRoles = new ArrayList<Role>();
         try {
@@ -89,7 +101,13 @@ public class AuthController {
 
     }
 
+    /**
+     *
+     * @param data oggetto con i campi necessari per effettuare il login
+     * @return
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("Endpoin per effettuare il login")
     public ResponseEntity signin(@RequestBody AuthenticationRequestVM data) {
         try {
             System.out.println("Post /login");
@@ -117,21 +135,31 @@ public class AuthController {
     }
 
     //TODO fare la get da inviare tramite mail
+
+    /**
+     *
+     * @param randomUUID token fornito per completare la registrazione
+     * @return
+     */
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.GET)
+    @ApiOperation("Endpoint per raggiungere la pagina di completamento iscrizione")
     public ResponseEntity getPage(@PathVariable String randomUUID) {
         if (userService.getVerificationToken(randomUUID)) {
             return new ResponseEntity(HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
         }
-        /*
-        Map<Object, Object> model = new TreeMap<>();
-        model.put("message", "create the page");
-        return ok(model);
-        */
+
     }
 
+    /**
+     *
+     * @param randomUUID token passatogli
+     * @param userVM
+     * @return
+     */
     @RequestMapping(value = "/confirm/{randomUUID}", method = RequestMethod.POST)
+    @ApiOperation("Endpoint per la creazione dell'utente dopo che ha inserito i dati")
     public ResponseEntity confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
         if (!userService.getVerificationToken(randomUUID))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token non valido");
@@ -153,23 +181,21 @@ public class AuthController {
         }
     }
 
+    /**
+     *
+     * @param email con cui ci si è registrati
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/recover", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("Endpoint per mandare la mail per il recupero della password")
     public ResponseEntity recoverPassword(@RequestBody String email, WebRequest request) {
 
         User user = userRepo.findByUsername(email);
         if (user == null) {
            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        // TODO: vedere se continuare a passare il DTO come il /register sopra o qui passare direttamente lo user poichè si va a salvarlo in db
 
-        /*
-        UserDTO userDTO = UserDTO.builder()
-
-                            .email(user.getUsername())
-                            .roles(Arrays.asList(roleRepo.findByRole(user.getRoles().toString())))
-                            .passtoken(user.getPasstoken())
-                            .build();
-         */
 
         try {
             String appUrl = request.getContextPath();
@@ -181,39 +207,46 @@ public class AuthController {
         }
     }
 
+    /**
+     *
+     * @param randomUUID token utilizzato per il recover della password
+     * @param vm corpo della richiesta
+     * @return
+     */
     @RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, RecoverVM vm) {
-        //TO DO: CHECK TOKEN VALIDITY
+        if (userService.getVerificationPassToken(randomUUID)) {
 
+            System.out.println("RECOVER REQUEST");
+            User user = userService.getUserByPassUUID(randomUUID);
+            System.out.println("Pass user prima " + user.getPassword());
+            if (user == null) {
+                return new ResponseEntity<>(
+                        "Errore 404 – Not found",//utente o token non validi",
+                        HttpStatus.BAD_REQUEST);
+            }
+            if (!vm.getPass().equals(vm.getConfpass())) {
+                return new ResponseEntity<>(
+                        "Errore 404 – Not found",//utente o token non validi",
+                        HttpStatus.BAD_REQUEST);
+            }
+            if (!vm.getPass().matches(regex)) {
+                System.out.println("REGEX NOT MATCH");
+                return new ResponseEntity<>(
+                        "Errore 404 – Not found",//la password non soddisfa i requisiti minimi",
+                        HttpStatus.BAD_REQUEST);
+            } else {
+                System.out.println("REGEX PASS");
+            }
+            System.out.println("prova ad impostare " + vm.getPass());
 
-        System.out.println("RECOVER REQUEST");
-        User user = userService.getUserByPassUUID(randomUUID);
-        System.out.println("Pass user prima " + user.getPassword());
-        if (user == null) {
-            return new ResponseEntity<>(
-                    "Errore 404 – Not found",//utente o token non validi",
-                    HttpStatus.BAD_REQUEST);
-        }
-        if (!vm.getPass().equals(vm.getConfpass())) {
-            return new ResponseEntity<>(
-                    "Errore 404 – Not found",//utente o token non validi",
-                    HttpStatus.BAD_REQUEST);
-        }
-        if (!vm.getPass().matches(regex)) {
-            System.out.println("REGEX NOT MATCH");
-            return new ResponseEntity<>(
-                    "Errore 404 – Not found",//la password non soddisfa i requisiti minimi",
-                    HttpStatus.BAD_REQUEST);
+            //user.setPassword(b.encode(vm.getPass()));
+            userService.changePassword(user, vm.getPass());
+            System.out.println("impostata " + user.getPassword());
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            System.out.println("REGEX PASS");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
         }
-        System.out.println("prova ad impostare " + vm.getPass());
-
-        //user.setPassword(b.encode(vm.getPass()));
-        userService.changePassword(user, vm.getPass());
-        System.out.println("impostata " + user.getPassword());
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }
