@@ -52,8 +52,30 @@ public class ChildController {
         String stopName;
 
         // non sono required lo stopID, la lineaID, la direction e la data
-        if (data.getNameChild() == "" || data.getUsername() == null || data.getFamily_name() == null || data.getColor() == null)
-            return badRequest().build();
+        // mettere controllo anche che il nome sia well formed con regex
+        if (data.getNameChild() == ""
+                || data.getNameChild()==null
+                || data.getNameChild().length()<3
+                || data.getFamily_name() == ""
+                || data.getUsername() == null
+                || data.getUsername() == ""
+                || data.getFamily_name() == null
+                || data.getColor() == null)
+            return new ResponseEntity("Dati inseriti in modo non corretto", HttpStatus.BAD_REQUEST);
+
+        /* Controllo per vedere se stiamo inserendo un bambino con lo stesso nome */
+        /*
+        if (childService.registerChild(data)!=null){
+
+        }
+        */
+
+        if (childService.findChildByNameChildAndUsername(data.getNameChild(),data.getUsername())!=null) {
+            return new ResponseEntity("BUBBA",HttpStatus.BAD_REQUEST);
+        }
+
+
+
 
     /* Caso in cui il child viene iscritto con una linea e una fermata di default */
 
