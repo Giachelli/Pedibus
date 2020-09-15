@@ -2,7 +2,6 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
-import org.bson.types.ObjectId;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,12 +1,14 @@
 package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Dto.UserDTO;
+import ai.polito.lab2.demo.Entity.Role;
 import ai.polito.lab2.demo.OnRecoverCompleteEvent;
 import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.OnRegistrationCompleteEvent;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.IUserService;
 import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.Service.RoleService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.AuthenticationRequestVM;
 import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
@@ -43,7 +45,7 @@ public class AuthController {
     private UserRepo userRepo;
 
     @Autowired
-    private RoleRepo roleRepo;
+    private RoleService roleService;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -78,16 +80,21 @@ public class AuthController {
             return new ResponseEntity("Lo user è già presente",HttpStatus.BAD_REQUEST );
         }
 
+        ArrayList<Role> userRoles = new ArrayList<Role>();
+        try {
+            userRoles = roleService.convertRoles(register.getRole());
+        } catch (Exception e) {
+            return new ResponseEntity("Errore nei ruoli",HttpStatus.BAD_REQUEST);
+        }
         UserDTO user = UserDTO.builder().
                 email(register.getEmail()).
-                roles(Arrays.asList(roleRepo.findByRole(register.getRole()))).build();
-
+                roles(userRoles).build();
 
         try {
             String appUrl = request.getContextPath();
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent
                     (user, request.getLocale(), appUrl));
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity(user, HttpStatus.CREATED);
         } catch (Exception me) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Some problems occurred when sending the email", me);
         }

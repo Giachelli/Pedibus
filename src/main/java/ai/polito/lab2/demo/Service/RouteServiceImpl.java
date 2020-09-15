@@ -55,22 +55,41 @@ public class RouteServiceImpl implements RouteService {
     }
 
 
+    /**
+     *
+     * @return ritorna tutte le route
+     */
     public List<Route> getAllRoutes() {
         return routeRepo.findAll();
     }
 
+    /**
+     *
+     * @param NameR nome della route
+     * @return ritorna la route in base al nome
+     */
     public Route getRoutesByName(String NameR) {
         Query query = new Query();
         query.addCriteria(Criteria.where("nameR").is(NameR));
         return mongoTemplate.find(query, Route.class).get(0);
     }
 
+    /**
+     * ritorna la route in base all'id
+     * @param routeID id della route
+     * @return ritorna la route in base all'id
+     */
     @Override
     public Route getRoutesByID(int routeID) {
 
         return routeRepo.findRouteById(routeID);
     }
 
+    /**
+     * ritorna la routeDto in base all'id
+     * @param routeID id della route
+     * @return ritorna la routeDTO in base all'id
+     */
     @Override
     public RouteDTO getRoutesDTOByID(int routeID) {
 
@@ -78,6 +97,10 @@ public class RouteServiceImpl implements RouteService {
     }
 
 
+    /**
+     * salva tutte le linee passate nell'array list
+     * @param r arraylist con tutte le linee da salvare (fase di configurazione)
+     */
     public void saveAll(ArrayList<Route> r) {
 
         for (Route route : r) {
@@ -99,6 +122,11 @@ public class RouteServiceImpl implements RouteService {
 
     }
 
+    /**
+     *
+     * @param nameR nome della route
+     * @return ritorna la route in base al nome
+     */
     @Override
     public RouteDTO findRouteByNameR(String nameR) {
         Route r = routeRepo.findRouteByNameR(nameR);
@@ -106,6 +134,11 @@ public class RouteServiceImpl implements RouteService {
         return r.convertToRouteDTO();
     }
 
+    /**
+     * ritorna l'id dal nome della route
+     * @param nameR nome della route
+     * @return id della route con quel nome
+     */
     @Override
     public int findIDRouteByNameR(String nameR) {
         return routeRepo.findRouteByNameR(nameR).getId();
@@ -118,15 +151,22 @@ public class RouteServiceImpl implements RouteService {
 
     }
 
+    /**
+     * Salvataggio di una route
+     * @param r
+     */
     @Override
     public void saveRoute(Route r) {
         routeRepo.save(r);
     }
 
+    /**
+     * Lettura da file delle route utilizzata in fase di configurazione
+     * @throws IOException
+     */
     @Override
     public void readAll() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println("SIAMOMOMOMOM QUI");
         final File folder = ResourceUtils.getFile("classpath:pedibus_routes//");
         ArrayList<Route> routesArray = new ArrayList<>();
 
@@ -138,13 +178,18 @@ public class RouteServiceImpl implements RouteService {
             }
             route.setLastModified(file.lastModified());
             routesArray.add(route);
-            System.out.println("ROOOOOUTEEEEE INSERTED!!!!");
         }
 
         this.saveAll(routesArray);
 
     }
 
+    /**
+     * Lettura di una singola route da file per caricamento
+     * @param file che contiene la route da controllare e caricare
+     * @return ritorna la route creata se tutto va bene
+     * @throws IOException errore nel parsing del json
+     */
     @Override
     public Route readSingle(File file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -172,6 +217,11 @@ public class RouteServiceImpl implements RouteService {
 
     }
 
+    /**
+     * Funzione che controlla la route passata se ha tutti i campi corretti
+     * @param route
+     * @return true se tutto ok
+     */
     private boolean controlRoute(Route route) {
         if (routeRepo.findRouteByNameR(route.getNameR()) != null)
             return false;
@@ -204,6 +254,11 @@ public class RouteServiceImpl implements RouteService {
         return true;
     }
 
+    /**
+     * ritorna gli username dei mule per la linea
+     * @param lineaID id della linea
+     * @return ritorna la lista degli username dei mule per la linea
+     */
     @Override
     public List<String> getAccompagnaotori(int lineaID) {
         List<String> accompagnatori = new ArrayList<>();
@@ -221,13 +276,5 @@ public class RouteServiceImpl implements RouteService {
 
         return accompagnatori;
     }
-
-    /* @Override
-    public Route getRouteByName(String nameR) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("nameR").is(nameR));
-        return mongoTemplate.findOne(query, Route.class);
-    }*/
-
 
 }

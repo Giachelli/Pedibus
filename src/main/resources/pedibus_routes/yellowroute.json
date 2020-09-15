@@ -39,40 +39,54 @@
       "time": "8:25",
       "lat": "45.0615919",
       "lng": "7.660763"
+    },
+    {
+      "nome": "Scuola Entrata-Principale",
+      "nums": 6,
+      "time": "8:28",
+      "lat": "45.0614594",
+      "lng": "7.6625148"
     }
   ],
   "stopListB": [
     {
-      "nome": "Corso Duca degli Abruzzi 28",
+      "nome": "Scuola Entrata-Principale",
       "nums": 1,
+      "time": "15:55",
+      "lat": "45.0614594",
+      "lng": "7.6625148"
+    },
+    {
+      "nome": "Corso Duca degli Abruzzi 28",
+      "nums": 2,
       "time": "16:00",
       "lat": "45.0615919",
       "lng": "7.660763"
     },
     {
       "nome": "Fermata 10 Corso Duca",
-      "nums": 2,
+      "nums": 3,
       "time": "16:07",
       "lat": "45.059999",
       "lng": "7.6613676"
     },
     {
       "nome": "Corso Luigi Einaudi 25- Krabon Pizzeria",
-      "nums": 3,
+      "nums": 4,
       "time": "16:15",
       "lat": "45.0581958",
       "lng": "7.6642387"
     },
     {
       "nome": "Corso Luigi Einaudi 15- Banca del Piemonte",
-      "nums": 4,
+      "nums": 5,
       "time": "16:20",
       "lat": "45.0574455",
       "lng": "7.6655583"
     },
     {
       "nome": "Corso Germano Sommeiller 39- Unicredit",
-      "nums": 5,
+      "nums": 6,
       "time": "16:25",
       "lat": "45.0567558",
       "lng": "7.6677792"
