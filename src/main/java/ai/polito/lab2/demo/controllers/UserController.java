@@ -195,6 +195,8 @@ public class UserController {
         ArrayList<Integer> adminRoutes = modifyRoleUser.getAdminRoutes();
         ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
 
+        ArrayList<Boolean> oldAvailability = user.getAvailability();
+
         ArrayList<Integer> adminBefore = new ArrayList<>();
         ArrayList<Integer> muleBefore = new ArrayList<>();
 
@@ -346,7 +348,7 @@ public class UserController {
                 }
             }
             for (Map.Entry<Integer,ArrayList<String>> entry: otherAdmins.entrySet()){
-                String action = "I privilegi relativi allo user " + user.getUsername() + " aggiornati.";
+                String action = "I privilegi/disponibilità relativi allo user " + user.getUsername() + " aggiornati.";
                 // mettere controllo che se entry.getValue è uguale al sender, allora il messaggio non va inviato
                 if (entry.getValue().contains(modifyRoleUser.getModifiedBy())){
                     entry.getValue().remove(modifyRoleUser.getModifiedBy());  // in questo modo il messaggio non dovrebbe arrivare a chi ha fatto l'operazione anche se admin di un altra linea per cui lo user ha subito delle variazioni
@@ -356,9 +358,25 @@ public class UserController {
                         action,
                         day,
                         entry.getKey());
+
+                /* se anche gli admin posso cambiare le availability di un mule allora ritornare su questo messaggio, poiché lo user non viene informato*/
+
+                /* Da utilizzare solo nel caso vogliamo notificare che uno user ha modificato le sue dispo, sennò no.
+                if (!(oldAvailability.equals(modifyRoleUser.getAvailability()))){
+                    String action1= "Modifica disponibilità";
+                    messageService.createMessageEditAvailability(modifyRoleUser.getModifiedBy(),
+                            entry.getValue(),
+                            action1,
+                            day,
+                            entry.getKey());
+                }
+                */
+
+
             }
 
         /* seconda parte che riguarda lo user stesso */
+        if (!(modifyRoleUser.getModifiedBy().equals(userService.getUserBy_id(user.get_id()).getUsername()))){
             String action= "Privilegi aggiornati";
             messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
                     user.get_id(),
@@ -366,6 +384,10 @@ public class UserController {
                     day,
                     adminRoutes,
                     muleRoutes);
+        }
+
+
+
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

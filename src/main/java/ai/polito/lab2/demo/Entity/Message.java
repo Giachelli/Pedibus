@@ -22,6 +22,7 @@ public class Message {
     ObjectId shiftID;
     ObjectId reservationID;
     ObjectId childID;
+    ObjectId userID;
     String nameChild; //utizzato solo quando il bambino viene cancellato e quindi il child id non mi permette più di trovarlo
     String familyName;// utizzato solo quando il bambino viene cancellato e quindi il child id non mi permette più di trovarlo
     Boolean messageShiftRequest;  //indica che è un messaggio relativo alla richiesta/disponibilità del turno
@@ -32,6 +33,8 @@ public class Message {
     Boolean messageUpdateUser; //indica che è un messaggio relativo alla definizione di un nuovo admin
     Boolean messageShiftResponse;
     Boolean messageChildPlace;
+    Boolean messageNewUser; // indica che un nuovo user è stato iscritto a sistena
+    Boolean messageEditAvailability; //messaggio che ricevono gli user quando un mule cambia le sue disponibilità
     Boolean read;
     ArrayList<Integer> adminRoutes = new ArrayList<>();
     ArrayList<Integer> muleRoutes = new ArrayList<>();
