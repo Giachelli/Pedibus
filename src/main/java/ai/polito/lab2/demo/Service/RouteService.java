@@ -12,7 +12,7 @@ import java.util.List;
 public interface RouteService {
 
 
-        List<Route> getAllRoutes();  //getAllUsers
+        List<RouteVM> getAllRoutes();  //getAllUsers
 
         Route getRoutesByName(String NameR);   //getUserById
 
@@ -35,6 +35,8 @@ public interface RouteService {
     RouteVM readSingle(File file) throws IOException;
 
     List<String> getAccompagnaotori(int lineaID);
+
+    RouteVM getRoutesVMByID(int id_linea);
 
       /*  Route getReservationByDate(Route route);      //addNewUser
 

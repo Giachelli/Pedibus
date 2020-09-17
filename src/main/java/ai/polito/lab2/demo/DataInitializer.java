@@ -108,8 +108,8 @@ public class DataInitializer implements CommandLineRunner {
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
-        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
         routeService.saveRoute(r2);
         routeService.saveRoute(r1);
 
@@ -118,15 +118,15 @@ public class DataInitializer implements CommandLineRunner {
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
-        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
         routeService.saveRoute(r2);
         routeService.saveRoute(r1);
 
 
         r1 = routeService.getRoutesByID(6);
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
         routeService.saveRoute(r1);
     }
 

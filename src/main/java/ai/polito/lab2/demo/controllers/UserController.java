@@ -13,10 +13,7 @@ import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
-import ai.polito.lab2.demo.viewmodels.DashboardVM;
-import ai.polito.lab2.demo.viewmodels.UserRouteVM;
-import ai.polito.lab2.demo.viewmodels.UserVM;
-import ai.polito.lab2.demo.viewmodels.modifyRoleUserVM;
+import ai.polito.lab2.demo.viewmodels.*;
 import io.swagger.annotations.ApiOperation;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,7 +179,7 @@ public class UserController {
 
 
     //TODO
-//    @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"})
+    @Secured({"ROLE_ADMIN", "ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
     public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
 
@@ -436,7 +433,7 @@ public class UserController {
     @RequestMapping(value = "/users/info", method = RequestMethod.GET)
     public ResponseEntity getInfoAboutPedibus() {
 
-        List<Route> routes = routeService.getAllRoutes();
+        List<RouteVM> routes = routeService.getAllRoutes();
         Set<String> admin = new HashSet<>();
         Set<String> mule = new HashSet<>();
         int numberRoutes = routes.size();
@@ -444,18 +441,18 @@ public class UserController {
         int numberMule = 0;
         int numberAdmin = 0;
 
-        for (Route r : routes)
+        for (RouteVM r : routes)
         {
-            for (String adminName : r.getUsernameAdmin())
-            {
-                admin.add(adminName);
+            for(int i =0; i< r.getUsernameAdmin().size(); i++)
+                admin.add(r.getUsernameAdmin().get(i).getUsername());
+
+
+            for(int i =0; i< r.getUsernameMule().size(); i++)
+                mule.add(r.getUsernameMule().get(i).getUsername());
+
+
             }
 
-            for (String muleName : r.getUsernameMule())
-            {
-                mule.add(muleName);
-            }
-        }
 
         int userNumber = userService.findAll().size() -1;
         int childNumber = childService.findAllChild().size();
