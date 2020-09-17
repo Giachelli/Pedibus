@@ -13,6 +13,7 @@ public class MessageVM {
     String reservationID;
     String nameChild;
     String familyName;
+    String username;
     String text;
     String sender;
     Boolean messageShiftRequest;  //indica che è un messaggio relativo alla richiesta del turno
@@ -25,6 +26,8 @@ public class MessageVM {
     ArrayList<String> muleRoutes = new ArrayList<>();
     Boolean messageShiftResponse; // indica il turno accettato dall'admin
     Boolean messageChildPlace; // indica il bambino che (prenotato o non prenotato) è stato preso in consegna
+    Boolean messageNewUser;
+    Boolean messageEditAvailability;
     Boolean read;
     private long date;
     String status;
@@ -32,6 +35,9 @@ public class MessageVM {
     Boolean direction;
     String directionReservation; // potrebbe essere ridondante visto che c'è il boolean
     String nameLinea;
-    String nameStop;
+    String nameStop; //Salita
+    String nameStopDiscesa;
     String oraFermata;
+    String oraFermataDiscesa;
+
 }

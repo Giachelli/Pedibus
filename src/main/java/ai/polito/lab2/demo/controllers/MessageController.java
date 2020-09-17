@@ -4,6 +4,11 @@ import ai.polito.lab2.demo.Entity.*;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.viewmodels.MessageVM;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.apache.http.protocol.HTTP;
+import org.aspectj.weaver.patterns.HasMemberTypePatternForPerThisMatching;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,231 +31,83 @@ public class MessageController {
     private UserService userService;
 
     @Autowired
-    private StopService stopService;
-
-    @Autowired
     private MessageService messageService;
 
-    @Autowired
-    private RouteService routeService;
 
-    @Autowired
-    private ChildService childService;
-
-    @Autowired
-    private ShiftService shiftService;
-
-    @Autowired
-    private ReservationService reservationService;
-
-
+    @ApiOperation("Endpoint per tutti i messaggi per uno user")
     @RequestMapping(value = "/messages", method = RequestMethod.GET)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "Richiesta mal formata"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa")
+    })
     public ResponseEntity<ArrayList<MessageVM>> getMessages(@RequestParam (required = true) String username){
-        ObjectId receiverID= userService.getUserByUsername(username).get_id();
-        ArrayList<Message> messages = messageService.findMessagesByReceiverID(receiverID);
+        if (username == null || username.equals("") || userService.getUserByUsername(username) == null)
+            return new ResponseEntity("Richiesta malformata", HttpStatus.BAD_REQUEST);
 
-        ArrayList<MessageVM> messageVMS = new ArrayList<>();
+        ArrayList<MessageVM> messages = new ArrayList<>();
+        messages = messageService.getMessages(username);
 
-        for (Message message : messages)
-        {
-            String senderName = userService.getUserBy_id(message.getSenderID()).getUsername();
-            //Get messaggio turni
-            if(message.getShiftID()!=null){
-
-                Shift shift = shiftService.getTurnByID(message.getShiftID());
-                String pattern = "dd/MM";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                String date = simpleDateFormat.format(new Date(shift.getDate()));
-
-                MessageVM messageVM = MessageVM.builder()
-                        .sender(senderName)
-                        .messageID(message.getMessageID().toString())
-                        .text(message.getAction())
-                        .read(message.getRead())
-                        .date(message.getDate())
-                        .shiftID(message.getShiftID().toString())
-                        .messageShiftRequest(true) //TODO: dopo aver parlato con gli altri
-                        .status(message.getStatus())
-                        .dateShift(date)
-                        .direction(shift.isDirection())
-                        .nameLinea(routeService.getRoutesByID(shift.getLineaID()).getNameR())
-                        .build();
-                messageVMS.add(messageVM);
-
-                /* get messaggio che concerne le reservation. Due tipi di messaggi per tre azioni differenti:
-                prenotazione bimbo da calendario, bimbo prenotato preso in carica,
-                bimbo non prenotato preso in carica
-                 */
-
-            }else if(message.getReservationID()!=null) {
-                if (message.getMessageChildPlace() != null) {
-                    Reservation r = reservationService.findReservationById(message.getReservationID());
-                    if (r != null) {
-                        Boolean direction = ((r.getDirection().equals("andata")) ? true : false);
-                        System.out.println("stopService.findStopbyId(r.getStopID()).getNome()!!!" + stopService.findStopbyId(r.getStopID()).getNome());
-                        MessageVM messageVM = MessageVM.builder()
-                            .sender(senderName)
-                            .messageID(message.getMessageID().toString())
-                            .text(message.getAction())
-                            .read(message.getRead())
-                            .date(message.getDate())
-                            .messageChildPlace(true)
-                            .nameChild(childService.findChildbyID(message.getChildID()).getNameChild())
-                            .direction(direction)
-                            .nameLinea(routeService.getRoutesByID(r.getRouteID()).getNameR())
-                            .nameStop(stopService.findStopbyId(r.getStopID()).getNome())
-                            .oraFermata(stopService.findStopbyId(r.getStopID()).getTime())
-                            .build();
-                    messageVMS.add(messageVM);
-                    }
-                }else if(message.getMessageChildPrenotation()!= null){
-                Reservation reservation = reservationService.findReservationById(message.getReservationID());
-                if(reservation != null){
-                    String pattern = "dd/MM";
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                    String date = simpleDateFormat.format(new Date(reservation.getDate()));
-                    MessageVM messageVM = MessageVM.builder()
-                            .sender(senderName)
-                            .messageID(message.getMessageID().toString())
-                            .text(message.getAction())
-                            .read(message.getRead())
-                            .date(message.getDate())
-                            .reservationID(message.getReservationID().toString())
-                            .dateShift(date)
-                            .messageChildPrenotation(true)
-                            .directionReservation(reservation.getDirection())
-                            .nameLinea(routeService.getRoutesByID(reservation.getRouteID()).getNameR())
-                            .nameStop(stopService.findStopbyId(reservation.getStopID()).getNome())
-                            .oraFermata(stopService.findStopbyId(reservation.getStopID()).getTime())
-                            .build();
-                    messageVMS.add(messageVM);
-                }
-            }
-        }else if(message.getChildID()!= null){       //get messaggio che concerne il bimbo (creazione / cancellazione)
-                    if (message.getMessageChildCreation()!=null) {
-                        Child child = childService.findChildbyID(message.getChildID());
-                        MessageVM messageVM = MessageVM.builder()
-                                .sender(senderName)
-                                .messageID(message.getMessageID().toString())
-                                .text(message.getAction())
-                                .read(message.getRead())
-                                .date(message.getDate())
-                                .nameChild(child.getNameChild())
-                                .familyName(child.getFamily_name())
-                                .messageChildCreation(true)
-                                .build();
-                        messageVMS.add(messageVM);
-                    }else if (message.getMessageChildDelete()){
-                        MessageVM messageVM = MessageVM.builder()
-                                .sender(senderName)
-                                .messageID(message.getMessageID().toString())
-                                .text(message.getAction())
-                                .read(message.getRead())
-                                .date(message.getDate())
-                                .nameChild(message.getNameChild())
-                                .familyName(message.getFamilyName())
-                                .messageChildDelete(true)
-                                .build();
-                        messageVMS.add(messageVM);
-                    }
-                    // messaggio che concerne il cambio di privilegi visto da un altro user
-            }else if (message.getMessageUpdateOtherUser()!=null){
-                    MessageVM messageVM = MessageVM.builder()
-                            .sender(senderName)
-                            .messageID(message.getMessageID().toString())
-                            .text(message.getAction())
-                            .read(message.getRead())
-                            .date(message.getDate())
-                            .messageUpdateOtherUser(true)
-                            .nameLinea(routeService.getRoutesByID(message.getRoute()).getNameR())
-                            .build();
-                messageVMS.add(messageVM);
-                // messaggio che concerne il cambio di privilegi visto dallo user stesso
-            }else if (message.getMessageUpdateUser()!=null){
-                ArrayList<String> adminRoutesName = new ArrayList<>();
-                ArrayList<String> muleRoutesName = new ArrayList<>();
-                for (int routeID : message.getAdminRoutes()){
-                    adminRoutesName.add(routeService.getRoutesByID(routeID).getNameR());
-                }
-                for (int routeID : message.getMuleRoutes()){
-                    muleRoutesName.add(routeService.getRoutesByID(routeID).getNameR());
-                }
-
-                MessageVM messageVM = MessageVM.builder()
-                        .sender(senderName)
-                        .messageID(message.getMessageID().toString())
-                        .text(message.getAction())
-                        .read(message.getRead())
-                        .date(message.getDate())
-                        .messageUpdateUser(true)
-                        .adminRoutes(adminRoutesName)
-                        .muleRoutes(muleRoutesName)
-                        .build();
-                messageVMS.add(messageVM);
-
-            }else if(message.getMessageChildPrenotation()!=null){
-                Reservation r = reservationService.findReservationById(message.getReservationID());
-                Boolean direction = ((r.getDirection().equals("andata")) ? true : false);
-                System.out.println("stopService.findStopbyId(r.getStopID()).getNome()!!!" +stopService.findStopbyId(r.getStopID()).getNome());
-                MessageVM messageVM = MessageVM.builder()
-                        .sender(senderName)
-                        .messageID(message.getMessageID().toString())
-                        .text(message.getAction())
-                        .read(message.getRead())
-                        .date(message.getDate())
-                        .messageChildPrenotation(true)
-                        .nameChild(childService.findChildbyID(message.getChildID()).getNameChild())
-                        .direction(direction)
-                        .nameLinea(routeService.getRoutesByID(r.getRouteID()).getNameR())
-                        .nameStop(stopService.findStopbyId(r.getStopID()).getNome())
-                        .oraFermata(stopService.findStopbyId(r.getStopID()).getTime())
-                        .build();
-                messageVMS.add(messageVM);
-            }
-        }
-        return ok().body(messageVMS);
+        return new ResponseEntity(messages, HttpStatus.OK);
     }
 
+    @ApiOperation("Endpoint per modificare lo stato di un messaggio")
     @RequestMapping(value = "/messages/{messageID}/edit/{read}", method = RequestMethod.PUT)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 400, message = "Richiesta mal formata"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa")
+    })
     public ResponseEntity readedMessage(@PathVariable String messageID, @PathVariable Boolean read){
-            Message message = messageService.findMessageByMessageID(new ObjectId(messageID));
-            message.setRead(read);
-            messageService.update(message);
+            if (messageID == null || messageID.equals(""))
+                return new ResponseEntity("Richiesta malformata", HttpStatus.BAD_REQUEST);
+
+            if (messageService.findMessageByMessageID(new ObjectId(messageID)) == null)
+                return new ResponseEntity("Messaggio non trovato", HttpStatus.NOT_FOUND);
+
+            messageService.readedUpdated(new ObjectId(messageID), read);;
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
+    @ApiOperation("Endpoint per modificare lo stato di un turno")
     @RequestMapping(value = "/messages/{messageID}/{status}", method = RequestMethod.PUT)
     public ResponseEntity editStatus(@PathVariable final String messageID, @PathVariable String status) {
 
+        if (messageID == null || messageID.equals(""))
+            return  new ResponseEntity("Richiesta malformata", HttpStatus.BAD_REQUEST);
 
-        Message message = messageService.findMessageByMessageID(new ObjectId(messageID));
+        if (messageService.findMessageByMessageID(new ObjectId(messageID)) == null)
+            return new ResponseEntity("Messaggio non trovato", HttpStatus.NOT_FOUND);
 
-        //caso in cui il turno in questione è già stato modificato
-        if(!message.getStatus().equals("pending")) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Message m = messageService.editStatus(new ObjectId(messageID), status);
 
-        if (status.equals("accepted")|| status.equals("rejected")) {
-            System.out.println("entrato!!!!!!!!!!!!!!!!!!!!!!!!! status è:" + status);
-            message.setStatus(status);
-
-            messageService.update(message);
+        if ( m == null)
+            return new ResponseEntity("Richiesta Malformata", HttpStatus.BAD_REQUEST);
+        else
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
-
+    @ApiOperation("Endpoint per cancellare un messaggio")
     @RequestMapping(value = "/messages/{messageID}", method = RequestMethod.DELETE)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 400, message = "Richiesta mal formata"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Messaggio non trovato")
+    })
     public ResponseEntity deleteChild(@PathVariable ObjectId messageID ) {
 
-        //TODO fare controllo se messageID è buono
-        messageService.deleteByMessageID(messageID);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if ( messageID == null)
+            return new ResponseEntity("Richiesta mal formata", HttpStatus.BAD_REQUEST);
 
+        if (messageService.findMessageByMessageID(messageID) == null)
+            return new ResponseEntity("Messaggio non trovato", HttpStatus.NOT_FOUND);
+
+
+        if (messageService.deleteByMessageID(messageID) == -1)
+            return new ResponseEntity("Il messaggio non può essere cancellato, devi prima fornire una risposta", HttpStatus.BAD_REQUEST);
+        else
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
-
-
 }

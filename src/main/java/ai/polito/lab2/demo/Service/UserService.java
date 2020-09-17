@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserService implements IUserService {
@@ -29,6 +26,11 @@ public class UserService implements IUserService {
 
     @Autowired
     EmailServiceImpl emailService;
+
+    @Autowired
+    MessageService messageService;
+
+
 
     public void saveUser(UserDTO userDTO) {
 
@@ -145,6 +147,13 @@ public class UserService implements IUserService {
         user.setExpiryDate(null);
         user.setEnabled(true);
         userRepo.save(user);
+        String action = "Utente creato";
+        long day = new Date().getTime();
+        messageService.createMessageNewUser(user.get_id(),
+                getUserByUsername("admin@info.it").get_id(),
+                action,
+                day
+        );
         return true;
     }
 
