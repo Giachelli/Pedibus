@@ -108,8 +108,8 @@ public class DataInitializer implements CommandLineRunner {
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
-        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
         routeService.saveRoute(r2);
         routeService.saveRoute(r1);
 
@@ -118,15 +118,15 @@ public class DataInitializer implements CommandLineRunner {
 
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
         r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
-        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
+        r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
         routeService.saveRoute(r2);
         routeService.saveRoute(r1);
 
 
         r1 = routeService.getRoutesByID(6);
         r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
+        r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it","giacomo.chelli4@gmail.com"));
         routeService.saveRoute(r1);
     }
 
@@ -143,15 +143,16 @@ public class DataInitializer implements CommandLineRunner {
         ArrayList<String> bubba2 = new ArrayList<>();
         bubba2.add(r1.getNameR());
         bubba2.add(r1.getNameR());
+
         ArrayList<String> bubba_ = new ArrayList<>();
+        bubba_.add(r1.getStopListA().get(4).get_id().toString());
         bubba_.add("");
-        bubba_.add(r1.getStopListB().get(4).get_id().toString());
         ArrayList<String> bubba_1 = new ArrayList<>();
+        bubba_1.add(r1.getStopListA().get(4).getNome());
         bubba_1.add("");
-        bubba_1.add(r1.getStopListB().get(4).getNome());
         ArrayList<String> bubba_2 = new ArrayList<>();
-        bubba_2.add("");
         bubba_2.add(r1.getNameR());
+        bubba_2.add("");
         this.childController.registerChild(
                 ChildVM.builder()
                         .nameChild("Luigi")
@@ -179,14 +180,14 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
         bubba_ = new ArrayList<>();
+        bubba_.add(r2.getStopListA().get(4).get_id().toString());
         bubba_.add("");
-        bubba_.add(r2.getStopListB().get(4).get_id().toString());
         bubba_1 = new ArrayList<>();
+        bubba_1.add(r2.getStopListA().get(4).getNome());
         bubba_1.add("");
-        bubba_1.add(r2.getStopListB().get(4).getNome());
         bubba_2 = new ArrayList<>();
-        bubba_2.add("");
         bubba_2.add(r2.getNameR());
+        bubba_2.add("");
 
         this.childController.registerChild(
                 ChildVM.builder()

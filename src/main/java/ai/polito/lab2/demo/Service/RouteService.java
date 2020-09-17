@@ -2,6 +2,7 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;
 import ai.polito.lab2.demo.Entity.Route;
+import ai.polito.lab2.demo.viewmodels.RouteVM;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface RouteService {
 
 
-        List<Route> getAllRoutes();  //getAllUsers
+        List<RouteVM> getAllRoutes();  //getAllUsers
 
         Route getRoutesByName(String NameR);   //getUserById
 
@@ -31,9 +32,11 @@ public interface RouteService {
 
        void readAll() throws IOException;
 
-    Route readSingle(File file) throws IOException;
+    RouteVM readSingle(File file) throws IOException;
 
     List<String> getAccompagnaotori(int lineaID);
+
+    RouteVM getRoutesVMByID(int id_linea);
 
       /*  Route getReservationByDate(Route route);      //addNewUser
 

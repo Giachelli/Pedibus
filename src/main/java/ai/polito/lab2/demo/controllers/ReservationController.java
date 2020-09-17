@@ -4,13 +4,13 @@ package ai.polito.lab2.demo.controllers;
 
 import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Reservation;
-import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,79 +79,26 @@ public class ReservationController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{id_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("Prenotazione di un bimbo da parte del genitore")
-    public ResponseEntity<Reservation> create(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
-        ObjectId stopID = new ObjectId(reservationVM.getStopID());
-        ObjectId childID = new ObjectId(reservationVM.getChildID());
+    public ResponseEntity<ReservationCreatedVM> create(@ApiParam("id della linea selezionata") @PathVariable int id_linea,@ApiParam("timestamp della data selezionata") @PathVariable long data,@ApiParam("reservation creata lato fe") @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
 
-        Reservation r = reservationService.findReservationByChildIDAndData(childID, data);
+
+        Reservation r = reservationService.findReservationByChildIDAndDataAndDirection(reservationVM.getChildID(), data, reservationVM.getDirection());
         if(r != null)
         {
-            logger.info("Prenotazione child "+ childID+" sovrascritta");
+            logger.info("Prenotazione child "+ reservationVM.getChildID()+" sovrascritta");
             reservationService.delete(r.getId());
         }
 
         if(routeService.getRoutesByID(id_linea) == null)
-            return new ResponseEntity("Id linea errato",HttpStatus.BAD_REQUEST); //TODO far tornare un errore
+            return new ResponseEntity("Id linea errato",HttpStatus.BAD_REQUEST);
 
-
-        if (this.controlName_RouteAndStop(id_linea, stopID))
+        if (reservationService.controlName_RouteAndStop(id_linea,reservationVM.getStopID()))
             return new ResponseEntity("Errore nel passaggiodi linea e stop",HttpStatus.BAD_REQUEST); //TODO far tornare un errore
 
-        r = Reservation.builder()
-                .childID(childID)
-                .stopID(stopID)
-                .familyName(reservationVM.getFamily_name())
-                .name_route(routeService.getRoutesByID(id_linea).getNameR())
-                .direction(reservationVM.getDirection())
-                .date(data)
-                .build();
 
+        ReservationCreatedVM reservationCreatedVM = reservationService.createReservation(reservationVM, id_linea, data);
 
-        int routeID = routeService.getRoutesByName(r.getName_route()).getId();
-
-        /*  TODO: DA USARE QUANDO IL MESSAGGIO SARà RICEVUTO DA PIù USER
-
-        List<ObjectId> receiverIDs = new ArrayList<>();
-
-        for (String accompagnatore : routeService.getAccompagnaotori(routeID)){
-            receiverIDs.add(userService.getUserByUsername(accompagnatore).get_id());
-        }
-         */
-
-
-        r.setRouteID(routeID);
-        r.setBooked(true);
-        reservationService.save(r);
-
-
-
-        Child child = childService.findChildbyID(childID);
-
-        ObjectId senderID = userService.getUserByUsername(child.getUsername()).get_id();
-
-
-        String action = "Prenotazione bimbo";
-        long day = new Date().getTime();
-
-        messageService.createMessageReservation(senderID,
-                new ArrayList<>(routeService.getAccompagnaotori(routeID)),
-                action,
-                day,
-                r.getId(),
-         "messageChildPrenotation"
-        );
-
-
-      /*
-        System.out.println("Prima di ricercare la prenotazione nel DB::::::::::" + r);
-        r = reservationService.findReservationByStopIDAndDataAndChildID(stopID,data,childID);
-        System.out.println("Nuova Prenotazione");
-        System.out.println("DOPO di ricercare la prenotazione nel DB::::::::::" + r);
-        System.out.println(r);
-        //        Reservation r = reservationService.createReservation(reservationDTO);
-        // String idReservation = r.getId().toString();
-      */
-        return new ResponseEntity<Reservation>(r,HttpStatus.CREATED);
+        return new ResponseEntity<ReservationCreatedVM>(reservationCreatedVM,HttpStatus.CREATED);
 
     }
 
@@ -169,7 +116,6 @@ public class ReservationController {
     @ApiOperation("RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata")
     public ResponseEntity createNotBooked(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
-        ObjectId childID = new ObjectId(reservationVM.getChildID());
 
         long nowTimeStamp = getCurrentTimeStamp();
         Stop stop = stopService.findStopbyId(stopID);
@@ -179,49 +125,10 @@ public class ReservationController {
             return new ResponseEntity("Errore nella data",HttpStatus.BAD_REQUEST);
         }
 
-        if (this.controlName_RouteAndStop(id_linea,stopID))
+        if (reservationService.controlName_RouteAndStop(id_linea,reservationVM.getStopID()))
             return new ResponseEntity<>("Errore nel passaggiodi linea e stop",HttpStatus.BAD_REQUEST);
 
-        Reservation r = Reservation.builder()
-                .childID(childID)
-                .stopID(stopID)
-                .direction(reservationVM.getDirection())
-                .familyName(childService.findChildbyID(childID).getFamily_name())
-                .name_route(routeService.getRoutesByID(id_linea).getNameR())
-                .date(data)
-                .build();
-
-        r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
-        r.setBooked(false);
-        r.setInPlace(true);
-
-
-        r = reservationService.saveAndGet(r);
-
-       logger.info("RESEERVATIOOON appena SALVATAAAAAA:" + r.getDirection());
-
-        //  Reservation r = reservationService.createReservation(reservationDTO);
-        //  String idReservation = r.getId().toString();
-
-        //TODO: messaggio per bimbo preso in carico al genitore
-        ChildReservationVM childReservationVM =
-                ChildReservationVM.builder()
-                .childID(childID.toString())
-                .nameChild(childService.findChildbyID(childID).getNameChild())
-                .nameFamily(reservationVM.getFamily_name())
-                .booked(false)
-                .inPlace(true)
-                .build();
-
-        String action= "Bambino non prenotato ma preso in carico";
-        long day = new Date().getTime();
-        messageService.createMessageChildinPlace("admin@info.it", // deve essere il mule che effettua l'azione
-                childService.findChildbyID(childID).getUsername(),
-                action,
-                day,
-                childService.findChildbyID(childID).getChildID(),
-                r.getId()
-                );
+        ChildReservationVM childReservationVM = reservationService.createNotBookedRes(reservationVM,data,id_linea);
 
         return new ResponseEntity<>(childReservationVM,HttpStatus.CREATED);
     }
@@ -243,28 +150,24 @@ public class ReservationController {
     @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
     @ApiOperation("RICHIESTA per confermare o meno presenza del bambino")
     public ResponseEntity confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody final String childID) throws JsonProcessingException, ParseException {
-        Reservation r = reservationService.findReservationByStopIDAndDataAndChildID(new ObjectId(id_fermata), data, new ObjectId(childID));
-        // if (inplace = true) => fai partire messaggio
-        logger.info("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
-        r.setInPlace(!r.isInPlace());
-        if (r.isInPlace()){
-            String action= "Bambino preso in carico";
-            long day = new Date().getTime();
-            messageService.createMessageChildinPlace("admin@info.it", // deve essere il mule che effettua l'azione
-                    childService.findChildbyID(r.getChildID()).getUsername(),
-                    action,
-                    day,
-                    childService.findChildbyID(r.getChildID()).getChildID(),
-                    r.getId());
+
+        Reservation r = null;
+        try {
+            r = reservationService.findReservationByStopIDAndDataAndChildID(new ObjectId(id_fermata), data, new ObjectId(childID));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        long nowTimeStamp = getCurrentTimeStamp();
+        Stop stop = stopService.findStopbyId(r.getStopID());
+
+        if (checkTimestamp(nowTimeStamp,data,stop))
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        reservationService.save(r);
-        ChildReservationVM childReservationVM = ChildReservationVM.builder()
-                .childID(r.getChildID().toString())
-                .inPlace(r.isInPlace())
-                .booked(r.isBooked())
-                .nameFamily(r.getFamilyName())
-                .nameChild(childService.findChildbyID(r.getChildID()).getNameChild()).build();
+        ChildReservationVM childReservationVM = reservationService.confirmPresence(r,data,childID,id_fermata);
         return new ResponseEntity(childReservationVM, HttpStatus.OK);
     }
 
@@ -278,163 +181,21 @@ public class ReservationController {
      */
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{id_linea}/{data}", method = RequestMethod.GET)
-    public ResponseEntity getPeople(@PathVariable int id_linea, @PathVariable long  data) throws JsonProcessingException, ParseException {
-        System.out.println("data richiesta "+data);
-        Route route = routeService.getRoutesByID(id_linea);
-        ArrayList<ChildReservationVM> notBookedA = new ArrayList<>();
-        ArrayList<ChildReservationVM> notBookedR = new ArrayList<>();
-        ArrayList<Child> allChildren = (ArrayList<Child>) childService.findAllChild();
-        ArrayList<Child> children = new ArrayList<>();
-        children.addAll(allChildren);
+    @ApiOperation("Per una certa data ritorna tutti i bambini non prenotati più tutti quelli prenotati per quella linea")
+    public ResponseEntity<GetChildrenReservationVM> getPeople(@ApiParam("id della linea passata") @PathVariable int id_linea,@ApiParam("timestamp della data") @PathVariable long  data) throws JsonProcessingException, ParseException {
+        logger.info("data richiesta "+data);
 
-        /**
-         * nella MAPPA salire ci sono tutti i bimbi prenotati per una certa linea in una certa data
-         * la chiave della mappa è il nome della fermata, value è una lista di utenti prenotati per quella fermata.
-         *
-         */
-        Map<String, List<ChildReservationVM>> salire = reservationService.findReservationAndata(route.getId(), data);
-        salire.forEach((key,value) -> {
-            System.out.println("KEEEEEEEEY:::::" + key);
-            System.out.println("Valueeeeeeee::::" + value);
-        });
-        /**
-         * per ogni fermata contiene una serie di info e la lista dei passeggeri che sarebbe l'arrylist passeggeri.
-         *
-         */
-        ArrayList<Stop_RegistrationVM> andata = new ArrayList<>();
-        ArrayList<ChildReservationVM> passeggeri = new ArrayList<>();
-
-        /**
-         *  se il size è uguale a 0, per quella linea, in quella data, non ci sono bimbi prenotati e quindi sono tutti
-         *  non in grassetto nel listone con il totale dei bimbi
-         *
-         */
-       if (salire.size() == 0) {
-            for (Child c : children)
-                notBookedA.add(ChildReservationVM.builder()
-                        .childID(c.getChildID().toString())
-                        .nameChild(c.getNameChild())
-                        .nameFamily(c.getFamily_name())
-                        .inPlace(false)
-                        .booked(false)
-                        .build());
+        if(routeService.getRoutesByID(id_linea)==null){
+            return new ResponseEntity("errore nella linea passata", HttpStatus.BAD_REQUEST);
         }
 
-        //per ogni stop di una linea definita, se la mappa è nulla, passeggeri sarà nullo e aggiungiamo
-        // la info al registrationVM da passare
-
-        for (Stop stop : route.getStopListA()) {
-
-            if (salire.size() == 0) {
-                andata.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .name_stop(stop.getNome())
-                        .time(stop.getTime())
-                        .passengers(passeggeri)
-                        .build());
-            }
-            //se invece non è nulla controlliamo se nella mappa è presente la chiave definita dal nome
-            // della fermata
-            else {
-                if (salire.get(stop.getNome()) != null) {
-                    //se presente aggiungiamo tutti i passeggeri alla relativa fermata nella mappa
-                    passeggeri.addAll(salire.get(stop.getNome()));
-                    for (ChildReservationVM p : passeggeri) {
-                        int i = 0;
-                        for (Child c : allChildren) {
-
-                            if (c.getChildID().toString().equals(p.getChildID())) {
-                                children.remove(c);
-                            }
-                            i++;
-                        }
-                    }
-
-
-                }
-
-
-                andata.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .name_stop(stop.getNome())
-                        .time(stop.getTime())
-                        .passengers(passeggeri)
-                        .build());
-                passeggeri = new ArrayList<>();
-
-            }
-        }
-        for (Child c : children)
-            notBookedA.add(ChildReservationVM.builder()
-                    .childID(c.getChildID().toString())
-                    .nameChild(c.getNameChild())
-                    .nameFamily(c.getFamily_name())
-                    .booked(false)
-                    .inPlace(false)
-                    .build());
-
-
-        Map<String, List<ChildReservationVM>> scendere = reservationService.findReservationRitorno(route.getId(), data);
-        ArrayList<Stop_RegistrationVM> ritorno = new ArrayList<>();
-        children.clear();
-        children.addAll(allChildren);
-
-        if (scendere.size() == 0)
-            for (Child c : children)
-                notBookedR.add(ChildReservationVM.builder()
-                        .childID(c.getChildID().toString())
-                        .nameChild(c.getNameChild())
-                        .nameFamily(c.getFamily_name())
-                        .build());
-
-        for (Stop stop : route.getStopListB()) {
-            if (scendere.size() == 0) {
-                ritorno.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .name_stop(stop.getNome())
-                        .time(stop.getTime())
-                        .passengers(passeggeri)
-                        .build());
-
-            } else {
-
-                if (scendere.get(stop.getNome()) != null) {
-                    passeggeri.addAll(scendere.get(stop.getNome()));
-                    for (ChildReservationVM p : passeggeri) {
-                        for (Child c : allChildren) {
-                            if (c.getChildID().toString().equals(p.getChildID()))
-                                children.remove(c);
-                        }
-                    }
-
-                }
-                ritorno.add(Stop_RegistrationVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .name_stop(stop.getNome())
-                        .time(stop.getTime())
-                        .passengers(passeggeri)
-                        .build());
-                passeggeri = new ArrayList<>();
-
-
-            }
+        try {
+            GetChildrenReservationVM reservationsVM = reservationService.returnChild(id_linea, data);
+            return new ResponseEntity(reservationsVM,HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
 
-        for (Child c : children)
-            notBookedR.add(ChildReservationVM.builder()
-                    .childID(c.getChildID().toString())
-                    .nameChild(c.getNameChild())
-                    .nameFamily(c.getFamily_name())
-                    .build());
-
-        Map<Object, Object> model = new TreeMap<>();
-        model.put("nameRoute", route.getNameR());
-        model.put("date", data);
-        model.put("pathA", andata);
-        model.put("pathR", ritorno);
-        model.put("resnotBookedA", notBookedA);
-        model.put("resnotBookedR", notBookedR);
-        return ok().body(model);
     }
 
     /**
@@ -445,7 +206,6 @@ public class ReservationController {
      * @param reservation_id id reservation da aggiornare
      * @return
      */
-
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("Per aggiornare una reservation")
@@ -554,7 +314,7 @@ public class ReservationController {
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.DELETE)
     @ApiOperation("Eliminazione della reservation")
-    public ResponseEntity delete(@PathVariable ObjectId reservation_id) {
+    public ResponseEntity delete(@ApiParam("Id della prenotazione da eliminare")@PathVariable ObjectId reservation_id) {
         Reservation updatedReservation = reservationService.findReservationById(reservation_id);
         long nowTimeStamp = getCurrentTimeStamp();
         Stop stop = stopService.findStopbyId(updatedReservation.getStopID());
@@ -624,25 +384,7 @@ public class ReservationController {
      * @param stopID id dello stop
      * @return false se tutto ok
      */
-    private boolean controlName_RouteAndStop(int id_route, ObjectId stopID) {
-        Route route = routeService.getRoutesByID(id_route);
-        boolean found = false;
-        if(route == null)
-            return true;
-        else {
-            for (Stop s : route.getStopListA())
-            {
-                if(s.get_id().toString().equals(stopID.toString()))
-                    found = true;
-            }
-            for (Stop s : route.getStopListB())
-            {
-                if(s.get_id().toString().equals(stopID.toString()))
-                    found = true;
-            }
-            return !found;
-        }
-    }
+
 
 
 }

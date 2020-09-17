@@ -13,12 +13,15 @@ public interface ReservationRepo extends MongoRepository<Reservation, ObjectId> 
     Reservation findReservationById(ObjectId id);
     List<Reservation> findReservationByChildID(ObjectId child_id);
 
+    List<Reservation> findReservationByChildIDAndAndDateAndStopID(ObjectId child_id, long date, ObjectId stop_id);
+
+
     @Override
     List<Reservation> findAll();
 
     List<Reservation> findReservationByFamilyName(String family_name);
 
-    Reservation findReservationByChildIDAndDate(ObjectId childID, long data);
+    List<Reservation>  findReservationByChildIDAndDateAndDirection(ObjectId childID, long data, String direction);
 
     List<Reservation> findReservationByDate(long time);
 

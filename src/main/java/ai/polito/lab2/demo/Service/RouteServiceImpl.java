@@ -2,26 +2,27 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.RouteDTO;;
 import ai.polito.lab2.demo.Entity.Stop;
+import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Repositories.UserRepo;
+import ai.polito.lab2.demo.viewmodels.RouteVM;
+import ai.polito.lab2.demo.viewmodels.StopVM;
+import ai.polito.lab2.demo.viewmodels.UserVM;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.jni.Time;
 import org.bson.json.JsonParseException;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import org.thymeleaf.util.ArrayUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Timestamp;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,8 @@ import java.util.Objects;
 @Service
 public class RouteServiceImpl implements RouteService {
 
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private RouteRepo routeRepo;
@@ -59,8 +62,82 @@ public class RouteServiceImpl implements RouteService {
      *
      * @return ritorna tutte le route
      */
-    public List<Route> getAllRoutes() {
-        return routeRepo.findAll();
+    public List<RouteVM> getAllRoutes() {
+        String user = Principal.class.getName();
+        List<Route> routes = routeRepo.findAll();
+        ArrayList<RouteVM> routeVMs = new ArrayList<>();
+
+        routes.forEach(route -> {
+            ArrayList<StopVM> stopVMsA = new ArrayList<>();
+            ArrayList<StopVM> stopVMsB = new ArrayList<>();
+
+            route.getStopListA().forEach(stop -> {
+                StopVM stopVM = StopVM.builder()
+                        .stopID(stop.get_id().toString())
+                        .nameStop(stop.getNome())
+                        .time(stop.getTime())
+                        .nums(stop.getNums())
+                        .lat(stop.getLat())
+                        .lng(stop.getLng())
+                        .build();
+
+                stopVMsA.add(stopVM);
+            });
+
+            route.getStopListB().forEach(stop -> {
+                StopVM stopVM = StopVM.builder()
+                        .stopID(stop.get_id().toString())
+                        .nameStop(stop.getNome())
+                        .time(stop.getTime())
+                        .nums(stop.getNums())
+                        .lat(stop.getLat())
+                        .lng(stop.getLng())
+                        .build();
+                stopVMsB.add(stopVM);
+            });
+            List<UserVM> muleVMList = new ArrayList<>();
+            List<UserVM> adminVMList = new ArrayList<>();
+
+            if (route.getUsernameAdmin() != null)
+                for (String u : route.getUsernameAdmin()) {
+                    User admin = userService.getUserByUsername(u);
+                    UserVM adminVM = UserVM.builder()
+                            .userID(admin.get_id().toString())
+                            .username(u)
+                            .family_name(admin.getFamily_name())
+                            .isEnabled(admin.isEnabled())
+                            .build();
+                    adminVMList.add(adminVM);
+                }
+
+            if (route.getUsernameMule() != null)
+                for (String u : route.getUsernameMule()) {
+                    User mule = userService.getUserByUsername(u);
+                    UserVM muleVM = UserVM.builder()
+                            .userID(mule.get_id().toString())
+                            .username(u)
+                            .family_name(mule.getFamily_name())
+                            .isEnabled(mule.isEnabled())
+                            .availabilityVM(mule.getAvailability())
+                            .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
+                            .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
+                            .build();
+                    muleVMList.add(muleVM);
+                }
+
+            RouteVM r = RouteVM.builder()
+                    .id(route.getId())
+                    .nameR(route.getNameR())
+                    .stopListA(stopVMsA)
+                    .stopListB(stopVMsB)
+                    .usernameAdmin(adminVMList)
+                    .usernameMule(muleVMList)
+                    .build();
+
+            routeVMs.add(r);
+        });
+
+        return routeVMs;
     }
 
     /**
@@ -74,16 +151,87 @@ public class RouteServiceImpl implements RouteService {
         return mongoTemplate.find(query, Route.class).get(0);
     }
 
+    @Override
+    public Route getRoutesByID(int routeID) {
+        return routeRepo.findRouteById(routeID);
+    }
+
     /**
      * ritorna la route in base all'id
      * @param routeID id della route
      * @return ritorna la route in base all'id
      */
     @Override
-    public Route getRoutesByID(int routeID) {
+    public RouteVM getRoutesVMByID(int routeID) {
 
-        return routeRepo.findRouteById(routeID);
-    }
+        Route route = routeRepo.findRouteById(routeID);
+        ArrayList<StopVM> stopVMsA = new ArrayList<>();
+        ArrayList<StopVM> stopVMsB = new ArrayList<>();
+
+        route.getStopListA().forEach(stop -> {
+            StopVM stopVM = StopVM.builder()
+                    .stopID(stop.get_id().toString())
+                    .nameStop(stop.getNome())
+                    .time(stop.getTime())
+                    .nums(stop.getNums())
+                    .lat(stop.getLat())
+                    .lng(stop.getLng())
+                    .build();
+
+            stopVMsA.add(stopVM);
+        });
+
+        route.getStopListB().forEach(stop -> {
+            StopVM stopVM = StopVM.builder()
+                    .stopID(stop.get_id().toString())
+                    .nameStop(stop.getNome())
+                    .time(stop.getTime())
+                    .nums(stop.getNums())
+                    .lat(stop.getLat())
+                    .lng(stop.getLng())
+                    .build();
+            stopVMsB.add(stopVM);
+        });
+        List<UserVM> muleVMList = new ArrayList<>();
+        List<UserVM> adminVMList = new ArrayList<>();
+
+        if (route.getUsernameAdmin() != null)
+            for (String u : route.getUsernameAdmin()) {
+                User admin = userService.getUserByUsername(u);
+                UserVM adminVM = UserVM.builder()
+                        .userID(admin.get_id().toString())
+                        .username(u)
+                        .family_name(admin.getFamily_name())
+                        .isEnabled(admin.isEnabled())
+                        .build();
+                adminVMList.add(adminVM);
+            }
+
+        if (route.getUsernameMule() != null)
+            for (String u : route.getUsernameMule()) {
+                User mule = userService.getUserByUsername(u);
+                UserVM muleVM = UserVM.builder()
+                        .userID(mule.get_id().toString())
+                        .username(u)
+                        .family_name(mule.getFamily_name())
+                        .isEnabled(mule.isEnabled())
+                        .availabilityVM(mule.getAvailability())
+                        .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
+                        .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
+                        .build();
+                muleVMList.add(muleVM);
+            }
+
+        RouteVM r = RouteVM.builder()
+                .id(route.getId())
+                .nameR(route.getNameR())
+                .stopListA(stopVMsA)
+                .stopListB(stopVMsB)
+                .usernameAdmin(adminVMList)
+                .usernameMule(muleVMList)
+                .build();
+
+        return r;}
 
     /**
      * ritorna la routeDto in base all'id
@@ -191,7 +339,7 @@ public class RouteServiceImpl implements RouteService {
      * @throws IOException errore nel parsing del json
      */
     @Override
-    public Route readSingle(File file) throws IOException {
+    public RouteVM readSingle(File file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Route route = objectMapper.readValue(file, Route.class);
@@ -209,7 +357,73 @@ public class RouteServiceImpl implements RouteService {
             long time = date.getTime();
             route.setLastModified(time);
             routeRepo.save(route);
-            return route;
+
+            ArrayList<StopVM> stopVMsA = new ArrayList<>();
+            ArrayList<StopVM> stopVMsB = new ArrayList<>();
+            List<UserVM> adminVMList = new ArrayList<>();
+            List<UserVM> muleVMList = new ArrayList<>();
+
+            route.getStopListA().forEach(stop -> {
+                StopVM stopVM = StopVM.builder()
+                        .stopID(stop.get_id().toString())
+                        .nameStop(stop.getNome())
+                        .time(stop.getTime())
+                        .nums(stop.getNums())
+                        .lat(stop.getLat())
+                        .lng(stop.getLng())
+                        .build();
+
+                stopVMsA.add(stopVM);
+            });
+
+            route.getStopListB().forEach(stop -> {
+                StopVM stopVM = StopVM.builder()
+                        .stopID(stop.get_id().toString())
+                        .nameStop(stop.getNome())
+                        .time(stop.getTime())
+                        .nums(stop.getNums())
+                        .lat(stop.getLat())
+                        .lng(stop.getLng())
+                        .build();
+                stopVMsB.add(stopVM);
+            });
+
+            if (route.getUsernameAdmin() != null)
+                for (String u : route.getUsernameAdmin()) {
+                    User admin = userService.getUserByUsername(u);
+                    UserVM adminVM = UserVM.builder()
+                            .userID(admin.get_id().toString())
+                            .username(u)
+                            .family_name(admin.getFamily_name())
+                            .isEnabled(admin.isEnabled())
+                            .build();
+                    adminVMList.add(adminVM);
+                }
+
+            if (route.getUsernameMule() != null)
+                for (String u : route.getUsernameMule()) {
+                    User mule = userService.getUserByUsername(u);
+                    UserVM muleVM = UserVM.builder()
+                            .userID(mule.get_id().toString())
+                            .username(u)
+                            .family_name(mule.getFamily_name())
+                            .isEnabled(mule.isEnabled())
+                            .availabilityVM(mule.getAvailability())
+                            .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
+                            .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
+                            .build();
+                    muleVMList.add(muleVM);
+                }
+
+            return RouteVM.builder()
+                    .id(route.getId())
+                    .nameR(route.getNameR())
+                    .stopListA(stopVMsA)
+                    .stopListB(stopVMsB)
+                    .usernameAdmin(adminVMList)
+                    .usernameMule(muleVMList)
+                    .build();
+
 
         } catch (JsonMappingException | JsonParseException jsonException) {
             throw new IOException("errore nel parsing json");

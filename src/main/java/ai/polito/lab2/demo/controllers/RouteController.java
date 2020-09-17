@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.OnNewFileCompleteEvent;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.context.ApplicationEventPublisher;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.UserService;
@@ -69,80 +70,9 @@ public class RouteController {
     @ApiOperation("ritorna tutte le linee presenti sul db")
     public ResponseEntity getAllRoutes() throws JsonProcessingException {
         String user = Principal.class.getName();
-        List<Route> routes = routeService.getAllRoutes();
-        ArrayList<RouteVM> routeVMs = new ArrayList<>();
+        List<RouteVM> routeVMs = routeService.getAllRoutes();
+
         logger.info(user + " Request GET Lines. The lines are: routes\n");
-        routes.forEach(route -> System.out.println(route.getNameR()));
-        routes.forEach(route -> {
-            ArrayList<StopVM> stopVMsA = new ArrayList<>();
-            ArrayList<StopVM> stopVMsB = new ArrayList<>();
-
-            route.getStopListA().forEach(stop -> {
-                StopVM stopVM = StopVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .nameStop(stop.getNome())
-                        .time(stop.getTime())
-                        .nums(stop.getNums())
-                        .lat(stop.getLat())
-                        .lng(stop.getLng())
-                        .build();
-
-                stopVMsA.add(stopVM);
-            });
-
-            route.getStopListB().forEach(stop -> {
-                StopVM stopVM = StopVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .nameStop(stop.getNome())
-                        .time(stop.getTime())
-                        .nums(stop.getNums())
-                        .lat(stop.getLat())
-                        .lng(stop.getLng())
-                        .build();
-                stopVMsB.add(stopVM);
-            });
-            List<UserVM> muleVMList = new ArrayList<>();
-            List<UserVM> adminVMList = new ArrayList<>();
-
-            if (route.getUsernameAdmin() != null)
-                for (String u : route.getUsernameAdmin()) {
-                    User admin = userService.getUserByUsername(u);
-                    UserVM adminVM = UserVM.builder()
-                            .userID(admin.get_id().toString())
-                            .username(u)
-                            .family_name(admin.getFamily_name())
-                            .isEnabled(admin.isEnabled())
-                            .build();
-                    adminVMList.add(adminVM);
-                }
-
-            if (route.getUsernameMule() != null)
-                for (String u : route.getUsernameMule()) {
-                    User mule = userService.getUserByUsername(u);
-                    UserVM muleVM = UserVM.builder()
-                            .userID(mule.get_id().toString())
-                            .username(u)
-                            .family_name(mule.getFamily_name())
-                            .isEnabled(mule.isEnabled())
-                            .availabilityVM(mule.getAvailability())
-                            .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
-                            .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
-                            .build();
-                    muleVMList.add(muleVM);
-                }
-
-            RouteVM r = RouteVM.builder()
-                    .id(route.getId())
-                    .nameR(route.getNameR())
-                    .stopListA(stopVMsA)
-                    .stopListB(stopVMsB)
-                    .usernameAdmin(adminVMList)
-                    .usernameMule(muleVMList)
-                    .build();
-
-            routeVMs.add(r);
-        });
-
         Map<Object, Object> model = new HashMap<>();
         model.put("lines", routeVMs);
         return ok().body(model);
@@ -150,15 +80,15 @@ public class RouteController {
 
     /**
      * ritorna una linea dal nome
-     * @param nome_linea nome della linea richiesta
+     * @param id_linea id della linea richiesta
      * @return linea per intero
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "/routes/{nome_linea}", method = RequestMethod.GET)
-    @ApiOperation("ritorna una linea in base al nome")
-    public ResponseEntity<Route> getAllStopsForRoute(@PathVariable String nome_linea) throws JsonProcessingException {
-        Route route = routeService.getRoutesByName(nome_linea);
-        return new ResponseEntity<Route>(route, HttpStatus.OK);
+    @RequestMapping(value = "/routes/{id_linea}", method = RequestMethod.GET)
+    @ApiOperation("ritorna una linea in base all'id")
+    public ResponseEntity<RouteVM> getAllStopsForRoute(@ApiParam("Id della linea") @PathVariable int id_linea) throws JsonProcessingException {
+        RouteVM route = routeService.getRoutesVMByID(id_linea);
+        return new ResponseEntity<>(route, HttpStatus.OK);
     }
 
     /**
@@ -182,7 +112,7 @@ public class RouteController {
             Path path = Paths.get(file.getOriginalFilename());
             Files.write(path, bytes);
             System.out.println(path.getFileName());
-            Route r = routeService.readSingle(path.toFile());
+            routeVM = routeService.readSingle(path.toFile());
             /*File myObj = new File(path.getFileName().toString());
             if (myObj.delete()) {
                 System.out.println("Deleted the file: " + myObj.getName());
@@ -190,73 +120,10 @@ public class RouteController {
                 System.out.println("Failed to delete the file.");
             }*/
             Path result = null;
-            ArrayList<StopVM> stopVMsA = new ArrayList<>();
-            ArrayList<StopVM> stopVMsB = new ArrayList<>();
-            List<UserVM> muleVMList = new ArrayList<>();
 
-            r.getStopListA().forEach(stop -> {
-                StopVM stopVM = StopVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .nameStop(stop.getNome())
-                        .time(stop.getTime())
-                        .nums(stop.getNums())
-                        .lat(stop.getLat())
-                        .lng(stop.getLng())
-                        .build();
-
-                stopVMsA.add(stopVM);
-            });
-
-            r.getStopListB().forEach(stop -> {
-                StopVM stopVM = StopVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .nameStop(stop.getNome())
-                        .time(stop.getTime())
-                        .nums(stop.getNums())
-                        .lat(stop.getLat())
-                        .lng(stop.getLng())
-                        .build();
-                stopVMsB.add(stopVM);
-            });
-
-            if (r.getUsernameAdmin() != null)
-                for (String u : r.getUsernameAdmin()) {
-                    User admin = userService.getUserByUsername(u);
-                    UserVM adminVM = UserVM.builder()
-                            .userID(admin.get_id().toString())
-                            .username(u)
-                            .family_name(admin.getFamily_name())
-                            .isEnabled(admin.isEnabled())
-                            .build();
-                    adminVMList.add(adminVM);
-                }
-
-            if (r.getUsernameMule() != null)
-                for (String u : r.getUsernameMule()) {
-                    User mule = userService.getUserByUsername(u);
-                    UserVM muleVM = UserVM.builder()
-                            .userID(mule.get_id().toString())
-                            .username(u)
-                            .family_name(mule.getFamily_name())
-                            .isEnabled(mule.isEnabled())
-                            .availabilityVM(mule.getAvailability())
-                            .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
-                            .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
-                            .build();
-                    muleVMList.add(muleVM);
-                }
-
-            routeVM = RouteVM.builder()
-                    .id(r.getId())
-                    .nameR(r.getNameR())
-                    .stopListA(stopVMsA)
-                    .stopListB(stopVMsB)
-                    .usernameAdmin(adminVMList)
-                    .usernameMule(muleVMList)
-                    .build();
             try {
                 //System.out.println(ResourceUtils.getFile("classpath:pedibus_routes/"));
-                result = Files.move(Paths.get(path.getFileName().toString()), Paths.get(ResourceUtils.getFile("classpath:pedibus_routes//")+path.getFileName().toString()));
+                result = Files.move(Paths.get(path.getFileName().toString()), Paths.get(ResourceUtils.getFile("classpath:pedibus_routes//")+"/"+path.getFileName().toString()));
             } catch (IOException e) {
                 logger.error("Exception while moving file: " + e.getMessage());
             }
