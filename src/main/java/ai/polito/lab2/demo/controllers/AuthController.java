@@ -114,7 +114,7 @@ public class AuthController {
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
             if (!userService.userEnabled(username)) {
-                throw new BadCredentialsException("You are not enabled to login");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Disabled");
             }
             String token = jwtTokenProvider.createToken(username, this.userRepo.findByUsername(username).getRolesString());
 
@@ -130,7 +130,7 @@ public class AuthController {
             System.out.println("User: " + username + " is logged");
             return ok(model);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username/password supplied"); //deve restituire 401 Unauthorized, lo vedo io
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username/password"); //deve restituire 401 Unauthorized, lo vedo io
         }
     }
 
