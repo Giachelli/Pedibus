@@ -104,7 +104,10 @@ public class MessageController {
         if (messageService.findMessageByMessageID(messageID) == null)
             return new ResponseEntity("Messaggio non trovato", HttpStatus.NOT_FOUND);
 
-        messageService.deleteByMessageID(messageID);
+
+        if (messageService.deleteByMessageID(messageID) == -1)
+            return new ResponseEntity("Il messaggio non può essere cancellato, devi prima fornire una risposta", HttpStatus.BAD_REQUEST);
+        else
             return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

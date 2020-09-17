@@ -16,7 +16,7 @@ public interface MessageService {
     void createMessageNewUser(ObjectId senderID, ObjectId receiverID,String action, long time);
     Message findMessageByShiftID(ObjectId shiftID);
     void createMessageReservation(ObjectId senderID, ArrayList<String> receivers, String action, long time, ObjectId reservationID,String typeMessage);
-    void deleteByMessageID(ObjectId messageID);
+    int deleteByMessageID(ObjectId messageID);
     Message findMessageByChildID(ObjectId childID);
     void createMessageNewRolesOtherAdmins(String sender, ArrayList<String> receivers, String action, long time, Integer routeID); //messaggio che ricevono tutti gli altri admin
     void createMessageNewRoles(String sender, ObjectId receiver, String action, long time, ArrayList<Integer> adminRoutes, ArrayList<Integer> muleRoutes); // messaggio che riceve lo user stesso

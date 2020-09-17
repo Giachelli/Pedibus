@@ -72,6 +72,7 @@ public class MessageServiceImpl implements MessageService {
                 .read(false)
                 .date(time)
                 .shiftID(shiftID)
+                .messageShiftRequest(true)
                 .status("pending")
                 .build();
 
@@ -252,8 +253,19 @@ public class MessageServiceImpl implements MessageService {
         return messageRepo.findMessageByShiftID(shiftID);
     }
 
-    public void deleteByMessageID(ObjectId messageID) {
+    public int deleteByMessageID(ObjectId messageID) {
+        Message m = messageRepo.findMessageByMessageID(messageID);
+
+        if (m.getMessageShiftRequest() != null && m.getMessageShiftRequest() == true) {
+            if (m.getStatus().equals("pending"))
+                return -1;
+            else {
+                messageRepo.deleteByMessageID(messageID);
+                return 1;
+            }
+        }
         messageRepo.deleteByMessageID(messageID);
+        return 1;
     }
 
     public ArrayList<MessageVM> getMessages(String username) {
