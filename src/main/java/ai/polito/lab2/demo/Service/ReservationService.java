@@ -1,10 +1,7 @@
 package ai.polito.lab2.demo.Service;
 
-import ai.polito.lab2.demo.Dto.ReservationDTO;
-import ai.polito.lab2.demo.viewmodels.ChildReservationVM;
+import ai.polito.lab2.demo.viewmodels.*;
 import ai.polito.lab2.demo.Entity.Reservation;
-import ai.polito.lab2.demo.viewmodels.ReservationCalendarVM;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public interface ReservationService {
 
     Reservation update(Reservation r);
 
-    void save(Reservation r);
+    Reservation save(Reservation r);
 
     Reservation saveAndGet(Reservation r);
 
@@ -32,7 +29,7 @@ public interface ReservationService {
 
     Reservation findReservationById(ObjectId reservation_id);
 
-    Reservation findReservationByStopIDAndDataAndChildID(ObjectId id_fermata, long data, ObjectId childID);
+    Reservation findReservationByStopIDAndDataAndChildID(ObjectId id_fermata, long data, ObjectId childID) throws Exception;
 
     List<Reservation> findReservationByChildID(ObjectId child_id);
 
@@ -42,7 +39,7 @@ public interface ReservationService {
 
     ArrayList<ReservationCalendarVM> reservationsChild (ObjectId childID);
 
-    Reservation findReservationByChildIDAndData(ObjectId childID, long data);
+    Reservation findReservationByChildIDAndDataAndDirection(String childID, long data, String direction);
 
     Reservation findRecentReservation(ObjectId childID, long data);
 
@@ -52,4 +49,13 @@ public interface ReservationService {
 
     int findNumberReservationToday();
 
+    ReservationCreatedVM createReservation(ReservationVM reservationVM, int id_linea, long data);
+
+    boolean controlName_RouteAndStop(int id_linea, String stopID);
+
+    GetChildrenReservationVM returnChild(int id_linea, long data) throws Exception;
+
+    ChildReservationVM confirmPresence(Reservation r, long data, String childID, String id_fermata);
+
+    ChildReservationVM createNotBookedRes(ReservationVM reservationVM, long data, int id_linea);
 }

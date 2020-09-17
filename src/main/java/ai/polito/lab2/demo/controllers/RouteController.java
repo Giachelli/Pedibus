@@ -182,7 +182,7 @@ public class RouteController {
             Path path = Paths.get(file.getOriginalFilename());
             Files.write(path, bytes);
             System.out.println(path.getFileName());
-            Route r = routeService.readSingle(path.toFile());
+            routeVM = routeService.readSingle(path.toFile());
             /*File myObj = new File(path.getFileName().toString());
             if (myObj.delete()) {
                 System.out.println("Deleted the file: " + myObj.getName());
@@ -190,73 +190,10 @@ public class RouteController {
                 System.out.println("Failed to delete the file.");
             }*/
             Path result = null;
-            ArrayList<StopVM> stopVMsA = new ArrayList<>();
-            ArrayList<StopVM> stopVMsB = new ArrayList<>();
-            List<UserVM> muleVMList = new ArrayList<>();
 
-            r.getStopListA().forEach(stop -> {
-                StopVM stopVM = StopVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .nameStop(stop.getNome())
-                        .time(stop.getTime())
-                        .nums(stop.getNums())
-                        .lat(stop.getLat())
-                        .lng(stop.getLng())
-                        .build();
-
-                stopVMsA.add(stopVM);
-            });
-
-            r.getStopListB().forEach(stop -> {
-                StopVM stopVM = StopVM.builder()
-                        .stopID(stop.get_id().toString())
-                        .nameStop(stop.getNome())
-                        .time(stop.getTime())
-                        .nums(stop.getNums())
-                        .lat(stop.getLat())
-                        .lng(stop.getLng())
-                        .build();
-                stopVMsB.add(stopVM);
-            });
-
-            if (r.getUsernameAdmin() != null)
-                for (String u : r.getUsernameAdmin()) {
-                    User admin = userService.getUserByUsername(u);
-                    UserVM adminVM = UserVM.builder()
-                            .userID(admin.get_id().toString())
-                            .username(u)
-                            .family_name(admin.getFamily_name())
-                            .isEnabled(admin.isEnabled())
-                            .build();
-                    adminVMList.add(adminVM);
-                }
-
-            if (r.getUsernameMule() != null)
-                for (String u : r.getUsernameMule()) {
-                    User mule = userService.getUserByUsername(u);
-                    UserVM muleVM = UserVM.builder()
-                            .userID(mule.get_id().toString())
-                            .username(u)
-                            .family_name(mule.getFamily_name())
-                            .isEnabled(mule.isEnabled())
-                            .availabilityVM(mule.getAvailability())
-                            .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
-                            .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
-                            .build();
-                    muleVMList.add(muleVM);
-                }
-
-            routeVM = RouteVM.builder()
-                    .id(r.getId())
-                    .nameR(r.getNameR())
-                    .stopListA(stopVMsA)
-                    .stopListB(stopVMsB)
-                    .usernameAdmin(adminVMList)
-                    .usernameMule(muleVMList)
-                    .build();
             try {
                 //System.out.println(ResourceUtils.getFile("classpath:pedibus_routes/"));
-                result = Files.move(Paths.get(path.getFileName().toString()), Paths.get(ResourceUtils.getFile("classpath:pedibus_routes//")+path.getFileName().toString()));
+                result = Files.move(Paths.get(path.getFileName().toString()), Paths.get(ResourceUtils.getFile("classpath:pedibus_routes//")+"/"+path.getFileName().toString()));
             } catch (IOException e) {
                 logger.error("Exception while moving file: " + e.getMessage());
             }
