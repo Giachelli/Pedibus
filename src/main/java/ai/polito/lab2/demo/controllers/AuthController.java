@@ -122,6 +122,7 @@ public class AuthController {
 
             Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
+            model.put("userID", u.get_id().toString());
             model.put("token", token);
             model.put("roles", u.getRolesString());
             model.put("family_name", u.getFamily_name());
