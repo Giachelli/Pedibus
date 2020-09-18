@@ -3,6 +3,7 @@ package ai.polito.lab2.demo.Service;
 import ai.polito.lab2.demo.Dto.RouteDTO;;
 import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Route;
@@ -30,6 +31,10 @@ import java.util.Objects;
 
 @Service
 public class RouteServiceImpl implements RouteService {
+
+
+    @Autowired
+    private RoleRepo roleRepository;
 
     @Autowired
     private UserService userService;
@@ -347,6 +352,10 @@ public class RouteServiceImpl implements RouteService {
                 String error = "Error in new route of file " + file.getName();
                 throw new IOException(error);
             }
+
+            User user = userService.getUserByUsername(route.getUsernameAdmin().get(0));
+            if(!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
+                user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
             List<Stop> saved = stopRepo.saveAll(route.getStopListA());
 
             stopRepo.saveAll(route.getStopListB());
