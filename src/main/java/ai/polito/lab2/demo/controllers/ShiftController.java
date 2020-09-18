@@ -5,6 +5,7 @@ import ai.polito.lab2.demo.Entity.*;
 import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.viewmodels.ShiftCreateVM;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,35 +47,35 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @ApiOperation("Creazione di vari shift")
     @RequestMapping(value = "/shift/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ShiftCreateVM>> createShift(@RequestBody List<ShiftCreateVM> shiftVMList) {
+    public ResponseEntity<List<ShiftCreateVM>> createShift( @RequestBody List<ShiftCreateVM> shiftVMList) {
         List<ShiftCreateVM> returnedList = new ArrayList<>();
 
         if (controlDoubleShift(shiftVMList)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "PRENOTAZIONE MULE GIA' PRESENTE NEL DB");
+            new ResponseEntity<>("PRENOTAZIONE MULE GIA' PRESENTE NEL DB",HttpStatus.BAD_REQUEST);
         }
 
 
         for (ShiftCreateVM shiftVM : shiftVMList) {
             if (!shiftVM.control())
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "PRENOTAZIONE MULE GIA' PRESENTE NEL DB");
+                new ResponseEntity<>("PRENOTAZIONE Errata mancano dei dati",HttpStatus.BAD_REQUEST);
 
 
             Route route = routeService.getRoutesByID(shiftVM.getLineId());
             if (route == null)
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Route non presente nel db, controlla l'id");
+                new ResponseEntity<>("Route non presente nel db, controlla l'id",HttpStatus.BAD_REQUEST );
 
             User u = userService.getUserByUsername(shiftVM.getUsername());
             if (u == null)
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il mule selezionato non esiste");
+                new ResponseEntity<>("Il mule selezionato non esiste",HttpStatus.BAD_REQUEST);
 
 
             User admin = userService.getUserByUsername(shiftVM.getUsernameAdmin());
             if (admin == null)
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'admin richiedente non esiste");
+                new ResponseEntity<>("L'admin richiedente non esiste",HttpStatus.BAD_REQUEST);
 
 
             if ((!route.getUsernameMule().contains(shiftVM.getUsername())) || (!route.getUsernameAdmin().contains(shiftVM.getUsernameAdmin())))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'utente selezionato non è mule per questa linea o l'admin non è admin per questa linea");
+                new ResponseEntity<>("L'utente selezionato non è mule per questa linea o l'utente dichiarante non è admin per questa linea",HttpStatus.BAD_REQUEST);
 
 
             Stop s1 = stopService.findStopbyId(new ObjectId(shiftVM.getStartShiftId()));
@@ -140,14 +141,14 @@ public class ShiftController {
      * @param muleID
      * @return ritorna i turni prenotati per quel mule su quella linea
      */
-    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/shift/{routeID}/{muleID}/history", method = RequestMethod.GET)
     @ApiOperation("get dei turni per una linea per un mule")
-    public ResponseEntity getMuleShifts(@PathVariable final int routeID,@PathVariable final ObjectId muleID){
+    public ResponseEntity getMuleShifts(@ApiParam("id della linea") @PathVariable final int routeID,@ApiParam("id del mule")@PathVariable final ObjectId muleID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("id della route errato",HttpStatus.BAD_REQUEST);
         }
 
         User u = userService.getUserBy_id(muleID);
@@ -176,7 +177,7 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/{routeID}", method = RequestMethod.GET)
     @ApiOperation("get dei turni per una linea")
-    public ResponseEntity getRouteShifts(@PathVariable final int routeID){
+    public ResponseEntity getRouteShifts(@ApiParam("id della linea")@PathVariable final int routeID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
@@ -197,10 +198,10 @@ public class ShiftController {
      * @param muleID id mule
      * @return i turni da 7 giorni fa per tutto il futuro per un mule
      */
-    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/shift/{routeID}/{muleID}", method = RequestMethod.GET)
     @ApiOperation("get dei turni recenti e futuri per una linea per un mule")
-    public ResponseEntity getMuleShiftsAfter(@PathVariable final int routeID,@PathVariable final ObjectId muleID){
+    public ResponseEntity getMuleShiftsAfter(@ApiParam("id della linea")@PathVariable final int routeID,@ApiParam("id del mule")@PathVariable final ObjectId muleID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
@@ -232,7 +233,7 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/present/{routeID}", method = RequestMethod.GET)
     @ApiOperation("prende tutte i turni recenti e future per una linea")
-    public ResponseEntity getShiftsAfter(@PathVariable final int routeID){
+    public ResponseEntity getShiftsAfter(@ApiParam("id della linea")@PathVariable final int routeID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
@@ -250,10 +251,10 @@ public class ShiftController {
      * Eliminazione di un turno
      * @param shiftID id del turno da eliminare
      */
-    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @ApiOperation("Eliminazione di un turno")
     @RequestMapping(value = "/shift/{shiftID}/delete", method = RequestMethod.DELETE)
-    public ResponseEntity deleteShift(@PathVariable final ObjectId shiftID) {
+    public ResponseEntity deleteShift(@ApiParam("id dello shift")@PathVariable final ObjectId shiftID) {
 
         Shift s = shiftService.getTurnByID(shiftID);
         long nowTimeStamp = getCurrentTimeStamp();
@@ -275,56 +276,6 @@ public class ShiftController {
     }
 
     /**
-     * modifica di un turno
-     * @param shiftID id del turno da modificare
-     * @param shiftVM il turno modificato
-     * @return ritorna il nuovo turno presente nel db con le modifiche apportate
-     */
-    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
-    @RequestMapping(value = "/shift/{shiftID}/edit", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation("modifica di un turno")
-    public ResponseEntity editTurn(@PathVariable final ObjectId shiftID, @RequestBody ShiftCreateVM shiftVM) {
-
-        Shift t = shiftService.getTurnByID(shiftID);
-
-        Stop s1 = stopService.findStopbyId(new ObjectId(shiftVM.getStartShiftId()));
-        Stop s2 = stopService.findStopbyId(new ObjectId(shiftVM.getStopShiftId()));
-
-        if (t != null) {
-            if (!shiftVM.control())
-                return new ResponseEntity<>("Controlli sul turno non passati",HttpStatus.BAD_REQUEST);
-
-            User u = userService.getUserByUsername(shiftVM.getUsername());
-            if (u == null)
-                return new ResponseEntity<>("Mule non esistente",HttpStatus.BAD_REQUEST);
-
-            User admin = userService.getUserByUsername(shiftVM.getUsernameAdmin());
-            if (admin == null)
-                return new ResponseEntity<>("Admin non esistente",HttpStatus.BAD_REQUEST);
-
-            Route route = routeService.getRoutesByID(shiftVM.getLineId());
-            if (route == null)
-                return new ResponseEntity<>("Route non esistente",HttpStatus.BAD_REQUEST);
-
-            t.setDate(shiftVM.getData());
-            t.setDirection(shiftVM.isDirection());
-            t.setLineaID(shiftVM.getLineId());
-            t.setMuleID(u.get_id());
-            t.setStartID(s1.get_id());
-            t.setStopID(s2.get_id());
-            t.setAdminID(admin.get_id());
-            t.setStatus("pending");
-
-            shiftService.editTurn(t);
-        } else {
-            return new ResponseEntity<>("Turno da modificare non esistente",HttpStatus.BAD_REQUEST);
-        }
-
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    /**
      * Accettazione o rifiuto di un turno
      * @param shiftID id del turno
      * @param status stato del turno
@@ -332,7 +283,7 @@ public class ShiftController {
      */
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/shift/{shiftID}/{status}", method = RequestMethod.PUT)
-    public ResponseEntity editStatus(@PathVariable final ObjectId shiftID, @PathVariable String status) {
+    public ResponseEntity editStatus(@ApiParam("id dello shift")@PathVariable final ObjectId shiftID, @ApiParam("status")@PathVariable String status) {
 
         Shift t = shiftService.getTurnByID(shiftID);
 
@@ -388,39 +339,6 @@ public class ShiftController {
             return new ResponseEntity<>("Errore nell'accetazione del turno",HttpStatus.BAD_REQUEST);
         }
     }
-
-    //TODO da eliminare
-    /*
-    @RequestMapping(value = "/turn/confirm/{turnID}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    private boolean confirmTurn(@PathVariable ObjectId turnID, @RequestBody ConfirmAdminVM confirmAdminVM) {
-        Turn t = turnService.getTurnByID(turnID);
-
-        if (t.isConfirmed()) {
-            return false; // c'è qualcosa di SBGALIATO
-        } else {
-            t.setConfirmed(true);
-            t.setConfirmAdminID(confirmAdminVM.getAdminID());
-            System.out.println("Io: " + confirmAdminVM.getAdminID() + "confirmed this turn TRUE: " + t.getTurnID());
-            turnService.save(t);
-        }
-        return true;
-    }
-
-    //da parte dell'admin
-    @RequestMapping(value = "/turn/modify/{turnID}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    private void modifyTurn(@PathVariable ObjectId turnID, @RequestBody ModifyTurnVM modifyTurnVM) {
-        Turn t = turnService.getTurnByID(turnID);
-
-        if (t.isConfirmed()) {
-
-        } else {
-            // dipende da come viene modificato il turno e da che parametri abilitiamo alla modifica
-            t.setConfirmAdminID(modifyTurnVM.getAdminID());
-            System.out.println("Io: " + modifyTurnVM.getAdminID() + "confirmed this turn TRUE: " + t.getTurnID());
-            turnService.save(t);
-        }
-    }
-    */
 
     /**
      * Funzione che controlla se un turno è ancora modificabile o meno

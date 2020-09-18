@@ -74,16 +74,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     public Reservation findRecentReservation(ObjectId childID, long data) {
         Query query = new Query();
-        System.out.println("data::::::::::::::::::::::" + data);
         query.addCriteria(Criteria.where("childID").is(childID).and("date").gt(data));
         query.with(new Sort(Sort.Direction.ASC, "date"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
         if (res.size() == 0) {
-            System.out.println("sono nel size = 0::::::::::::" + data);
-
+            logger.info("Nessuna prenotazione attiva");
             return null;
         } else {
-            System.out.println("sono nel else del size = 0::::::::::::" + data);
+            logger.info("Esiste almeno una prenotazione recente");
             return res.get(0);
         }
     }
@@ -185,14 +183,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
-        System.out.println("Entro in findReservationAndata con date " + data);
+        logger.info("Entro in findReservationAndata con date " + data);
         int i = 0;
         Query query = new Query();
         query.addCriteria(Criteria.where("routeID").is(linea).and("date").is(data).and("direction").is("andata"));
         query.with(new Sort(Sort.Direction.ASC, "stopID"));
         List<Reservation> res = mongoTemplate.find(query, Reservation.class);
         res.forEach(reservation -> {
-            System.out.println("RESERVATION::::::::" + reservation);
+            logger.info("RESERVATION::::::::" + reservation);
         });
         Map<String, List<ChildReservationVM>> mappa = new HashMap<>();
         String id_prec = "";
@@ -217,7 +215,7 @@ public class ReservationServiceImpl implements ReservationService {
                     .build());
         }
         for (String key : mappa.keySet()) {
-            System.out.println("key " + key + " values: " + mappa.get(key));
+            logger.info("key " + key + " values: " + mappa.get(key));
         }
         return mappa;
     }
@@ -258,7 +256,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         }
         for (String key : mappa.keySet()) {
-            System.out.println("key " + key + " values: " + mappa.get(key));
+            logger.info("key " + key + " values: " + mappa.get(key));
         }
         return mappa;
     }
@@ -317,7 +315,6 @@ public class ReservationServiceImpl implements ReservationService {
     public ArrayList<ReservationCalendarVM> reservationFamily(String family_name) {
         List<Reservation> res = reservationRepo.findReservationByFamilyName(family_name);
         ArrayList<ReservationCalendarVM> rcvms = new ArrayList<>();
-        res.forEach(bubba -> System.out.println("BUBBAAA:::" + bubba.getName_route()));
 
         res.forEach(reservation -> {
             SimpleDateFormat data = null;
@@ -329,6 +326,7 @@ public class ReservationServiceImpl implements ReservationService {
                 d = data.parse(s.getTime());
                 data.setTimeZone(TimeZone.getTimeZone("UTC"));
                 // d = data.parse(s.getTime());
+                //TODO reservationFamily
                 System.out.println("DDDD" + d.getTime());
 
                 //System.out.println("IIIIIII" + i);
@@ -437,7 +435,6 @@ public class ReservationServiceImpl implements ReservationService {
          *
          */
         Map<String, List<ChildReservationVM>> salire = this.findReservationAndata(route.getId(), data);
-        System.out.println("size di salire " + salire.size());
         /**
          * per ogni fermata contiene una serie di info e la lista dei passeggeri che sarebbe l'arrylist passeggeri.
          *
@@ -605,8 +602,6 @@ public class ReservationServiceImpl implements ReservationService {
         List<Reservation>  deleted = reservationRepo.findReservationByChildIDAndDateAndDirection(childID,data,reservationVM.getDirection());
 
         //eventualmente si può fare una sorta di update qui
-        if(deleted.size() >0)
-            reservationRepo.delete(deleted.get(0));
 
         Reservation r = Reservation.builder()
                 .childID(childID)
@@ -616,6 +611,10 @@ public class ReservationServiceImpl implements ReservationService {
                 .name_route(routeService.getRoutesByID(id_linea).getNameR())
                 .date(data)
                 .build();
+
+        if(deleted.size() >0)
+            r.setId(deleted.get(0).getId());
+
 
         r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
         r.setBooked(false);

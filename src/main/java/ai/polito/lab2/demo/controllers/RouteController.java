@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.OnNewFileCompleteEvent;
+import ai.polito.lab2.demo.viewmodels.AllRoutesVM;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.context.ApplicationEventPublisher;
@@ -74,8 +75,8 @@ public class RouteController {
 
         logger.info(user + " Request GET Lines. The lines are: routes\n");
         Map<Object, Object> model = new HashMap<>();
-        model.put("lines", routeVMs);
-        return ok().body(model);
+        AllRoutesVM allRoutesVM = AllRoutesVM.builder().lines(routeVMs).build();
+        return new ResponseEntity(allRoutesVM,HttpStatus.OK);
     }
 
     /**
@@ -139,8 +140,6 @@ public class RouteController {
         }
 
         try {
-            System.out.println("AAAAADMIN VM LIST: " + adminVMList);
-
             if (adminVMList!= null){
                 for ( UserVM user : adminVMList){
                     String appUrl = request.getContextPath();
