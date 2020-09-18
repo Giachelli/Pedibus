@@ -14,5 +14,5 @@ public class UserRouteVM {
     private ObjectId userID;
     private ArrayList<Integer> adminRoutes;
     private ArrayList<Integer> muleRoutes;
-
+    private ArrayList<Boolean> availability;
 }

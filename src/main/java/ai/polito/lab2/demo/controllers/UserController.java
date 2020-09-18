@@ -417,6 +417,7 @@ public class UserController {
                 .username(user.getUsername())
                 .adminRoutes(adminRoute)
                 .muleRoutes(muleRoute)
+                .availability(user.getAvailability())
                 .build();
 
         return new ResponseEntity<UserRouteVM>(userVM, HttpStatus.OK);
