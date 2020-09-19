@@ -51,31 +51,31 @@ public class ShiftController {
         List<ShiftCreateVM> returnedList = new ArrayList<>();
 
         if (controlDoubleShift(shiftVMList)){
-            new ResponseEntity<>("PRENOTAZIONE MULE GIA' PRESENTE NEL DB",HttpStatus.BAD_REQUEST);
+           return new ResponseEntity("PRENOTAZIONE MULE GIA' PRESENTE NEL DB",HttpStatus.BAD_REQUEST);
         }
 
 
         for (ShiftCreateVM shiftVM : shiftVMList) {
             if (!shiftVM.control())
-                new ResponseEntity<>("PRENOTAZIONE Errata mancano dei dati",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("PRENOTAZIONE Errata mancano dei dati",HttpStatus.BAD_REQUEST);
 
 
             Route route = routeService.getRoutesByID(shiftVM.getLineId());
             if (route == null)
-                new ResponseEntity<>("Route non presente nel db, controlla l'id",HttpStatus.BAD_REQUEST );
+                return new ResponseEntity("Route non presente nel db, controlla l'id",HttpStatus.BAD_REQUEST );
 
             User u = userService.getUserByUsername(shiftVM.getUsername());
             if (u == null)
-                new ResponseEntity<>("Il mule selezionato non esiste",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Il mule selezionato non esiste",HttpStatus.BAD_REQUEST);
 
 
             User admin = userService.getUserByUsername(shiftVM.getUsernameAdmin());
             if (admin == null)
-                new ResponseEntity<>("L'admin richiedente non esiste",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("L'admin richiedente non esiste",HttpStatus.BAD_REQUEST);
 
 
             if ((!route.getUsernameMule().contains(shiftVM.getUsername())) || (!route.getUsernameAdmin().contains(shiftVM.getUsernameAdmin())))
-                new ResponseEntity<>("L'utente selezionato non è mule per questa linea o l'utente dichiarante non è admin per questa linea",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("L'utente selezionato non è mule per questa linea o l'utente dichiarante non è admin per questa linea",HttpStatus.BAD_REQUEST);
 
 
             Stop s1 = stopService.findStopbyId(new ObjectId(shiftVM.getStartShiftId()));
