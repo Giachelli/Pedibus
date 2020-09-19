@@ -6,6 +6,8 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 
 @Data
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 public class ChildVM {
 
     private String childID;
+    @Max(3)
     private String username;
     private String family_name;
     private String nameChild;

@@ -19,7 +19,13 @@ public class Message {
     ObjectId receiverID;
     String action; //eg: Richiesta turno, Accettazione/Rifiuto turno, Richiesta bimbo
     private long date;
+    private long dateTurns; //per il messaggio di cancellazione
     ObjectId shiftID;
+    Integer route; // utilizzato solo quando ci sono other admin e cancellazione turno
+    ObjectId startID;
+    ObjectId stopID;
+    boolean direction;
+    String muleName;
     ObjectId reservationID;
     ObjectId childID;
     ObjectId userID;
@@ -35,10 +41,10 @@ public class Message {
     Boolean messageChildPlace;
     Boolean messageNewUser; // indica che un nuovo user è stato iscritto a sistena
     Boolean messageEditAvailability; //messaggio che ricevono gli user quando un mule cambia le sue disponibilità
+    Boolean messageDeleteTurn; // messaggio di eliminazione turno
     Boolean read;
     ArrayList<Integer> adminRoutes = new ArrayList<>();
     ArrayList<Integer> muleRoutes = new ArrayList<>();
-    Integer route; // utilizzato solo quando ci sono other admin
     String status; // pending, accepted, rejected
     //String commento;
 }

@@ -62,6 +62,8 @@ public class MessageServiceImpl implements MessageService {
         return messageRepo.findMessageByChildID(childID);
     }
 
+
+
     public void createMessageShift(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId shiftID, String typeMessage) {
 
 
@@ -92,6 +94,7 @@ public class MessageServiceImpl implements MessageService {
                     .read(false)
                     .date(time)
                     .shiftID(shiftID)
+                    .messageShiftRequest(true)
                     .status(status)
                     .build();
 
@@ -177,6 +180,40 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    public void createMessageDeleteTurns(ObjectId senderID, ArrayList<ObjectId> receiversID, String action, long time, ObjectId shiftID) {
+
+        Shift shift = shiftService.getTurnByID(shiftID);
+
+        /*  Per cancellare nella sezione messagi del richiedente, quello con precedente che indicava turno accettato*/
+       /* Message m1 = findMessageByShiftIDAndReceiverID(shiftID, senderID);
+        if ( m1 != null)
+            messageRepo.deleteByMessageID(m1.getMessageID());
+        */
+        for (ObjectId id : receiversID) {
+            Message m = findMessageByShiftIDAndReceiverID(shiftID, id);
+            if ( m != null)
+                messageRepo.deleteByMessageID(m.getMessageID());
+
+            Message message = Message.builder()
+                    .senderID(senderID)
+                    .receiverID(id)
+                    .action(action)
+                    .shiftID(shiftID)
+                    .dateTurns(shift.getDate())
+                    .route(shift.getLineaID())
+                    .startID(shift.getStartID())
+                    .stopID(shift.getStopID())
+                    .direction(shift.isDirection())
+                    .muleName(userService.getUserBy_id(shift.getMuleID()).getUsername())
+                    .read(false)
+                    .messageDeleteTurn(true)
+                    .date(time)
+                    .build();
+
+            messageRepo.save(message);
+        }
+    }
+
     public void createMessageEditAvailability(String sender, ArrayList<String> receivers, String action, long time, Integer routeID) {
         ObjectId senderID = userRepo.findByUsername(sender).get_id();
         for (String s : receivers) {
@@ -253,6 +290,10 @@ public class MessageServiceImpl implements MessageService {
         return messageRepo.findMessageByShiftID(shiftID);
     }
 
+    public Message findMessageByShiftIDAndReceiverID(ObjectId shiftID, ObjectId receiverID){
+        return messageRepo.findMessageByShiftIDAndReceiverID(shiftID,receiverID);
+    }
+
     public int deleteByMessageID(ObjectId messageID) {
         Message m = messageRepo.findMessageByMessageID(messageID);
 
@@ -278,34 +319,59 @@ public class MessageServiceImpl implements MessageService {
             //Get messaggio turni
             if (message.getShiftID() != null) {
                 Shift shift = shiftService.getTurnByID(message.getShiftID());
-                if ( shift != null){
-                    String pattern = "dd/MM";
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                    String date = simpleDateFormat.format(new Date(shift.getDate()));
-                    MessageVM messageVM = MessageVM.builder()
-                            .sender(senderName)
-                            .messageID(message.getMessageID().toString())
-                            .text(message.getAction())
-                            .read(message.getRead())
-                            .date(message.getDate())
-                            .nameStop(stopService.findStopbyId(shift.getStartID()).getNome())
-                            .oraFermata(stopService.findStopbyId(shift.getStartID()).getTime())
-                            .nameStopDiscesa(stopService.findStopbyId(shift.getStopID()).getNome())
-                            .oraFermataDiscesa(stopService.findStopbyId(shift.getStopID()).getTime())
-                            .shiftID(message.getShiftID().toString())
-                            .messageShiftRequest(true) //TODO: dopo aver parlato con gli altri
-                            .status(message.getStatus())
-                            .dateShift(date)
-                            .direction(shift.isDirection())
-                            .nameLinea(routeService.getRoutesByID(shift.getLineaID()).getNameR())
-                            .build();
-                    messageVMS.add(messageVM);
-                }
+                if ( shift != null) {
+                    if (message.getMessageShiftRequest()) {
+                        String pattern = "dd/MM";
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                        String date = simpleDateFormat.format(new Date(shift.getDate()));
+                        MessageVM messageVM = MessageVM.builder()
+                                .sender(senderName)
+                                .messageID(message.getMessageID().toString())
+                                .text(message.getAction())
+                                .read(message.getRead())
+                                .date(message.getDate())
+                                .nameStop(stopService.findStopbyId(shift.getStartID()).getNome())
+                                .oraFermata(stopService.findStopbyId(shift.getStartID()).getTime())
+                                .nameStopDiscesa(stopService.findStopbyId(shift.getStopID()).getNome())
+                                .oraFermataDiscesa(stopService.findStopbyId(shift.getStopID()).getTime())
+                                .shiftID(message.getShiftID().toString())
+                                .messageShiftRequest(true) //TODO: dopo aver parlato con gli altri
+                                .status(message.getStatus())
+                                .dateShift(date)
+                                .direction(message.isDirection())
+                                .nameLinea(routeService.getRoutesByID(shift.getLineaID()).getNameR())
+                                .build();
+                        messageVMS.add(messageVM);
+                    }
                 /* get messaggio che concerne le reservation. Due tipi di messaggi per tre azioni differenti:
                 prenotazione bimbo da calendario, bimbo prenotato preso in carica,
                 bimbo non prenotato preso in carica
                  */
-            } else if (message.getMessageNewUser() != null) {
+                }else{if ( message.getMessageDeleteTurn()) {
+                        String pattern = "dd/MM";
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                        String date = simpleDateFormat.format(new Date(message.getDateTurns()));
+                        MessageVM messageVM = MessageVM.builder()
+                                .sender(senderName)
+                                .messageID(message.getMessageID().toString())
+                                .text(message.getAction())
+                                .read(message.getRead())
+                                .date(message.getDate())
+                                .nameStop(stopService.findStopbyId(message.getStartID()).getNome())
+                                .oraFermata(stopService.findStopbyId(message.getStartID()).getTime())
+                                .nameStopDiscesa(stopService.findStopbyId(message.getStopID()).getNome())
+                                .oraFermataDiscesa(stopService.findStopbyId(message.getStopID()).getTime())
+                                .shiftID(message.getShiftID().toString())
+                                .muleName(message.getMuleName())
+                                .messageDeleteTurn(true) //TODO: dopo aver parlato con gli altri
+                                .dateShift(date)
+                                .direction(message.isDirection())
+                                .nameLinea(routeService.getRoutesByID(message.getRoute()).getNameR())
+                                .build();
+                        messageVMS.add(messageVM);
+                    }
+                }
+            }else if (message.getMessageNewUser() != null) {
                 User u = userService.getUserBy_id(message.getUserID());
                 if (u != null) { // se fosse stato cancellato potrebbe esser null
                     MessageVM messageVM = MessageVM.builder()

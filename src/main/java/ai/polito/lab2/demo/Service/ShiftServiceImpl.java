@@ -10,10 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class ShiftServiceImpl implements ShiftService {
@@ -23,6 +20,11 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MessageService messageService;
+    @Autowired
+    private RouteService routeService;
 
 
     /**
@@ -52,6 +54,28 @@ public class ShiftServiceImpl implements ShiftService {
      */
     @Override
     public void delete(ObjectId turnID) {
+
+        Shift shift = this.getTurnByID(turnID);
+
+        String action = "Cancellazione turno";
+
+        long day = new Date().getTime();
+
+        ArrayList<ObjectId> receiversID = new ArrayList<>();
+
+        receiversID.add(shift.getMuleID());
+
+        for (String username : routeService.getRoutesByID(shift.getLineaID()).getUsernameAdmin()) {
+            User u = userService.getUserByUsername(username);
+            receiversID.add(u.get_id());
+        }
+
+        messageService.createMessageDeleteTurns(shift.getAdminID(),
+                receiversID,
+                action,
+                day,
+                shift.getTurnID()
+        );
 
         shiftRepo.delete(this.getTurnByID(turnID));
 

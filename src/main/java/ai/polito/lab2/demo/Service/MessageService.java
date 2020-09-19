@@ -12,9 +12,9 @@ public interface MessageService {
     void createMessageResponse(ObjectId senderID, ArrayList<String> receivers, String action, long time, ObjectId shiftID, String status, String typeMessage);
     void createMessageResp(ObjectId senderID, ObjectId receiverID, ObjectId childID, String action, long time, String typeMessage);
     Message findMessageByMessageID (ObjectId messageID);
+    Message findMessageByShiftID (ObjectId shiftID);
     void update(Message m);
     void createMessageNewUser(ObjectId senderID, ObjectId receiverID,String action, long time);
-    Message findMessageByShiftID(ObjectId shiftID);
     void createMessageReservation(ObjectId senderID, ArrayList<String> receivers, String action, long time, ObjectId reservationID,String typeMessage);
     int deleteByMessageID(ObjectId messageID);
     Message findMessageByChildID(ObjectId childID);
@@ -25,5 +25,6 @@ public interface MessageService {
     ArrayList<MessageVM> getMessages(String username);
     void readedUpdated(ObjectId messageID, Boolean read);
     Message editStatus(ObjectId messageID, String status);
+    void createMessageDeleteTurns(ObjectId senderID, ArrayList<ObjectId> receiverID, String action, long time, ObjectId shiftID);
 
 }

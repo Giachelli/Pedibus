@@ -8,6 +8,7 @@ import ai.polito.lab2.demo.OnRegistrationCompleteEvent;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.IUserService;
 import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.Service.MessageService;
 import ai.polito.lab2.demo.Service.RoleService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
 import ai.polito.lab2.demo.viewmodels.AuthenticationRequestVM;
@@ -46,6 +47,9 @@ public class AuthController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -176,6 +180,7 @@ public class AuthController {
         }
 
         if (userService.manageUser(randomUUID, userVM)) {
+
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
