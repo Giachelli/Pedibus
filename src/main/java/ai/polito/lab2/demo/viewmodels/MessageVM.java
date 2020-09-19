@@ -28,6 +28,7 @@ public class MessageVM {
     Boolean messageChildPlace; // indica il bambino che (prenotato o non prenotato) è stato preso in consegna
     Boolean messageNewUser;
     Boolean messageEditAvailability;
+    Boolean messageDeleteTurn;
     Boolean read;
     private long date;
     String status;
@@ -39,5 +40,6 @@ public class MessageVM {
     String nameStopDiscesa;
     String oraFermata;
     String oraFermataDiscesa;
+    String muleName; //per la cancellazione del turno
 
 }
