@@ -1,11 +1,14 @@
 package ai.polito.lab2.demo;
 
 
-import static reactor.bus.selector.Selectors.$;
-
-import ai.polito.lab2.demo.Dto.RouteDTO;
-import ai.polito.lab2.demo.Entity.*;
-import ai.polito.lab2.demo.Repositories.*;
+import ai.polito.lab2.demo.Entity.Role;
+import ai.polito.lab2.demo.Entity.Route;
+import ai.polito.lab2.demo.Entity.Stop;
+import ai.polito.lab2.demo.Entity.User;
+import ai.polito.lab2.demo.Repositories.ChildRepo;
+import ai.polito.lab2.demo.Repositories.MessageRepo;
+import ai.polito.lab2.demo.Repositories.RoleRepo;
+import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.ReservationService;
 import ai.polito.lab2.demo.Service.RouteService;
 import ai.polito.lab2.demo.Service.StopService;
@@ -16,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
