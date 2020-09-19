@@ -94,7 +94,7 @@ public class DataInitializer implements CommandLineRunner {
 
             setMule_Admin_Test();
             insertUserIntoDB(routeId);
-            insertChildIntoDB();
+            //insertChildIntoDB();
             //  insertMessageDb();
         }
 /*
@@ -132,7 +132,7 @@ public class DataInitializer implements CommandLineRunner {
         routeService.saveRoute(r1);
     }
 
-    private void insertChildIntoDB() {
+  /*  private void insertChildIntoDB() {
         System.out.println("creano il child");
         Route r1 = routeService.getRoutesByID(2);
         Route r2 = routeService.getRoutesByID(3);
@@ -218,8 +218,8 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
-    */
-    }
+
+    }*/
 
 
     public void insertUserIntoDB(Set<Integer> routeId) {
