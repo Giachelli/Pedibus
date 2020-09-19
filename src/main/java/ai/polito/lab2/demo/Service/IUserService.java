@@ -2,10 +2,9 @@ package ai.polito.lab2.demo.Service;
 
 import ai.polito.lab2.demo.Dto.UserDTO;
 import ai.polito.lab2.demo.Entity.User;
-import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
+import ai.polito.lab2.demo.viewmodels.*;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IUserService {
@@ -40,4 +39,16 @@ public interface IUserService {
     boolean deleteUserbyID(ObjectId userID);
 
     User getUserByUsername(String name);
+
+    List<UserVM> getAllUser();
+
+    void disableUser(ObjectId userID);
+
+    void ableUser(ObjectId userID);
+
+    UserRouteVM getRoutesUser(ObjectId userID);
+
+    LoginUserVM getUserLoginByUsername(String username);
+
+    void editUser(ObjectId userID, modifyRoleUserVM modifyRoleUser) throws Exception;
 }
