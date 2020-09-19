@@ -47,11 +47,11 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @ApiOperation("Creazione di vari shift")
     @RequestMapping(value = "/shift/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ShiftCreateVM>> createShift( @RequestBody List<ShiftCreateVM> shiftVMList) {
+    public ResponseEntity createShift( @RequestBody List<ShiftCreateVM> shiftVMList) {
         List<ShiftCreateVM> returnedList = new ArrayList<>();
 
         if (controlDoubleShift(shiftVMList)){
-           return new ResponseEntity("PRENOTAZIONE MULE GIA' PRESENTE NEL DB",HttpStatus.BAD_REQUEST);
+           return new ResponseEntity("PRENOTAZIONE MULE GIA PRESENTE NEL DB",HttpStatus.BAD_REQUEST);
         }
 
 

@@ -47,16 +47,8 @@ public class DataInitializer implements CommandLineRunner {
     private RoleRepo roleRepository;
 
     @Autowired
-    private ChildRepo childRepo;
-
-    @Autowired
     private ReservationService reservationService;
 
-    @Autowired
-    private ChildController childController;
-
-    @Autowired
-    private MessageRepo messageRepo;
 
     @Override
     public void run(String... args) throws Exception {
@@ -298,21 +290,6 @@ public class DataInitializer implements CommandLineRunner {
                 .isEnabled(true)
                 .build()
         );
-
-        this.users.save(User.builder()
-                .username("giacomo.chelli4@gmail.com")
-                .family_name("Chelli")
-                .password(this.passwordEncoder.encode("1user@user"))
-                .roles(Arrays.asList(role, roleRepository.findByRole("ROLE_MULE")))
-                .availability(disp)
-                .andataStops(andata)
-                .ritornoStops(ritorno)
-                .muleRoutesID(routeId)
-                //.roles(Arrays.asList(role))
-                .isEnabled(true)
-                .build()
-        );
-
 
         this.users.save(User.builder()
                 .username("user2@info.it")

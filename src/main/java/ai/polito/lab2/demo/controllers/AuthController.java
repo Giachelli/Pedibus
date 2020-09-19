@@ -10,12 +10,12 @@ import ai.polito.lab2.demo.Service.IUserService;
 import ai.polito.lab2.demo.Entity.User;
 import ai.polito.lab2.demo.Service.MessageService;
 import ai.polito.lab2.demo.Service.RoleService;
+import ai.polito.lab2.demo.Service.UserService;
 import ai.polito.lab2.demo.security.jwt.JwtTokenProvider;
-import ai.polito.lab2.demo.viewmodels.AuthenticationRequestVM;
-import ai.polito.lab2.demo.viewmodels.ConfirmUserVM;
-import ai.polito.lab2.demo.viewmodels.RecoverVM;
-import ai.polito.lab2.demo.viewmodels.RegisterVM;
+import ai.polito.lab2.demo.viewmodels.*;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -66,6 +66,8 @@ public class AuthController {
     @Autowired
     private IUserService userService;
 
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
 
     String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}";
 
@@ -114,7 +116,6 @@ public class AuthController {
     @ApiOperation("Endpoin per effettuare il login")
     public ResponseEntity signin(@RequestBody AuthenticationRequestVM data) {
         try {
-            System.out.println("Post /login");
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
             if (!userService.userEnabled(username)) {
@@ -122,24 +123,16 @@ public class AuthController {
             }
             String token = jwtTokenProvider.createToken(username, this.userRepo.findByUsername(username).getRolesString());
 
-            User u = userService.getUserByUsername(username);
+            LoginUserVM u = userService.getUserLoginByUsername(username);
 
-            Map<Object, Object> model = new HashMap<>();
-            model.put("username", username);
-            model.put("userID", u.get_id().toString());
-            model.put("token", token);
-            model.put("roles", u.getRolesString());
-            model.put("family_name", u.getFamily_name());
-            model.put("adminRoutes", u.getAdminRoutesID());
-            model.put("muleRoutes", u.getMuleRoutesID());
-            System.out.println("User: " + username + " is logged");
-            return ok(model);
+            u.setToken(token);
+
+
+            return new ResponseEntity(u,HttpStatus.OK);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username/password"); //deve restituire 401 Unauthorized, lo vedo io
         }
     }
-
-    //TODO fare la get da inviare tramite mail
 
     /**
      *
@@ -152,7 +145,7 @@ public class AuthController {
         if (userService.getVerificationToken(randomUUID)) {
             return new ResponseEntity(HttpStatus.OK);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
+            return new ResponseEntity(" NOT FOUND",HttpStatus.NOT_FOUND);
         }
 
     }
@@ -167,13 +160,13 @@ public class AuthController {
     @ApiOperation("Endpoint per la creazione dell'utente dopo che ha inserito i dati")
     public ResponseEntity confirm(@PathVariable String randomUUID, @RequestBody ConfirmUserVM userVM) {
         if (!userService.getVerificationToken(randomUUID))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token non valido");
+            return new ResponseEntity( "Token non valido",HttpStatus.FORBIDDEN);
 
         if ((userVM.getPassword().length())<8)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password corta");
+            return new ResponseEntity("Password corta",HttpStatus.BAD_REQUEST );
 
         if (!userVM.getPassword().equals(userVM.getConfirmPassword()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are differents");
+            return new ResponseEntity("Password are differents",HttpStatus.BAD_REQUEST);
 
         if (!userVM.getPassword().matches(regex)) {
             return new ResponseEntity("Password non ha tutti i caratteri richiesti",HttpStatus.BAD_REQUEST );
@@ -183,7 +176,7 @@ public class AuthController {
 
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
+            return new ResponseEntity(" NOT FOUND",HttpStatus.NOT_FOUND);
         }
     }
 
@@ -199,7 +192,7 @@ public class AuthController {
 
         User user = userRepo.findByUsername(email);
         if (user == null) {
-           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+           return new ResponseEntity<>("Utente non trovato sul db",HttpStatus.NOT_FOUND);
         }
 
 
@@ -242,17 +235,17 @@ public class AuthController {
                         "Errore 404 – Not found",//la password non soddisfa i requisiti minimi",
                         HttpStatus.BAD_REQUEST);
             } else {
-                System.out.println("REGEX PASS");
+                //System.out.println("REGEX PASS");
             }
-            System.out.println("prova ad impostare " + vm.getPass());
+            //System.out.println("prova ad impostare " + vm.getPass());
 
             //user.setPassword(b.encode(vm.getPass()));
             userService.changePassword(user, vm.getPass());
-            System.out.println("impostata " + user.getPassword());
+            logger.info("impostata " + user.getPassword());
 
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " NOT FOUND");
+            return new ResponseEntity(" NOT FOUND",HttpStatus.NOT_FOUND );
         }
     }
 }
