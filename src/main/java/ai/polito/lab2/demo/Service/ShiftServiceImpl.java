@@ -37,7 +37,7 @@ public class ShiftServiceImpl implements ShiftService {
         Shift shift = Shift.builder()
                 .muleID(t.getMuleID())
                 .AdminID(t.getAdminID())
-                .date(t.getData())
+                .date(t.getData()+7200000)
                 .lineaID(t.getLineId())
                 .direction(t.isDirection())
                 .status(t.getStatus())
