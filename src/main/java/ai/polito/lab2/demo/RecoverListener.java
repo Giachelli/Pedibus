@@ -29,7 +29,8 @@ public class RecoverListener implements
         User user = event.getUser();
         String passtoken = UUID.randomUUID().toString();
         user.setPasstoken(passtoken);
-        user.setExpiryDate(user.calculateExpiryDate(EXPIRATION));
+
+        user.setExpiry_passToken(user.calculateExpiryDate(EXPIRATION));
 
         String recipientAddress = user.getUsername();
         String subject = "Recupero Password";

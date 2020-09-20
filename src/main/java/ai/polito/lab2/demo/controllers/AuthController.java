@@ -211,7 +211,7 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, RecoverVM vm) {
+    public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, @RequestBody RecoverVM vm) {
         if (userService.getVerificationPassToken(randomUUID)) {
 
             System.out.println("RECOVER REQUEST");
@@ -222,7 +222,7 @@ public class AuthController {
                         "Errore 404 – Not found",//utente o token non validi",
                         HttpStatus.BAD_REQUEST);
             }
-            if (!vm.getPass().equals(vm.getConfpass())) {
+            if (!(vm.getPass().equals(vm.getConfpass()))) {
                 return new ResponseEntity<>(
                         "Errore 404 – Not found",//utente o token non validi",
                         HttpStatus.BAD_REQUEST);

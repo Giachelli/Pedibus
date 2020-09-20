@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/login").permitAll()
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/recover").permitAll()
+                    .antMatchers("/recover", "/recover/**").permitAll()
                     .and()
                     .authorizeRequests()
                     .antMatchers("/register").hasRole("SYSTEM_ADMIN")
