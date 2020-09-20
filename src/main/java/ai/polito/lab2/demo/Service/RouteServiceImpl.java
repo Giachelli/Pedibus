@@ -353,7 +353,7 @@ public class RouteServiceImpl implements RouteService {
                 throw new IOException(error);
             }
 
-            User user = userService.getUserByUsername(route.getUsernameAdmin().get(0));
+            User user = userService.getUserByUsername(route.getEmails());
             if(!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
                 user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
             List<Stop> saved = stopRepo.saveAll(route.getStopListA());
