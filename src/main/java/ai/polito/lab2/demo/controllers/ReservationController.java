@@ -98,7 +98,7 @@ public class ReservationController {
      * @throws JsonProcessingException
      * @throws ParseException
      */
-    @Secured("ROLE_MULE")
+    @Secured({"ROLE_MULE","ROLE_ADMIN"})
     @RequestMapping(value = "/reservations/add/{id_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata")
     public ResponseEntity createNotBooked(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
@@ -129,7 +129,7 @@ public class ReservationController {
      * @throws JsonProcessingException
      * @throws ParseException
      */
-    @Secured({"ROLE_MULE"})
+    @Secured({"ROLE_MULE","ROLE_ADMIN"})
     @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
     @ApiOperation("RICHIESTA per confermare o meno presenza del bambino")
     public ResponseEntity confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody childConfirmVM childConfirmVM) throws JsonProcessingException, ParseException {
@@ -293,7 +293,7 @@ public class ReservationController {
      * @param reservation_id id della reservation da eliminare
      * @return
      */
-    @Secured({"ROLE_USER", "ROLE_MULE"})
+    @Secured({"ROLE_USER"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.DELETE)
     @ApiOperation("Eliminazione della reservation")
     public ResponseEntity delete(@ApiParam("Id della prenotazione da eliminare")@PathVariable ObjectId reservation_id) {
@@ -308,7 +308,7 @@ public class ReservationController {
         reservationService.delete(reservation_id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
+/*
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.GET)
     public ResponseEntity<Reservation> getPeople(@PathVariable ObjectId reservation_id) throws JsonProcessingException {
@@ -316,14 +316,14 @@ public class ReservationController {
 
         return new ResponseEntity<>(request,HttpStatus.OK);
     }
-
+*/
     /**
      * Funzione per il calendario del genitore
      * @param family_name cognome della famiglia
      * @return tutte le prenotazioni per quella famiglia
      * @throws JsonProcessingException
      */
-    @Secured({"ROLE_USER", "ROLE_MULE"})
+    @Secured({"ROLE_USER"})
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
     public ResponseEntity getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
         System.out.println("family_name :" + family_name);
@@ -360,9 +360,17 @@ public class ReservationController {
     @RequestMapping(value = "/reservations", method = RequestMethod.DELETE)
     public ResponseEntity deleteChildReservation(@RequestParam (required = true) ObjectId id) throws JsonProcessingException {
 
+        Reservation updatedReservation = reservationService.findReservationById(id);
+        long nowTimeStamp = getCurrentTimeStamp();
+        Stop stop = stopService.findStopbyId(updatedReservation.getStopID());
+
+        if (checkTimestamp(nowTimeStamp,updatedReservation.getDate(),stop))
+        {
+            return new ResponseEntity<>("Errore non è possibile cancellare la prenotazione",HttpStatus.BAD_REQUEST);
+        }
         reservationService.delete(id);
 
-        return noContent().build();
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 

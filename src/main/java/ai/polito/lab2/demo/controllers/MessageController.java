@@ -88,6 +88,9 @@ public class MessageController {
         else
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
+
     @ApiOperation("Endpoint per cancellare un messaggio")
     @RequestMapping(value = "/messages/{messageID}", method = RequestMethod.DELETE)
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
@@ -96,7 +99,7 @@ public class MessageController {
             @ApiResponse(code = 403, message = "Richiesta non permessa"),
             @ApiResponse(code = 404, message = "Messaggio non trovato")
     })
-    public ResponseEntity deleteChild(@PathVariable ObjectId messageID ) {
+    public ResponseEntity deleteMessageChild(@PathVariable ObjectId messageID ) {
 
         if ( messageID == null)
             return new ResponseEntity("Richiesta mal formata", HttpStatus.BAD_REQUEST);

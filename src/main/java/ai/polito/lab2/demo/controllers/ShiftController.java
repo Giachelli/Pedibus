@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,21 +94,21 @@ public class ShiftController {
 
 
             // metto il turno sul db
-            Shift shift = shiftService.save(t);
+            shiftVM.setShiftId(shiftService.save(t).getTurnID().toString());
             //notificare gli admin di linea
 
             String action = "Richiesta turno";
 
             long day = new Date().getTime();
 
+            ObjectId shiftidOb = new ObjectId(shiftVM.getShiftId());
             messageService.createMessageShift(admin.get_id(), u.get_id(),
                     action,
                     day,
-                    shift.getTurnID(),
+                    shiftidOb,
                     "messageShiftRequest"
             );
 
-            shiftVM.setShiftId(shift.getTurnID().toString());
             returnedList.add(shiftVM);
         }
 
@@ -161,8 +160,8 @@ public class ShiftController {
         List<ShiftCreateVM> shifts = shiftService.getTurns(routeID, muleID);
 
 
-        logger.info("per la linea "+r.getNameR()+ " e per il mule con username "+ u.getUsername()+ " " +
-                "sono state trovate queste prenotazioni (numero):  "+shifts.size() );
+        /*logger.info("per la linea "+r.getNameR()+ " e per il mule con username "+ u.getUsername()+ " " +
+                "sono state trovate queste prenotazioni (numero):  "+shifts.size() );*/
 
         return new ResponseEntity(shifts, HttpStatus.OK);
     }

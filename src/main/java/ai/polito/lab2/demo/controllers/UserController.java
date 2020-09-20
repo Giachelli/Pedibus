@@ -34,25 +34,7 @@ import static org.springframework.http.ResponseEntity.ok;
 public class UserController {
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private RouteService routeService;
-
-    @Autowired
-    private ChildService childService;
-
-    @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private ReservationService reservationService;
-
-    @Autowired
-    private ShiftService shiftService;
 
     @Autowired
     RoleRepo roleRepository;
@@ -129,9 +111,8 @@ public class UserController {
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/disabled", method = RequestMethod.PUT)
     public ResponseEntity disabledUser(@PathVariable ObjectId userID) {
-        if(userService.getUserBy_id(userID)==null)
-        {
-            return new ResponseEntity("Errore User non presente nel db",HttpStatus.BAD_REQUEST);
+        if (userService.getUserBy_id(userID) == null) {
+            return new ResponseEntity("Errore User non presente nel db", HttpStatus.BAD_REQUEST);
         }
         userService.disableUser(userID);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -140,9 +121,8 @@ public class UserController {
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/enabled", method = RequestMethod.PUT)
     public ResponseEntity enabledUser(@PathVariable ObjectId userID) {
-        if(userService.getUserBy_id(userID)==null)
-        {
-            return new ResponseEntity("Errore User non presente nel db",HttpStatus.BAD_REQUEST);
+        if (userService.getUserBy_id(userID) == null) {
+            return new ResponseEntity("Errore User non presente nel db", HttpStatus.BAD_REQUEST);
         }
         userService.ableUser(userID);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -151,9 +131,8 @@ public class UserController {
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/delete", method = RequestMethod.DELETE)
     public ResponseEntity deleteUserByID(@PathVariable ObjectId userID) {
-        if(userService.getUserBy_id(userID)==null)
-        {
-            return new ResponseEntity("Errore User non presente nel db",HttpStatus.BAD_REQUEST);
+        if (userService.getUserBy_id(userID) == null) {
+            return new ResponseEntity("Errore User non presente nel db", HttpStatus.BAD_REQUEST);
         }
         userService.deleteUserbyID(userID);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -163,20 +142,17 @@ public class UserController {
     @RequestMapping(value = "/users/modify/{userID}", method = RequestMethod.PUT)
     public ResponseEntity modifyUserByID(@PathVariable ObjectId userID, @RequestBody modifyRoleUserVM modifyRoleUser) {
 
-        if(userService.getUserBy_id(userID)==null)
-        {
-            return new ResponseEntity("Errore User non presente nel db",HttpStatus.BAD_REQUEST);
+        if (userService.getUserBy_id(userID) == null) {
+            return new ResponseEntity("Errore User non presente nel db", HttpStatus.BAD_REQUEST);
         }
 
-        if((modifyRoleUser.getAvailability() == null)||(modifyRoleUser.getStopAndata() == null) || (modifyRoleUser.getStopRitorno() == null))
-            return new ResponseEntity("Errore nel passaggio dei parametri",HttpStatus.BAD_REQUEST);
-
-        //if(controlData())
+        if ((modifyRoleUser.getAvailability() == null) || (modifyRoleUser.getStopAndata() == null) || (modifyRoleUser.getStopRitorno() == null))
+            return new ResponseEntity("Errore nel passaggio dei parametri", HttpStatus.BAD_REQUEST);
 
         try {
-            userService.editUser(userID,modifyRoleUser);
+            userService.editUser(userID, modifyRoleUser);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
 
@@ -184,11 +160,11 @@ public class UserController {
     }
 
 
+    @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/users/{userID}/getLines", method = RequestMethod.GET)
     public ResponseEntity getUserLines(@PathVariable ObjectId userID) {
-        if(userService.getUserBy_id(userID)==null)
-        {
-            return new ResponseEntity("Errore User non presente nel db",HttpStatus.BAD_REQUEST);
+        if (userService.getUserBy_id(userID) == null) {
+            return new ResponseEntity("Errore User non presente nel db", HttpStatus.BAD_REQUEST);
         }
 
         UserRouteVM userVM = userService.getRoutesUser(userID);

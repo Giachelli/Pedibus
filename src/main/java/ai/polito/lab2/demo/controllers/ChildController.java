@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -46,6 +47,7 @@ public class ChildController {
     @Autowired
     private ChildService childService;
 
+    @Secured("ROLE_USER")
     @ApiOperation("Endpoint per la registrazione di un bambino")
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = { @ApiResponse(code = 201, message = "Bimbo creato"),
@@ -97,6 +99,7 @@ public class ChildController {
     */
 
     // vanno aggiunti più query params
+    @Secured("ROLE_USER")
     @ApiOperation("Endpoint per avere i bambini registrati da uno user")
     @RequestMapping(value = "/user/children", method = RequestMethod.GET)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok"),
@@ -115,6 +118,7 @@ public class ChildController {
         return new ResponseEntity(childrenVM, HttpStatus.OK);
     }
 
+    @Secured({"ROLE_USER","ROLE_SYSTEM_ADMIN"})
     @ApiOperation("Endpoint per cancellare i bambini registrati da uno user")
     @RequestMapping(value = "/user/child", method = RequestMethod.DELETE)
     @ApiResponses(value = { @ApiResponse(code = 204, message = "Bimbo cancellato con successo"),
