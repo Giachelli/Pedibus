@@ -138,8 +138,9 @@ public class UserService implements IUserService {
 
     /**
      * funzione che serve dopo che l'utente ha inserito i dati per andare a confermare il tutto
+     *
      * @param randomUUID stringa random associata all'utente in fase di creazione
-     * @param userVM dati inseriti dall'utente
+     * @param userVM     dati inseriti dall'utente
      * @return come viene salvato lo user sul db
      */
     @Override
@@ -214,6 +215,7 @@ public class UserService implements IUserService {
 
     /**
      * funzione per disabilitare l'utente
+     *
      * @param userID id dell'utente da disabilitare
      */
     @Override
@@ -225,6 +227,7 @@ public class UserService implements IUserService {
 
     /**
      * funzione per abilitare l'utente
+     *
      * @param userID id dell'utente da abilitare
      */
     @Override
@@ -269,6 +272,7 @@ public class UserService implements IUserService {
 
     /**
      * funzione che ritorna il view model per il login
+     *
      * @param username username dell'utente che si vuole loggare
      * @return informazioni dell'utente
      */
@@ -277,17 +281,25 @@ public class UserService implements IUserService {
         User u = userRepo.findUserByUsername(username);
 
 
-
-        return LoginUserVM.builder().userID(u.get_id().toString())
+        LoginUserVM userVM = LoginUserVM.builder().userID(u.get_id().toString())
                 .username(u.getUsername())
                 .roles(u.getRolesString())
                 .muleRoutes(u.getMuleRoutesID())
                 .family_name(u.getFamily_name())
                 .adminRoutes(u.getAdminRoutesID())
-                .andataStop(u.getUserVMMapStop(u.getAndataStops()))
-                .ritornoStop(u.getUserVMMapStop(u.getRitornoStops()))
-                .childsNumber(u.getChildsID().size())
                 .build();
+
+        if (u.getRolesString().contains("ROLE_MULE")) {
+            userVM.setAndataStop(u.getUserVMMapStop(u.getAndataStops()));
+            userVM.setRitornoStop(u.getUserVMMapStop(u.getRitornoStops()));
+        }
+
+        if(u.getChildsID() != null)
+        {
+            userVM.setChildsNumber(u.getChildsID().size());
+        }
+
+        return userVM;
     }
 
     @Override
@@ -314,13 +326,11 @@ public class UserService implements IUserService {
                     throw new Exception(error);
                     //return new ResponseEntity(HttpStatus.BAD_REQUEST);
                 }
-                if(r.getUsernameAdmin().contains(user.getUsername())) {
+                if (r.getUsernameAdmin().contains(user.getUsername())) {
                     r.removeAdmin(user.getUsername());
                     adminBefore.add(i);
-                }
-                else
-                {
-                    throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Settaggio db errore");
+                } else {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Settaggio db errore");
                 }
                 routeService.saveRoute(r);
             }
@@ -332,15 +342,14 @@ public class UserService implements IUserService {
                     String error = "Errore nella modify USer passo un id route non esistente";
                     logger.error(error);
                     throw new Exception(error);
-                   //return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    //return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
                 }
 
-                if(r.getUsernameMule().contains(user.getUsername())) {
+                if (r.getUsernameMule().contains(user.getUsername())) {
                     r.removeMule(user.getUsername());
                     muleBefore.add(i);
-                }else
-                {
+                } else {
                     throw new Exception("Errore nel precaricamento file");
                 }
 
@@ -351,7 +360,7 @@ public class UserService implements IUserService {
         //Check if the array of integers passed with the request is empty (admin routes id case)
         if (adminRoutes.size() == 0) {
             //if the array is empty = the user isn't admin for any routes and we delete the role "admin" from his role list
-            if (user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN"))){
+            if (user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN"))) {
                 user.removeRole(roleRepository.findByRole("ROLE_ADMIN"));
             }
 
@@ -369,8 +378,7 @@ public class UserService implements IUserService {
                 // controllo che non sia già Admin per la linea
                 adminRouteID.add(i);
                 Route addAdminRoute = routeService.getRoutesByName(r.getNameR());
-                if(addAdminRoute.getUsernameAdmin() == null)
-                {
+                if (addAdminRoute.getUsernameAdmin() == null) {
                     addAdminRoute.addAdmin(user.getUsername());
                     routeService.saveRoute(addAdminRoute);
                 }
@@ -390,7 +398,7 @@ public class UserService implements IUserService {
         //Check if the array of integers passed with the request is empty (mule routes id case)
         if (muleRoutes.size() == 0) {
             //the same of admin cases
-            if (user.getRoles().contains(roleRepository.findByRole("ROLE_MULE"))){
+            if (user.getRoles().contains(roleRepository.findByRole("ROLE_MULE"))) {
                 user.removeRole(roleRepository.findByRole("ROLE_MULE"));
             }
         } else {
@@ -406,12 +414,11 @@ public class UserService implements IUserService {
 
                 muleRouteID.add(j);
                 Route addMuleRoute = routeService.getRoutesByName(r.getNameR());
-                if (addMuleRoute.getUsernameMule() == null)
-                {
+                if (addMuleRoute.getUsernameMule() == null) {
                     addMuleRoute.addMule(user.getUsername());
                     routeService.saveRoute(addMuleRoute);
                 }
-                if (!addMuleRoute.getUsernameMule().contains(user.getUsername()) ) {
+                if (!addMuleRoute.getUsernameMule().contains(user.getUsername())) {
                     addMuleRoute.addMule(user.getUsername());
                     routeService.saveRoute(addMuleRoute);
                 }
@@ -430,7 +437,7 @@ public class UserService implements IUserService {
         this.saveUser(user);
 
         long day = new Date().getTime();
-        HashMap<Integer,ArrayList<String>> otherAdmins = new HashMap<Integer, ArrayList<String>>(); // mappa che contiene le linee a cui non sarò più admin e i relativi admin
+        HashMap<Integer, ArrayList<String>> otherAdmins = new HashMap<Integer, ArrayList<String>>(); // mappa che contiene le linee a cui non sarò più admin e i relativi admin
         ArrayList<Integer> old_newRoute = new ArrayList<>();
         old_newRoute.addAll(adminBefore);
         old_newRoute.addAll(adminRoutes);
@@ -439,27 +446,27 @@ public class UserService implements IUserService {
 
         /* messaggio che deve arrivare agli admin di linea */
 
-        for (Integer i : old_newRoute){
-            if(otherAdmins.containsKey(i)) //evito di mandare due notifiche agli admin delle linee che rimangono invariate
+        for (Integer i : old_newRoute) {
+            if (otherAdmins.containsKey(i)) //evito di mandare due notifiche agli admin delle linee che rimangono invariate
                 continue;
             Route r = routeService.getRoutesByID(i);
-            if (r.getUsernameAdmin()!=null && r.getUsernameAdmin().size()!=0){
-                for ( String s : r.getUsernameAdmin()){
+            if (r.getUsernameAdmin() != null && r.getUsernameAdmin().size() != 0) {
+                for (String s : r.getUsernameAdmin()) {
                     if (s.equals(user.getUsername()))
                         continue;
                     if (otherAdmins.containsKey(i)) //entra dalla seconda volta in poi
                         otherAdmins.get(i).add(s);
-                    else{ // entra la prima volta
-                        otherAdmins.put(i,new ArrayList<String>());
+                    else { // entra la prima volta
+                        otherAdmins.put(i, new ArrayList<String>());
                         otherAdmins.get(i).add(s);
                     }
                 }
             }
         }
-        for (Map.Entry<Integer,ArrayList<String>> entry: otherAdmins.entrySet()){
+        for (Map.Entry<Integer, ArrayList<String>> entry : otherAdmins.entrySet()) {
             String action = "I privilegi/disponibilità relativi allo user " + user.getUsername() + " aggiornati.";
             // mettere controllo che se entry.getValue è uguale al sender, allora il messaggio non va inviato
-            if (entry.getValue().contains(modifyRoleUser.getModifiedBy())){
+            if (entry.getValue().contains(modifyRoleUser.getModifiedBy())) {
                 entry.getValue().remove(modifyRoleUser.getModifiedBy());  // in questo modo il messaggio non dovrebbe arrivare a chi ha fatto l'operazione anche se admin di un altra linea per cui lo user ha subito delle variazioni
             }
             messageService.createMessageNewRolesOtherAdmins(modifyRoleUser.getModifiedBy(),
@@ -485,8 +492,8 @@ public class UserService implements IUserService {
         }
 
         /* seconda parte che riguarda lo user stesso */
-        if (!(modifyRoleUser.getModifiedBy().equals(this.getUserBy_id(user.get_id()).getUsername()))){
-            String action= "Privilegi aggiornati";
+        if (!(modifyRoleUser.getModifiedBy().equals(this.getUserBy_id(user.get_id()).getUsername()))) {
+            String action = "Privilegi aggiornati";
             messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
                     user.get_id(),
                     action,
@@ -509,7 +516,7 @@ public class UserService implements IUserService {
     }*/
 
     @Override
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userRepo.findAll();
     }
 
