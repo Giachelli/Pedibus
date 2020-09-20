@@ -67,7 +67,7 @@ public class DataInitializer implements CommandLineRunner {
                     .password(this.passwordEncoder.encode("12345@dmin"))
                     .roles(Arrays.asList(roleRepository.findByRole("ROLE_USER"),
                             roleRepository.findByRole("ROLE_SYSTEM_ADMIN"),
-                            roleRepository.findByRole("ROLE_MULE")))
+                            roleRepository.findByRole("ROLE_ADMIN")))
                     .isEnabled(true)
                     .build()
             );
