@@ -639,57 +639,63 @@ public class ReservationServiceImpl implements ReservationService {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         ObjectId childID = new ObjectId(reservationVM.getChildID());
 
-        List<Reservation>  deleted = reservationRepo.findReservationByChildIDAndDateAndDirection(childID,data,reservationVM.getDirection());
+        ObjectId muleId = userService.getUserByUsername(reservationVM.getMuleUsername()).get_id();
+        if(shiftService.getTurnsByLineaIDMuleIDDateDirection(id_linea, muleId, data, reservationVM.getDirection()).size()>0){
+            List<Reservation>  deleted = reservationRepo.findReservationByChildIDAndDateAndDirection(childID,data,reservationVM.getDirection());
 
-        //eventualmente si può fare una sorta di update qui
+            //eventualmente si può fare una sorta di update qui
 
-        Reservation r = Reservation.builder()
-                .childID(childID)
-                .stopID(stopID)
-                .direction(reservationVM.getDirection())
-                .familyName(childService.findChildbyID(childID).getFamily_name())
-                .name_route(routeService.getRoutesByID(id_linea).getNameR())
-                .date(data)
-                .build();
+            Reservation r = Reservation.builder()
+                    .childID(childID)
+                    .stopID(stopID)
+                    .direction(reservationVM.getDirection())
+                    .familyName(childService.findChildbyID(childID).getFamily_name())
+                    .name_route(routeService.getRoutesByID(id_linea).getNameR())
+                    .date(data)
+                    .build();
 
-        if(deleted.size() >0)
-            r.setId(deleted.get(0).getId());
-
-
-        r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
-        r.setBooked(false);
-        r.setInPlace(true);
+            if(deleted.size() >0)
+                r.setId(deleted.get(0).getId());
 
 
-        r = this.saveAndGet(r);
+            r.setRouteID(routeService.getRoutesByName(r.getName_route()).getId());
+            r.setBooked(false);
+            r.setInPlace(true);
 
-        logger.info("RESEERVATIOOON appena SALVATAAAAAA:" + r.getDirection());
 
-        //  Reservation r = reservationService.createReservation(reservationDTO);
-        //  String idReservation = r.getId().toString();
+            r = this.saveAndGet(r);
 
-        //TODO: messaggio per bimbo preso in carico al genitore
-        ChildReservationVM childReservationVM =
-                ChildReservationVM.builder()
-                        .childID(childID.toString())
-                        .nameChild(childService.findChildbyID(childID).getNameChild())
-                        .nameFamily(reservationVM.getFamily_name())
-                        .booked(false)
-                        .inPlace(true)
-                        .build();
+            logger.info("RESEERVATIOOON appena SALVATAAAAAA:" + r.getDirection());
 
-        String action= "Bambino non prenotato ma preso in carico";
-        long day = new Date().getTime();
-        if(reservationVM.getMuleUsername() == null ||reservationVM.getMuleUsername() =="")
-            reservationVM.setMuleUsername("admin@info.it");
-        messageService.createMessageChildinPlace(reservationVM.getMuleUsername(), // deve essere il mule che effettua l'azione
-                childService.findChildbyID(childID).getUsername(),
-                action,
-                day,
-                childService.findChildbyID(childID).getChildID(),
-                r.getId()
-        );
-        return childReservationVM;
+            //  Reservation r = reservationService.createReservation(reservationDTO);
+            //  String idReservation = r.getId().toString();
+
+            //TODO: messaggio per bimbo preso in carico al genitore
+            ChildReservationVM childReservationVM =
+                    ChildReservationVM.builder()
+                            .childID(childID.toString())
+                            .nameChild(childService.findChildbyID(childID).getNameChild())
+                            .nameFamily(reservationVM.getFamily_name())
+                            .booked(false)
+                            .inPlace(true)
+                            .build();
+
+            String action= "Bambino non prenotato ma preso in carico";
+            long day = new Date().getTime();
+            if(reservationVM.getMuleUsername() == null ||reservationVM.getMuleUsername() =="")
+                reservationVM.setMuleUsername("admin@info.it");
+            messageService.createMessageChildinPlace(reservationVM.getMuleUsername(), // deve essere il mule che effettua l'azione
+                    childService.findChildbyID(childID).getUsername(),
+                    action,
+                    day,
+                    childService.findChildbyID(childID).getChildID(),
+                    r.getId()
+            );
+            return childReservationVM;
+
+        } else {
+            return null;
+        }
     }
 }
 

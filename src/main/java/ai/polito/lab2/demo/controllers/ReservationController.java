@@ -116,7 +116,11 @@ public class ReservationController {
 
         ChildReservationVM childReservationVM = reservationService.createNotBookedRes(reservationVM,data,id_linea);
 
-        return new ResponseEntity<>(childReservationVM,HttpStatus.CREATED);
+        if(childReservationVM == null){
+            return new ResponseEntity<>("Non sei abilitato in questo turno",HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity(childReservationVM, HttpStatus.CREATED);
+        }
     }
 
 
