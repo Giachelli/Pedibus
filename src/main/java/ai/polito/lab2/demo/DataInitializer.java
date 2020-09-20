@@ -75,7 +75,6 @@ public class DataInitializer implements CommandLineRunner {
                     .isEnabled(true)
                     .build()
             );
-            System.out.println("Siamo sopra al populateDB");
             routeController.PopulateDb();
             if(addRouteId)
             {
@@ -219,12 +218,12 @@ public class DataInitializer implements CommandLineRunner {
         Role role = this.roleRepository.findByRole("ROLE_USER");
 
         ArrayList<Boolean> disp = new ArrayList<>();
-        disp.add(true);
-        disp.add(true);
-        disp.add(false);
         disp.add(false);
         disp.add(true);
         disp.add(false);
+        disp.add(false);
+        disp.add(true);
+        disp.add(true);
         disp.add(false);
 
         HashMap<Integer, ArrayList<ObjectId>> andata = new HashMap<>();

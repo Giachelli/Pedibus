@@ -402,7 +402,12 @@ public class ReservationServiceImpl implements ReservationService {
             return r.get(0);
     }
 
-
+    /**
+     * Funzione che controlla se lo stop appartiene alla route
+     * @param id_route id della route
+     * @param stopID id dello stop
+     * @return false se tutto ok
+     */
     public boolean controlName_RouteAndStop(int id_route, String stopID) {
         Route route = routeService.getRoutesByID(id_route);
         boolean found = false;
@@ -430,7 +435,7 @@ public class ReservationServiceImpl implements ReservationService {
         Route route = routeService.getRoutesByID(id_linea);
         ArrayList<Child> allChildren = (ArrayList<Child>) childService.findAllChild();
         if (allChildren.size() == 0)
-            throw new Exception("Errore nel numero di bambini presenti nel db");
+            throw new Exception("Nessun bambino presente nel db");
 
         ArrayList<Child> children = new ArrayList<>();
         children.addAll(allChildren);
@@ -582,6 +587,8 @@ public class ReservationServiceImpl implements ReservationService {
         if (r.isInPlace()){
             String action= "Bambino preso in carico";
             long day = new Date().getTime();
+            if(childID.getUsernameMule()== null ||childID.getUsernameMule() =="")
+                childID.setUsernameMule("admin@info.it");
             messageService.createMessageChildinPlace(childID.getUsernameMule(), // deve essere il mule che effettua l'azione
                     childService.findChildbyID(r.getChildID()).getUsername(),
                     action,
@@ -646,6 +653,8 @@ public class ReservationServiceImpl implements ReservationService {
 
         String action= "Bambino non prenotato ma preso in carico";
         long day = new Date().getTime();
+        if(reservationVM.getMuleUsername() == null ||reservationVM.getMuleUsername() =="")
+            reservationVM.setMuleUsername("admin@info.it");
         messageService.createMessageChildinPlace(reservationVM.getMuleUsername(), // deve essere il mule che effettua l'azione
                 childService.findChildbyID(childID).getUsername(),
                 action,
