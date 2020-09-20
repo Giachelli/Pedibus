@@ -161,8 +161,14 @@ public class ReservationServiceImpl implements ReservationService {
         String action = "Prenotazione bimbo";
         long day = new Date().getTime();
 
+        Set<String> accompagnatori = new HashSet<String>();
+
+        for (String s : routeService.getAccompagnaotori(r.getRouteID())){
+            accompagnatori.add(s);
+        }
+
         messageService.createMessageReservation(senderID,
-                new ArrayList<>(routeService.getAccompagnaotori(r.getRouteID())),
+                new ArrayList<>(accompagnatori),
                 action,
                 day,
                 r.getId(),

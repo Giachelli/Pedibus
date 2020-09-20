@@ -203,7 +203,7 @@ public class MessageServiceImpl implements MessageService {
                     .route(shift.getLineaID())
                     .startID(shift.getStartID())
                     .stopID(shift.getStopID())
-                    .direction(shift.isDirection())
+                    .direzione(shift.isDirection())
                     .muleName(userService.getUserBy_id(shift.getMuleID()).getUsername())
                     .read(false)
                     .messageDeleteTurn(true)
@@ -338,7 +338,7 @@ public class MessageServiceImpl implements MessageService {
                                 .messageShiftRequest(true) //TODO: dopo aver parlato con gli altri
                                 .status(message.getStatus())
                                 .dateShift(date)
-                                .direction(message.isDirection())
+                                .direction(shift.isDirection())
                                 .nameLinea(routeService.getRoutesByID(shift.getLineaID()).getNameR())
                                 .build();
                         messageVMS.add(messageVM);
@@ -365,7 +365,7 @@ public class MessageServiceImpl implements MessageService {
                                 .muleName(message.getMuleName())
                                 .messageDeleteTurn(true) //TODO: dopo aver parlato con gli altri
                                 .dateShift(date)
-                                .direction(message.isDirection())
+                                .direction(message.isDirezione())
                                 .nameLinea(routeService.getRoutesByID(message.getRoute()).getNameR())
                                 .build();
                         messageVMS.add(messageVM);

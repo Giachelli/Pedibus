@@ -24,7 +24,7 @@ public class Message {
     Integer route; // utilizzato solo quando ci sono other admin e cancellazione turno
     ObjectId startID;
     ObjectId stopID;
-    boolean direction;
+    boolean direzione;
     String muleName;
     ObjectId reservationID;
     ObjectId childID;
