@@ -48,16 +48,6 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private ChildService childService;
-
-    @Autowired
-    private UserService userService;
-
-
-    @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
@@ -133,15 +123,12 @@ public class ReservationController {
         return new ResponseEntity<>(childReservationVM,HttpStatus.CREATED);
     }
 
-    //TODO rivevedere implementazione objectID ChildID in base ad angular
-
-    //TODO vedere se si può skippare e fare solo lato angular)
 
     /**
      * RICHIESTA per confermare o meno presenza del bambino
      * @param id_fermata id della fermata in cui si presenta bimbo
      * @param data i millesecondi della data
-     * @param childID id del bimbo non prenotato che si è comunque presentato
+     * @param childConfirmVM id del bimbo non prenotato che si è comunque presentato + usrname mule
      * @return
      * @throws JsonProcessingException
      * @throws ParseException
@@ -335,19 +322,6 @@ public class ReservationController {
         return new ResponseEntity<>(request,HttpStatus.OK);
     }
 
-
-    // TODO: da cancellare probably
-
-
-   /* @Secured({"ROLE_USER", "ROLE_MULE"})
-    @RequestMapping(value = "/reservations", method = RequestMethod.GET)
-    public ResponseEntity<List<Reservation>> getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
-        System.out.println("CHILDID :" + childID);
-        List<Reservation> request = reservationService.findReservationByChildID(childID);
-
-        return new ResponseEntity<>(request,HttpStatus.OK);
-    }*/
-
    // TODO: prendersi anche l'ora della fermata
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
@@ -378,12 +352,6 @@ public class ReservationController {
         return noContent().build();
     }
 
-    /**
-     * Funzione che controlla se lo stop appartiene alla route
-     * @param id_route id della route
-     * @param stopID id dello stop
-     * @return false se tutto ok
-     */
 
 
 
