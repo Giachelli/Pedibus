@@ -23,7 +23,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
 
         final String expired = (String) httpServletRequest.getAttribute("expired");
-        System.out.println("EXPIRED" + expired);
+        logger.info("EXPIRED " + expired);
         /* da capire perchè avremmo fatto cosi */
         /*
         if (expired!=null){

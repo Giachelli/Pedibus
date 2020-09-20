@@ -110,7 +110,6 @@ public class RouteController {
             byte[] bytes = file.getBytes();
             Path path = Paths.get(file.getOriginalFilename());
             Files.write(path, bytes);
-            System.out.println(path.getFileName());
             routeVM = routeService.readSingle(path.toFile());
             /*File myObj = new File(path.getFileName().toString());
             if (myObj.delete()) {

@@ -53,8 +53,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     String firstDay;
 
-
-
     Logger logger = LoggerFactory.getLogger(ReservationController.class);
 
 
@@ -86,6 +84,11 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    /**
+     * funzione per calcolare quanti giorni mancano all'inizio della scuola,
+     * o da quanti giorni è iniziata
+     * @return il numero di giorni a/dall'inizio della scuola
+     */
     @Override
     public int calculateFirstDay() {
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
@@ -106,11 +109,19 @@ public class ReservationServiceImpl implements ReservationService {
         return daysBetween;
     }
 
+    /**
+     * funzione per settare il primo giorno di scuola
+     * @param s stringa che rappresenta il
+     */
     @Override
     public void setFirstDay(String s) {
         this.firstDay = s;
     }
 
+    /**
+     * Funzione che ritorna il numero di prenotazioni per il giorno odierno
+     * @return il numero
+     */
     @Override
     public int findNumberReservationToday() {
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
@@ -128,6 +139,13 @@ public class ReservationServiceImpl implements ReservationService {
             return 0;
     }
 
+    /**
+     * Creare la reservation
+     * @param reservationVM campi passati da angular
+     * @param id_linea
+     * @param data
+     * @return
+     */
     @Override
     public ReservationCreatedVM createReservation(ReservationVM reservationVM, int id_linea, long data) {
 

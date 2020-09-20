@@ -3,7 +3,6 @@ package ai.polito.lab2.demo.controllers;
 import ai.polito.lab2.demo.Dto.UserDTO;
 import ai.polito.lab2.demo.Entity.Role;
 import ai.polito.lab2.demo.OnRecoverCompleteEvent;
-import ai.polito.lab2.demo.Repositories.RoleRepo;
 import ai.polito.lab2.demo.OnRegistrationCompleteEvent;
 import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.IUserService;
@@ -23,17 +22,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 //@RequestMapping("/auth")
@@ -248,4 +246,21 @@ public class AuthController {
             return new ResponseEntity(" NOT FOUND",HttpStatus.NOT_FOUND );
         }
     }
+
+    /**
+     * API per richiedere una nuova pwd
+     * @param randomUUID assegnato all'utente in fase di recover
+     * @return
+     */
+    @RequestMapping(value = "/recover/{randomUUID}", method = RequestMethod.GET)
+    @ApiOperation("per avere i campi della richiesta")
+    public ResponseEntity recover(@PathVariable String randomUUID) {
+        if (userService.getVerificationPassToken(randomUUID)) {
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(" NOT FOUND",HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
