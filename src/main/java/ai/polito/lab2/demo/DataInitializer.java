@@ -58,13 +58,13 @@ public class DataInitializer implements CommandLineRunner {
         routeId.add(4);
         routeId.add(6);
         setRoleDb();
-        if (users.findByUsername("admin@info.it") != null) {
+        if (users.findByUsername("giacomo.chelli4@gmail.com") != null) {
             addRouteId = false;
         } else {
             this.users.save(User.builder()
-                    .username("admin@info.it")
+                    .username("giacomo.chelli4@gmail.com")
                     .family_name("head of school")
-                    .password(this.passwordEncoder.encode("12345@dmin"))
+                    .password(this.passwordEncoder.encode("12345@Admin"))
                     .roles(Arrays.asList(roleRepository.findByRole("ROLE_USER"),
                             roleRepository.findByRole("ROLE_SYSTEM_ADMIN"),
                             roleRepository.findByRole("ROLE_ADMIN")))
@@ -74,7 +74,7 @@ public class DataInitializer implements CommandLineRunner {
             routeController.PopulateDb();
             if(addRouteId)
             {
-                User u = users.findByUsername("admin@info.it");
+                User u = users.findByUsername("giacomo.chelli4@gmail.com");
                 u.setAdminRoutesID(routeId);
                 users.save(u);
             }
@@ -95,8 +95,8 @@ public class DataInitializer implements CommandLineRunner {
         Route r2 = routeService.getRoutesByID(2);
 
 
-        r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r1.setUsernameAdmin(Arrays.asList("giacomo.chelli4@gmail.com"));
+        r2.setUsernameAdmin(Arrays.asList("giacomo.chelli4@gmail.com"));
         r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         routeService.saveRoute(r2);
@@ -105,8 +105,8 @@ public class DataInitializer implements CommandLineRunner {
         r1 = routeService.getRoutesByID(3);
         r2 = routeService.getRoutesByID(4);
 
-        r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
-        r2.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r1.setUsernameAdmin(Arrays.asList("giacomo.chelli4@gmail.com"));
+        r2.setUsernameAdmin(Arrays.asList("giacomo.chelli4@gmail.com"));
         r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         r2.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         routeService.saveRoute(r2);
@@ -114,7 +114,7 @@ public class DataInitializer implements CommandLineRunner {
 
 
         r1 = routeService.getRoutesByID(6);
-        r1.setUsernameAdmin(Arrays.asList("admin@info.it"));
+        r1.setUsernameAdmin(Arrays.asList("giacomo.chelli4@gmail.com"));
         r1.setUsernameMule(Arrays.asList("user1@info.it", "user2@info.it"));
         routeService.saveRoute(r1);
     }

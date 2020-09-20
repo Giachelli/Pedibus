@@ -170,7 +170,7 @@ public class UserService implements IUserService {
         String action = "Utente creato";
         long day = new Date().getTime();
         messageService.createMessageNewUser(user.get_id(),
-                getUserByUsername("admin@info.it").get_id(),
+                getUserByUsername("giacomo.chelli4@gmail.com").get_id(),
                 action,
                 day
         );

@@ -353,7 +353,7 @@ public class RouteServiceImpl implements RouteService {
                 throw new IOException(error);
             }
 
-            User user = userService.getUserByUsername(route.getUsernameAdmin().get(0));
+            User user = userService.getUserByUsername(route.getEmails());
             if(!user.getRoles().contains(roleRepository.findByRole("ROLE_ADMIN")))
                 user.addRole(roleRepository.findByRole("ROLE_ADMIN"));
             List<Stop> saved = stopRepo.saveAll(route.getStopListA());
@@ -361,7 +361,9 @@ public class RouteServiceImpl implements RouteService {
             stopRepo.saveAll(route.getStopListB());
             route.setUsernameAdmin(new ArrayList<>());
             route.setUsernameMule(new ArrayList<>());
-            route.getUsernameAdmin().add(route.getEmails());
+            List<String> addAdmin = new ArrayList<>();
+            addAdmin.add(route.getEmails());
+            route.setUsernameAdmin(addAdmin);
             Date date= new Date();
             long time = date.getTime();
             route.setLastModified(time);

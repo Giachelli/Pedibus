@@ -612,7 +612,7 @@ public class ReservationServiceImpl implements ReservationService {
                 String action = "Bambino preso in carico";
                 long day = new Date().getTime();
                 if (childID.getUsernameMule() == null || childID.getUsernameMule() == "")
-                    childID.setUsernameMule("admin@info.it");
+                    childID.setUsernameMule("giacomo.chelli4@gmail.com");
                 messageService.createMessageChildinPlace(childID.getUsernameMule(), // deve essere il mule che effettua l'azione
                         childService.findChildbyID(r.getChildID()).getUsername(),
                         action,
@@ -683,7 +683,7 @@ public class ReservationServiceImpl implements ReservationService {
             String action= "Bambino non prenotato ma preso in carico";
             long day = new Date().getTime();
             if(reservationVM.getMuleUsername() == null ||reservationVM.getMuleUsername() =="")
-                reservationVM.setMuleUsername("admin@info.it");
+                reservationVM.setMuleUsername("giacomo.chelli4@gmail.com");
             messageService.createMessageChildinPlace(reservationVM.getMuleUsername(), // deve essere il mule che effettua l'azione
                     childService.findChildbyID(childID).getUsername(),
                     action,

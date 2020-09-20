@@ -293,7 +293,7 @@ public class ChildServiceImpl implements ChildService {
         String action = "Bambino creato";
         long day = new Date().getTime();
         messageService.createMessageResp(userService.getUserByUsername(child.getUsername()).get_id(),
-                userService.getUserByUsername("admin@info.it").get_id(),
+                userService.getUserByUsername("giacomo.chelli4@gmail.com").get_id(),
                 child.getChildID(),
                 action,
                 day,
@@ -431,7 +431,7 @@ public class ChildServiceImpl implements ChildService {
 
         Child child = childRepo.findChildByChildID(childID);
         messageService.createMessageResp(userService.getUserByUsername(child.getUsername()).get_id(),
-                userService.getUserByUsername("admin@info.it").get_id(),
+                userService.getUserByUsername("giacomo.chelli4@gmail.com").get_id(),
                 child.getChildID(),
                 action,
                 day,
