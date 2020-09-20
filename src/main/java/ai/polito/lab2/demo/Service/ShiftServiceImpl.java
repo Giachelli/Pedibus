@@ -37,7 +37,7 @@ public class ShiftServiceImpl implements ShiftService {
         Shift shift = Shift.builder()
                 .muleID(t.getMuleID())
                 .AdminID(t.getAdminID())
-                .date(t.getData())
+                .date(t.getData()+7200000)
                 .lineaID(t.getLineId())
                 .direction(t.isDirection())
                 .status(t.getStatus())
@@ -79,6 +79,17 @@ public class ShiftServiceImpl implements ShiftService {
 
         shiftRepo.delete(this.getTurnByID(turnID));
 
+    }
+
+    @Override
+    public List<Shift> getTurnsByLineaIDMuleIDDateDirection(int routeID, ObjectId muleID, long date, String dir){
+        if(dir.equals("andata")){
+            return shiftRepo.findByLineaIDAndMuleIDAndDateAndDirection(routeID, muleID, date, true);
+        }else if(dir.equals("ritorno")){
+            return shiftRepo.findByLineaIDAndMuleIDAndDateAndDirection(routeID, muleID, date, false);
+        }else{
+            return null;
+        }
     }
 
     /**

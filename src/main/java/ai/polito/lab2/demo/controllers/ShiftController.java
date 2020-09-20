@@ -173,7 +173,7 @@ public class ShiftController {
      * @param routeID id della linea
      * @return ritorna tutti gli shift per quella linea
      */
-    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
+    @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/shift/{routeID}", method = RequestMethod.GET)
     @ApiOperation("get dei turni per una linea")
     public ResponseEntity getRouteShifts(@ApiParam("id della linea")@PathVariable final int routeID){

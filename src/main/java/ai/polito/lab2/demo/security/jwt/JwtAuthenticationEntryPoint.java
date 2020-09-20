@@ -23,7 +23,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
 
         final String expired = (String) httpServletRequest.getAttribute("expired");
+
         logger.info("EXPIRED " + expired);
+        logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
+        httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());
+
         /* da capire perchè avremmo fatto cosi */
         /*
         if (expired!=null){
@@ -35,10 +39,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());
         }
         */
-        if (expired!=null) {
+        /*if (expired!=null) {
             logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
             httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());
-        }
+        }*/
     }
 
 }

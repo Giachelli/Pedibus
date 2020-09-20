@@ -94,7 +94,6 @@ public class ChildServiceImpl implements ChildService {
         query.addCriteria(Criteria.where("nameChild").is(nameChild).and("username").is(username));
         List<Child> child= mongoTemplate.find(query, Child.class);
         if (child!= null && child.size()!= 0){
-            System.out.println("child list size::::::::" + child.size());
             return child.get(0);
         }
         else
@@ -217,11 +216,11 @@ public class ChildServiceImpl implements ChildService {
                         today.set(Calendar.HOUR_OF_DAY, 0);
                         int day = 0;
                         long dataTimeStamp;
-                        int j = 10;
+                        int j = 200;
                         boolean correct = false;
                         int offsetDayOne = reservationService.calculateFirstDay();
                         for (int h = 0; h < j; h++) {
-                            if(!correct) {
+                            if (!correct) {
                                 if (offsetDayOne > 0) {
                                     today.add(Calendar.DATE, offsetDayOne);
                                     correct = true;

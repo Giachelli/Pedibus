@@ -24,6 +24,8 @@ public interface ShiftService {
 
     boolean controlDoubleTurn(String username, long data, boolean direction);
 
+    List<Shift> getTurnsByLineaIDMuleIDDateDirection(int routeID, ObjectId muleID, long date, String dir);
+
     List<ShiftCreateVM> getAllTurnsDate(int routeID);
 
     int findNumberShiftToday();
