@@ -361,7 +361,9 @@ public class RouteServiceImpl implements RouteService {
             stopRepo.saveAll(route.getStopListB());
             route.setUsernameAdmin(new ArrayList<>());
             route.setUsernameMule(new ArrayList<>());
-            route.getUsernameAdmin().add(route.getEmails());
+            List<String> addAdmin = new ArrayList<>();
+            addAdmin.add(route.getEmails());
+            route.setUsernameAdmin(addAdmin);
             Date date= new Date();
             long time = date.getTime();
             route.setLastModified(time);

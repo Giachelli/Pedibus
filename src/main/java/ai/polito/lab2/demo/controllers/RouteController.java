@@ -111,6 +111,7 @@ public class RouteController {
             Path path = Paths.get(file.getOriginalFilename());
             Files.write(path, bytes);
             routeVM = routeService.readSingle(path.toFile());
+            adminVMList.addAll(routeVM.getUsernameAdmin());
             /*File myObj = new File(path.getFileName().toString());
             if (myObj.delete()) {
                 System.out.println("Deleted the file: " + myObj.getName());
