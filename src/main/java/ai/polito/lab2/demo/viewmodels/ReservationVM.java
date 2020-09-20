@@ -14,4 +14,5 @@ public class ReservationVM {
     private String stopID;
     private String direction;
     private String family_name;
+    private String muleUsername;
 }

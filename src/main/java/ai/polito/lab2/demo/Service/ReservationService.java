@@ -55,7 +55,7 @@ public interface ReservationService {
 
     GetChildrenReservationVM returnChild(int id_linea, long data) throws Exception;
 
-    ChildReservationVM confirmPresence(Reservation r, long data, String childID, String id_fermata);
+    ChildReservationVM confirmPresence(Reservation r, long data, childConfirmVM childID, String id_fermata);
 
     ChildReservationVM createNotBookedRes(ReservationVM reservationVM, long data, int id_linea);
 }
