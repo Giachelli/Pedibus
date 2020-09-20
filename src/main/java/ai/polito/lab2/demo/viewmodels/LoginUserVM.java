@@ -15,5 +15,5 @@ public class LoginUserVM {
     private String family_name;
     private List<String> roles;
     private Set<Integer> adminRoutes;
-    private Set<Integer> adminMules;
+    private Set<Integer> muleRoutes;
 }

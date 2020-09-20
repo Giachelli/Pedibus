@@ -151,7 +151,11 @@ public class ReservationController {
         }
 
         ChildReservationVM childReservationVM = reservationService.confirmPresence(r,data,childConfirmVM,id_fermata);
-        return new ResponseEntity(childReservationVM, HttpStatus.OK);
+        if(childReservationVM == null){
+            return new ResponseEntity<>("Non sei abilitato in questo turno",HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity(childReservationVM, HttpStatus.OK);
+        }
     }
 
     /**

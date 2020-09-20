@@ -279,7 +279,7 @@ public class UserService implements IUserService {
         return LoginUserVM.builder().userID(u.get_id().toString())
                 .username(u.getUsername())
                 .roles(u.getRolesString())
-                .adminMules(u.getMuleRoutesID())
+                .muleRoutes(u.getMuleRoutesID())
                 .family_name(u.getFamily_name())
                 .adminRoutes(u.getAdminRoutesID())
                 .build();

@@ -51,6 +51,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private ChildRepo childRepo;
 
+    @Autowired
+    private ShiftService shiftService;
+
     String firstDay;
 
     Logger logger = LoggerFactory.getLogger(ReservationController.class);
@@ -598,31 +601,37 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ChildReservationVM confirmPresence(Reservation r, long data, childConfirmVM childID, String id_fermata) {
+        ObjectId muleId = userService.getUserByUsername(childID.getUsernameMule()).get_id();
+        System.out.println(shiftService.getTurnsByLineaIDMuleIDDateDirection(r.getRouteID(), muleId, r.getDate(), r.getDirection()));
+        if(shiftService.getTurnsByLineaIDMuleIDDateDirection(r.getRouteID(), muleId, r.getDate(), r.getDirection()).size()>0) {
+            System.out.println(shiftService.getTurnsByLineaIDMuleIDDateDirection(r.getRouteID(), muleId, r.getDate(), r.getDirection()));
+            // if (inplace = true) => fai partire messaggio
+            logger.info("Change presence bambino " + childID + " data " + data + " stopID " + id_fermata + "from " + r.isInPlace() + " to " + !r.isInPlace());
+            r.setInPlace(!r.isInPlace());
+            if (r.isInPlace()) {
+                String action = "Bambino preso in carico";
+                long day = new Date().getTime();
+                if (childID.getUsernameMule() == null || childID.getUsernameMule() == "")
+                    childID.setUsernameMule("admin@info.it");
+                messageService.createMessageChildinPlace(childID.getUsernameMule(), // deve essere il mule che effettua l'azione
+                        childService.findChildbyID(r.getChildID()).getUsername(),
+                        action,
+                        day,
+                        childService.findChildbyID(r.getChildID()).getChildID(),
+                        r.getId());
+            }
 
-        // if (inplace = true) => fai partire messaggio
-        logger.info("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
-        r.setInPlace(!r.isInPlace());
-        if (r.isInPlace()){
-            String action= "Bambino preso in carico";
-            long day = new Date().getTime();
-            if(childID.getUsernameMule()== null ||childID.getUsernameMule() =="")
-                childID.setUsernameMule("admin@info.it");
-            messageService.createMessageChildinPlace(childID.getUsernameMule(), // deve essere il mule che effettua l'azione
-                    childService.findChildbyID(r.getChildID()).getUsername(),
-                    action,
-                    day,
-                    childService.findChildbyID(r.getChildID()).getChildID(),
-                    r.getId());
+            this.save(r);
+            ChildReservationVM childReservationVM = ChildReservationVM.builder()
+                    .childID(r.getChildID().toString())
+                    .inPlace(r.isInPlace())
+                    .booked(r.isBooked())
+                    .nameFamily(r.getFamilyName())
+                    .nameChild(childService.findChildbyID(r.getChildID()).getNameChild()).build();
+            return childReservationVM;
+        }else{
+            return null;
         }
-
-        this.save(r);
-        ChildReservationVM childReservationVM = ChildReservationVM.builder()
-                .childID(r.getChildID().toString())
-                .inPlace(r.isInPlace())
-                .booked(r.isBooked())
-                .nameFamily(r.getFamilyName())
-                .nameChild(childService.findChildbyID(r.getChildID()).getNameChild()).build();
-        return childReservationVM;
     }
 
     @Override

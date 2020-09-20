@@ -81,6 +81,17 @@ public class ShiftServiceImpl implements ShiftService {
 
     }
 
+    @Override
+    public List<Shift> getTurnsByLineaIDMuleIDDateDirection(int routeID, ObjectId muleID, long date, String dir){
+        if(dir.equals("andata")){
+            return shiftRepo.findByLineaIDAndMuleIDAndDateAndDirection(routeID, muleID, date, true);
+        }else if(dir.equals("ritorno")){
+            return shiftRepo.findByLineaIDAndMuleIDAndDateAndDirection(routeID, muleID, date, false);
+        }else{
+            return null;
+        }
+    }
+
     /**
      * Ritorna lo shift richiesto
      * @param turnID id dello shift da ritornare
