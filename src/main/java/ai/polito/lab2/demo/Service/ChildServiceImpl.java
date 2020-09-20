@@ -149,7 +149,7 @@ public class ChildServiceImpl implements ChildService {
                         today.set(Calendar.HOUR_OF_DAY, 0);
                         int day = 0;
                         long dataTimeStamp;
-                        int j = 10;
+                        int j = 200;
                         boolean correct = false;
                         int offsetDayOne = reservationService.calculateFirstDay();
                         for (int k = 0; k < j; k++) {

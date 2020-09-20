@@ -149,11 +149,11 @@ public class ReservationController {
     @Secured({"ROLE_MULE"})
     @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
     @ApiOperation("RICHIESTA per confermare o meno presenza del bambino")
-    public ResponseEntity confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody final String childID) throws JsonProcessingException, ParseException {
+    public ResponseEntity confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody childConfirmVM childConfirmVM) throws JsonProcessingException, ParseException {
 
         Reservation r = null;
         try {
-            r = reservationService.findReservationByStopIDAndDataAndChildID(new ObjectId(id_fermata), data, new ObjectId(childID));
+            r = reservationService.findReservationByStopIDAndDataAndChildID(new ObjectId(id_fermata), data, new ObjectId(childConfirmVM.getChildID()));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,7 +167,7 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        ChildReservationVM childReservationVM = reservationService.confirmPresence(r,data,childID,id_fermata);
+        ChildReservationVM childReservationVM = reservationService.confirmPresence(r,data,childConfirmVM,id_fermata);
         return new ResponseEntity(childReservationVM, HttpStatus.OK);
     }
 

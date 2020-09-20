@@ -44,8 +44,6 @@ public class RouteController {
 
     @Autowired
     private RouteService routeService;
-    @Autowired
-    private UserService userService;
 
     @Autowired
     ApplicationEventPublisher eventPublisher;

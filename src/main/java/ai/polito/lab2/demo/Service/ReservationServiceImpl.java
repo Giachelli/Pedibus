@@ -568,7 +568,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ChildReservationVM confirmPresence(Reservation r, long data, String childID, String id_fermata) {
+    public ChildReservationVM confirmPresence(Reservation r, long data, childConfirmVM childID, String id_fermata) {
 
         // if (inplace = true) => fai partire messaggio
         logger.info("Change presence bambino "+childID+" data "+data+ " stopID "+id_fermata+"from "+r.isInPlace()+" to "+!r.isInPlace());
@@ -576,7 +576,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (r.isInPlace()){
             String action= "Bambino preso in carico";
             long day = new Date().getTime();
-            messageService.createMessageChildinPlace("admin@info.it", // deve essere il mule che effettua l'azione
+            messageService.createMessageChildinPlace(childID.getUsernameMule(), // deve essere il mule che effettua l'azione
                     childService.findChildbyID(r.getChildID()).getUsername(),
                     action,
                     day,
@@ -640,7 +640,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         String action= "Bambino non prenotato ma preso in carico";
         long day = new Date().getTime();
-        messageService.createMessageChildinPlace("admin@info.it", // deve essere il mule che effettua l'azione
+        messageService.createMessageChildinPlace(reservationVM.getMuleUsername(), // deve essere il mule che effettua l'azione
                 childService.findChildbyID(childID).getUsername(),
                 action,
                 day,
