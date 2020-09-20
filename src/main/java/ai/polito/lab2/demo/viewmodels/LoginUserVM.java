@@ -3,6 +3,8 @@ package ai.polito.lab2.demo.viewmodels;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -16,4 +18,7 @@ public class LoginUserVM {
     private List<String> roles;
     private Set<Integer> adminRoutes;
     private Set<Integer> muleRoutes;
+    private int childsNumber;
+    private HashMap<Integer, ArrayList<String>> andataStop;
+    private HashMap<Integer, ArrayList<String>> ritornoStop;
 }

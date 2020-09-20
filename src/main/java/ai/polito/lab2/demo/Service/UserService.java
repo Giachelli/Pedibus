@@ -205,7 +205,7 @@ public class UserService implements IUserService {
                     .isEnabled(u.isEnabled())
                     .build();
             usersIDString.add(u.get_id().toString());
-            System.out.println(u.get_id().toString());
+            //System.out.println(u.get_id().toString());
             userVMS.add(userVM);
         }
 
@@ -276,12 +276,17 @@ public class UserService implements IUserService {
     public LoginUserVM getUserLoginByUsername(String username) {
         User u = userRepo.findUserByUsername(username);
 
+
+
         return LoginUserVM.builder().userID(u.get_id().toString())
                 .username(u.getUsername())
                 .roles(u.getRolesString())
                 .muleRoutes(u.getMuleRoutesID())
                 .family_name(u.getFamily_name())
                 .adminRoutes(u.getAdminRoutesID())
+                .andataStop(u.getUserVMMapStop(u.getAndataStops()))
+                .ritornoStop(u.getUserVMMapStop(u.getRitornoStops()))
+                .childsNumber(u.getChildsID().size())
                 .build();
     }
 
