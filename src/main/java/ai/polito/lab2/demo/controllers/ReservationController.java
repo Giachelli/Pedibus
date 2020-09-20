@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
 import java.util.*;
 
@@ -116,7 +117,6 @@ public class ReservationController {
     @ApiOperation("RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata")
     public ResponseEntity createNotBooked(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
-
         long nowTimeStamp = getCurrentTimeStamp();
         Stop stop = stopService.findStopbyId(stopID);
 

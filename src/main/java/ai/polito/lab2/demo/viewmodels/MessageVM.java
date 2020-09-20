@@ -41,5 +41,6 @@ public class MessageVM {
     String oraFermata;
     String oraFermataDiscesa;
     String muleName; //per la cancellazione del turno
+    boolean direzione; // usato per la direzione nel turno cancellato
 
 }
