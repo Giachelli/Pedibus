@@ -53,8 +53,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     String firstDay;
 
-
-
     Logger logger = LoggerFactory.getLogger(ReservationController.class);
 
 
@@ -86,6 +84,11 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    /**
+     * funzione per calcolare quanti giorni mancano all'inizio della scuola,
+     * o da quanti giorni è iniziata
+     * @return il numero di giorni a/dall'inizio della scuola
+     */
     @Override
     public int calculateFirstDay() {
         TimeZone timeZone = TimeZone.getTimeZone("UTC");

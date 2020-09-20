@@ -2,7 +2,6 @@ package ai.polito.lab2.demo.controllers;
 
 //import ai.polito.lab2.demo.AppConfig;
 
-import ai.polito.lab2.demo.Entity.Child;
 import ai.polito.lab2.demo.Entity.Reservation;
 import ai.polito.lab2.demo.Entity.Stop;
 import ai.polito.lab2.demo.Service.*;
@@ -40,9 +39,6 @@ public class ReservationController {
 
     @Autowired
     private StopService stopService;
-
-    //@Autowired
-    //private EmailSenderService emailSenderService;
 
     @Autowired
     private ReservationService reservationService;
@@ -193,7 +189,7 @@ public class ReservationController {
      * @param reservation_id id reservation da aggiornare
      * @return
      */
-    @Secured("ROLE_USER")
+   /* @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("Per aggiornare una reservation")
     public ResponseEntity update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
@@ -213,7 +209,6 @@ public class ReservationController {
             updatedReservation.setDate(data);
         }
 
-        // TODO per il lab 5 non serve ma controllare qui la corrispondenza tra ChildReservationVM e il Child
         if (!reservationVM.getChildID().toString().isEmpty()) {
             updatedReservation.setChildID(childID);
         }
@@ -233,7 +228,7 @@ public class ReservationController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+*/
     /**
      * Va a controllare se è possibile cambiare o eliminare la prenotazione
      * @param nowTimeStamp ora odierna
@@ -322,7 +317,12 @@ public class ReservationController {
         return new ResponseEntity<>(request,HttpStatus.OK);
     }
 
-   // TODO: prendersi anche l'ora della fermata
+    /**
+     * Funzione per il calendario del genitore
+     * @param family_name cognome della famiglia
+     * @return tutte le prenotazioni per quella famiglia
+     * @throws JsonProcessingException
+     */
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
     public ResponseEntity getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
@@ -332,6 +332,12 @@ public class ReservationController {
         return ok().body(reservationCalendarVMS);
     }
 
+    /**
+     * Scaricare tutte le prenotazioni per un bimbo per l'admin
+     * @param childID id del bambino per cui si vogliono prendere tutte le prenotazioni
+     * @return
+     * @throws JsonProcessingException
+     */
     @Secured({"ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/reservations/child/{childID}", method = RequestMethod.GET)
     public ResponseEntity getChildListReservations(@PathVariable ObjectId childID) throws JsonProcessingException {
@@ -343,6 +349,13 @@ public class ReservationController {
 
 
     // A livello stilistico era meglio farlo con il PathParam ma funziona anche così
+
+    /**
+     *
+     * @param id
+     * @return
+     * @throws JsonProcessingException
+     */
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.DELETE)
     public ResponseEntity deleteChildReservation(@RequestParam (required = true) ObjectId id) throws JsonProcessingException {
