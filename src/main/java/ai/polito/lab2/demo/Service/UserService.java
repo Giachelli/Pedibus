@@ -93,7 +93,7 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setExpiry_passToken(null);
         user.setPasstoken(null);
-        if (user.getExpiryDate()!=null)
+        if (user.getExpiryDate() != null)
             user.setExpiryDate(null);
         userRepo.save(user);
     }
@@ -210,8 +210,7 @@ public class UserService implements IUserService {
                     .isEnabled(u.isEnabled())
                     .build();
             usersIDString.add(u.get_id().toString());
-            if(u.getRolesString().contains("ROLE_MULE"))
-            {
+            if (u.getRolesString().contains("ROLE_MULE")) {
                 userVM.setAndataStop(u.getUserVMMapStop(u.getAndataStops()));
                 userVM.setRitornoStop(u.getUserVMMapStop(u.getRitornoStops()));
             }
@@ -304,8 +303,7 @@ public class UserService implements IUserService {
             userVM.setRitornoStop(u.getUserVMMapStop(u.getRitornoStops()));
         }
 
-        if(u.getChildsID() != null)
-        {
+        if (u.getChildsID() != null) {
             userVM.setChildsNumber(u.getChildsID().size());
         }
 
@@ -319,6 +317,9 @@ public class UserService implements IUserService {
         ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
 
         ArrayList<Boolean> oldAvailability = user.getAvailability();
+        if (oldAvailability == null) {
+            oldAvailability = new ArrayList<>();
+        }
         Boolean differentAvailability = false;
         Boolean differentRoutes = false;
 
@@ -506,74 +507,73 @@ public class UserService implements IUserService {
         /* seconda parte che riguarda lo user stesso */
         if (!(modifyRoleUser.getModifiedBy().equals(this.getUserBy_id(user.get_id()).getUsername()))) {
 
-            if((adminBefore.isEmpty())&&(!adminRoutes.isEmpty()))
-            {
+            if ((adminBefore.isEmpty()) && (!adminRoutes.isEmpty())) {
                 differentRoutes = true;
-            }else {
-            if (adminBefore.size()>=adminRoutes.size()) {
-                for (int k = 0; k < adminBefore.size(); k++) {
+            } else {
+                if (adminBefore.size() >= adminRoutes.size()) {
+                    for (int k = 0; k < adminBefore.size(); k++) {
 
-                    try {
-                        if (adminRoutes.get(k) != adminBefore.get(k)) {
+                        try {
+                            if (adminRoutes.get(k) != adminBefore.get(k)) {
+                                differentRoutes = true;
+                                break;
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println(e.getMessage());
                             differentRoutes = true;
                             break;
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(e.getMessage());
-                        differentRoutes = true;
-                        break;
                     }
-                }
-            }else if (adminBefore.size()<adminRoutes.size())
-            {
-                for (int k = 0; k < adminRoutes.size(); k++) {
-                    try {
-                        if (adminRoutes.get(k) != adminBefore.get(k)) {
+                } else if (adminBefore.size() < adminRoutes.size()) {
+                    for (int k = 0; k < adminRoutes.size(); k++) {
+                        try {
+                            if (adminRoutes.get(k) != adminBefore.get(k)) {
+                                differentRoutes = true;
+                                break;
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println(e.getMessage());
                             differentRoutes = true;
                             break;
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(e.getMessage());
-                        differentRoutes = true;
-                        break;
                     }
                 }
-            }}
+            }
 
-            if((muleBefore.isEmpty())&&(!muleRoutes.isEmpty())){
-                differentRoutes=true;
-            }else{
-            if (muleBefore.size()>=muleRoutes.size()) {
-                for (int k = 0; k < muleBefore.size(); k++) {
+            if ((muleBefore.isEmpty()) && (!muleRoutes.isEmpty())) {
+                differentRoutes = true;
+            } else {
+                if (muleBefore.size() >= muleRoutes.size()) {
+                    for (int k = 0; k < muleBefore.size(); k++) {
 
-                    try {
-                        if (muleRoutes.get(k) != muleBefore.get(k)) {
+                        try {
+                            if (muleRoutes.get(k) != muleBefore.get(k)) {
+                                differentRoutes = true;
+                                break;
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println(e.getMessage());
                             differentRoutes = true;
                             break;
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(e.getMessage());
-                        differentRoutes = true;
-                        break;
                     }
-                }
-            }else if (muleBefore.size()<muleRoutes.size())
-            {
-                for (int k = 0; k < muleRoutes.size(); k++) {
-                    try {
-                        if (muleRoutes.get(k) != muleBefore.get(k)) {
+                } else if (muleBefore.size() < muleRoutes.size()) {
+                    for (int k = 0; k < muleRoutes.size(); k++) {
+                        try {
+                            if (muleRoutes.get(k) != muleBefore.get(k)) {
+                                differentRoutes = true;
+                                break;
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println(e.getMessage());
                             differentRoutes = true;
                             break;
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(e.getMessage());
-                        differentRoutes = true;
-                        break;
                     }
                 }
-            }}
+            }
 
-            if(differentRoutes){
+            if (differentRoutes) {
                 String action = "Privilegi aggiornati";
                 messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
                         user.get_id(),
@@ -583,14 +583,17 @@ public class UserService implements IUserService {
                         muleRoutes);
             }
 
-            for ( int i = 0; i<user.getAvailability().size(); i ++){
-                if (oldAvailability.get(i)!=user.getAvailability().get(i)){
-                    differentAvailability = true;
-                    break;
+            if (oldAvailability.isEmpty() && (!modifyRoleUser.getAvailability().isEmpty())) {
+                differentAvailability = true;
+            } else {
+                for (int i = 0; i < modifyRoleUser.getAvailability().size(); i++) {
+                    if (oldAvailability.get(i) != modifyRoleUser.getAvailability().get(i)) {
+                        differentAvailability = true;
+                        break;
+                    }
                 }
             }
-
-            if ( differentAvailability){
+            if (differentAvailability) {
                 String action1 = "Disponibilità aggiornate";
                 messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
                         user.get_id(),
