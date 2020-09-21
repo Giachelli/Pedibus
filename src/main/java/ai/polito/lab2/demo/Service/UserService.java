@@ -313,6 +313,8 @@ public class UserService implements IUserService {
         ArrayList<Integer> muleRoutes = modifyRoleUser.getMuleRoutes();
 
         ArrayList<Boolean> oldAvailability = user.getAvailability();
+        Boolean differentAvailability = false;
+        Boolean differentRoutes = false;
 
         ArrayList<Integer> adminBefore = new ArrayList<>();
         ArrayList<Integer> muleBefore = new ArrayList<>();
@@ -497,13 +499,94 @@ public class UserService implements IUserService {
 
         /* seconda parte che riguarda lo user stesso */
         if (!(modifyRoleUser.getModifiedBy().equals(this.getUserBy_id(user.get_id()).getUsername()))) {
-            String action = "Privilegi aggiornati";
-            messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
-                    user.get_id(),
-                    action,
-                    day,
-                    adminRoutes,
-                    muleRoutes);
+
+            if (adminBefore.size()>=adminRoutes.size()) {
+                for (int k = 0; k < adminBefore.size(); k++) {
+
+                    try {
+                        if (adminRoutes.get(k) != adminBefore.get(k)) {
+                            differentRoutes = true;
+                            break;
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                        differentRoutes = true;
+                        break;
+                    }
+                }
+            }else if (adminBefore.size()<adminRoutes.size())
+            {
+                for (int k = 0; k < adminRoutes.size(); k++) {
+                    try {
+                        if (adminRoutes.get(k) != adminBefore.get(k)) {
+                            differentRoutes = true;
+                            break;
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                        differentRoutes = true;
+                        break;
+                    }
+                }
+            }
+
+            if (muleBefore.size()>=muleRoutes.size()) {
+                for (int k = 0; k < muleBefore.size(); k++) {
+
+                    try {
+                        if (muleRoutes.get(k) != muleBefore.get(k)) {
+                            differentRoutes = true;
+                            break;
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                        differentRoutes = true;
+                        break;
+                    }
+                }
+            }else if (muleBefore.size()<muleRoutes.size())
+            {
+                for (int k = 0; k < muleRoutes.size(); k++) {
+                    try {
+                        if (muleRoutes.get(k) != muleBefore.get(k)) {
+                            differentRoutes = true;
+                            break;
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                        differentRoutes = true;
+                        break;
+                    }
+                }
+            }
+
+            if(differentRoutes){
+                String action = "Privilegi aggiornati";
+                messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
+                        user.get_id(),
+                        action,
+                        day,
+                        adminRoutes,
+                        muleRoutes);
+            }
+
+            for ( int i = 0; i<user.getAvailability().size(); i ++){
+                if (oldAvailability.get(i)!=user.getAvailability().get(i)){
+                    differentAvailability = true;
+                    break;
+                }
+            }
+
+            if ( differentAvailability){
+                String action1 = "Disponibilità aggiornate";
+                messageService.createMessageNewRoles(modifyRoleUser.getModifiedBy(),
+                        user.get_id(),
+                        action1,
+                        day,
+                        adminRoutes,
+                        muleRoutes);
+            }
+
         }
 
     }

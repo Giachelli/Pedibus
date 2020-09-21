@@ -315,7 +315,10 @@ public class MessageServiceImpl implements MessageService {
         ArrayList<MessageVM> messageVMS = new ArrayList<>();
 
         for (Message message : messages) {
+
             String senderName = userService.getUserBy_id(message.getSenderID()).getUsername();
+            if (senderName != null){
+
             //Get messaggio turni
             if (message.getShiftID() != null) {
                 Shift shift = shiftService.getTurnByID(message.getShiftID());
@@ -525,6 +528,7 @@ public class MessageServiceImpl implements MessageService {
                         .build();
                 messageVMS.add(messageVM);
             }
+        }
         }
         return messageVMS;
     }
