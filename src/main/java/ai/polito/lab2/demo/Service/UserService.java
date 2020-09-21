@@ -207,6 +207,8 @@ public class UserService implements IUserService {
                     .username(u.getUsername())
                     .family_name(u.getFamily_name())
                     .availabilityVM((u.getAvailability()))
+                    .andataStop(u.getUserVMMapStop(u.getAndataStops()))
+                    .ritornoStop(u.getUserVMMapStop(u.getRitornoStops()))
                     .isEnabled(u.isEnabled())
                     .build();
             usersIDString.add(u.get_id().toString());
@@ -604,6 +606,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> findAll() {
+
         return userRepo.findAll();
     }
 
