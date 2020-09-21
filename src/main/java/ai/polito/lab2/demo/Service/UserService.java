@@ -207,11 +207,15 @@ public class UserService implements IUserService {
                     .username(u.getUsername())
                     .family_name(u.getFamily_name())
                     .availabilityVM((u.getAvailability()))
-                    .andataStop(u.getUserVMMapStop(u.getAndataStops()))
-                    .ritornoStop(u.getUserVMMapStop(u.getRitornoStops()))
                     .isEnabled(u.isEnabled())
                     .build();
             usersIDString.add(u.get_id().toString());
+            if(u.getRolesString().contains("ROLE_MULE"))
+            {
+                userVM.setAndataStop(u.getUserVMMapStop(u.getAndataStops()));
+                userVM.setRitornoStop(u.getUserVMMapStop(u.getRitornoStops()));
+            }
+
             //System.out.println(u.get_id().toString());
             userVMS.add(userVM);
         }
