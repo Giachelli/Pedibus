@@ -76,6 +76,13 @@ public class ReservationController {
             reservationService.delete(r.getId());
         }
 
+        long nowTimeStamp = getCurrentTimeStamp();
+
+        if (data < nowTimeStamp)
+        {
+            return new ResponseEntity("Errore nella data",HttpStatus.BAD_REQUEST);
+        }
+
         if(routeService.getRoutesByID(id_linea) == null)
             return new ResponseEntity("Id linea errato",HttpStatus.BAD_REQUEST);
 
