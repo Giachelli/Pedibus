@@ -64,62 +64,6 @@ public class DataInitializer implements CommandLineRunner {
         if (users.findByUsername("giacomo.chelli4@gmail.com") != null) {
             addRouteId = false;
         } else {
-            ArrayList<Boolean> disp = new ArrayList<>();
-            disp.add(false);
-            disp.add(true);
-            disp.add(true);
-            disp.add(true);
-            disp.add(true);
-            disp.add(true);
-            disp.add(false);
-
-            HashMap<Integer, ArrayList<ObjectId>> andata = new HashMap<>();
-            HashMap<Integer, ArrayList<ObjectId>> ritorno = new HashMap<>();
-            ArrayList<ObjectId> andataS = new ArrayList<>();
-            ArrayList<ObjectId> ritornoS = new ArrayList<>();
-            andataS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 2).get_id());
-            andataS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 5).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 2).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 5).get_id());
-            andata.put(1, andataS);
-            ritorno.put(1, ritornoS);
-            andataS = new ArrayList<>();
-            ritornoS = new ArrayList<>();
-            andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 4).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 2).get_id());
-            andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 5).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 3).get_id());
-            andata.put(2, andataS);
-            ritorno.put(2, ritornoS);
-
-            Stop s1 = stopService.findStopbyNameAndNumS("Incrocio Corso Stati Uniti-Statua", 4);
-            Stop s2 = stopService.findStopbyNameAndNumS("Mixto", 2);
-            andataS = new ArrayList<>();
-            ritornoS = new ArrayList<>();
-            andataS.add(s1.get_id());
-            ritornoS.add(s2.get_id());
-            andataS.add(stopService.findStopbyNameAndNumS("Mixto", 5).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Incrocio Corso Stati Uniti-Statua", 3).get_id());
-            andata.put(6, andataS);
-            ritorno.put(6, ritornoS);
-            andataS = new ArrayList<>();
-            ritornoS = new ArrayList<>();
-            andataS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 1).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 2).get_id());
-            andataS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 5).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 6).get_id());
-            andata.put(4, andataS);
-            ritorno.put(4, ritornoS);
-
-
-            andataS = new ArrayList<>();
-            ritornoS = new ArrayList<>();
-            andataS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 1).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 2).get_id());
-            andataS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 5).get_id());
-            ritornoS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 6).get_id());
-            andata.put(3, andataS);
-            ritorno.put(3, ritornoS);
 
 
             this.users.save(User.builder()
@@ -130,9 +74,6 @@ public class DataInitializer implements CommandLineRunner {
                             roleRepository.findByRole("ROLE_SYSTEM_ADMIN"),
                             roleRepository.findByRole("ROLE_MULE"),
                             roleRepository.findByRole("ROLE_ADMIN")))
-                    .availability(disp)
-                    .andataStops(andata)
-                    .ritornoStops(ritorno)
                     .isEnabled(true)
                     .build()
             );
@@ -142,6 +83,66 @@ public class DataInitializer implements CommandLineRunner {
                 User u = users.findByUsername("giacomo.chelli4@gmail.com");
                 u.setAdminRoutesID(routeId);
                 u.setMuleRoutesID(routeId);
+                ArrayList<Boolean> disp = new ArrayList<>();
+                disp.add(false);
+                disp.add(true);
+                disp.add(true);
+                disp.add(true);
+                disp.add(true);
+                disp.add(true);
+                disp.add(false);
+
+                HashMap<Integer, ArrayList<ObjectId>> andata = new HashMap<>();
+                HashMap<Integer, ArrayList<ObjectId>> ritorno = new HashMap<>();
+                ArrayList<ObjectId> andataS = new ArrayList<>();
+                ArrayList<ObjectId> ritornoS = new ArrayList<>();
+                andataS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 2).get_id());
+                andataS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 5).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Corso Castelfidardo- Fermata 3281", 2).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Piazza Sabotino 38- Unicredit", 5).get_id());
+                andata.put(1, andataS);
+                ritorno.put(1, ritornoS);
+                andataS = new ArrayList<>();
+                ritornoS = new ArrayList<>();
+                andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 4).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 2).get_id());
+                andataS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo- Incrocio Corso Peschiera", 5).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Corso Mediterraneo 124- Fermata 3550", 3).get_id());
+                andata.put(2, andataS);
+                ritorno.put(2, ritornoS);
+
+                Stop s1 = stopService.findStopbyNameAndNumS("Incrocio Corso Stati Uniti-Statua", 4);
+                Stop s2 = stopService.findStopbyNameAndNumS("Mixto", 2);
+                andataS = new ArrayList<>();
+                ritornoS = new ArrayList<>();
+                andataS.add(s1.get_id());
+                ritornoS.add(s2.get_id());
+                andataS.add(stopService.findStopbyNameAndNumS("Mixto", 5).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Incrocio Corso Stati Uniti-Statua", 3).get_id());
+                andata.put(6, andataS);
+                ritorno.put(6, ritornoS);
+                andataS = new ArrayList<>();
+                ritornoS = new ArrayList<>();
+                andataS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 1).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 2).get_id());
+                andataS.add(stopService.findStopbyNameAndNumS("Corso Duca degli Abruzzi 28", 5).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Corso Germano Sommeiller 39- Unicredit", 6).get_id());
+                andata.put(4, andataS);
+                ritorno.put(4, ritornoS);
+
+
+                andataS = new ArrayList<>();
+                ritornoS = new ArrayList<>();
+                andataS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 1).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 2).get_id());
+                andataS.add(stopService.findStopbyNameAndNumS("corso Stati Uniti- Incrocio Corso Duca (stazione tobike)", 5).get_id());
+                ritornoS.add(stopService.findStopbyNameAndNumS("Via Paolo Sacchi 18- Unicredit", 6).get_id());
+                andata.put(3, andataS);
+                ritorno.put(3, ritornoS);
+
+                u.setAvailability(disp);
+                u.setAndataStops(andata);
+                u.setRitornoStops(ritorno);
                 setMule_Admin_Test();
                 users.save(u);
             }
