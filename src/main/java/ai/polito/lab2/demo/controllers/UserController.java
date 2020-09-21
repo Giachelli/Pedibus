@@ -146,7 +146,7 @@ public class UserController {
             return new ResponseEntity("Errore User non presente nel db", HttpStatus.BAD_REQUEST);
         }
 
-        if ((modifyRoleUser.getAvailability() == null) || (modifyRoleUser.getStopAndata() == null) || (modifyRoleUser.getStopRitorno() == null) || (modifyRoleUser.getStopRitorno().isEmpty())|| (modifyRoleUser.getStopAndata().isEmpty()))
+        if ((modifyRoleUser.getAvailability() == null) || (modifyRoleUser.getStopAndata() == null) || (modifyRoleUser.getStopRitorno() == null) )
             return new ResponseEntity("Errore nel passaggio dei parametri", HttpStatus.BAD_REQUEST);
 
         try {
