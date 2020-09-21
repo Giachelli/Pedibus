@@ -25,6 +25,7 @@ public interface MessageService {
     ArrayList<MessageVM> getMessages(String username);
     void readedUpdated(ObjectId messageID, Boolean read);
     Message editStatus(ObjectId messageID, String status);
+    Message findMessageByShiftIDAndReceiverID(ObjectId shiftID, ObjectId receiverID);
     void createMessageDeleteTurns(ObjectId senderID, ArrayList<ObjectId> receiverID, String action, long time, ObjectId shiftID);
 
 }

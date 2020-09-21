@@ -11,6 +11,7 @@ import ai.polito.lab2.demo.Repositories.UserRepo;
 import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.viewmodels.ChildAllVM;
 import ai.polito.lab2.demo.viewmodels.ChildVM;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.*;
 
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -47,6 +49,13 @@ public class ChildController {
     @Autowired
     private ChildService childService;
 
+
+    /**
+     * @param data view model del child
+     * @return
+     * @throws JsonProcessingException
+     * @throws ParseException
+     */
     @Secured("ROLE_USER")
     @ApiOperation("Endpoint per la registrazione di un bambino")
     @RequestMapping(value = "/register/child", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +107,7 @@ public class ChildController {
     }
     */
 
-    // vanno aggiunti più query params
+
     @Secured("ROLE_USER")
     @ApiOperation("Endpoint per avere i bambini registrati da uno user")
     @RequestMapping(value = "/user/children", method = RequestMethod.GET)

@@ -11,6 +11,12 @@ public class EmailServiceImpl {
     @Autowired
     public JavaMailSender emailSender;
 
+    /**
+     *
+     * @param to mail del ricevitore
+     * @param subject oggetto della mail
+     * @param text contenuto della mail
+     */
     public void sendSimpleMessage(
             String to, String subject, String text) {
 

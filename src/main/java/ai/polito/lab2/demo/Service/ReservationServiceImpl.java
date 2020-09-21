@@ -381,11 +381,7 @@ public class ReservationServiceImpl implements ReservationService {
 
                 d = data.parse(s.getTime());
                 data.setTimeZone(TimeZone.getTimeZone("UTC"));
-                // d = data.parse(s.getTime());
-                //TODO reservationFamily
-                System.out.println("DDDD" + d.getTime());
 
-                //System.out.println("IIIIIII" + i);
             } catch (ParseException e) {
                 System.out.println("ParseException occured: " + e.getMessage());
             }
@@ -408,7 +404,6 @@ public class ReservationServiceImpl implements ReservationService {
     public ArrayList<ReservationCalendarVM> reservationsChild(ObjectId childID) {
         List<Reservation> res = reservationRepo.findReservationByChildID(childID);
         ArrayList<ReservationCalendarVM> rcvms = new ArrayList<>();
-        res.forEach(bubba -> System.out.println("BUBBAAA:::" + bubba.getName_route()));
 
         res.forEach(reservation -> {
             SimpleDateFormat data = new SimpleDateFormat("hh:mm");
@@ -420,7 +415,6 @@ public class ReservationServiceImpl implements ReservationService {
 
                 data.setTimeZone(TimeZone.getTimeZone("UTC"));
                 d = data.parse(s.getTime());
-                System.out.println("DDDD" + d);
 
             } catch (ParseException e) {
                 System.out.println("ParseException occured: " + e.getMessage());
@@ -653,9 +647,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ChildReservationVM confirmPresence(Reservation r, long data, childConfirmVM childID, String id_fermata) {
         ObjectId muleId = userService.getUserByUsername(childID.getUsernameMule()).get_id();
-        System.out.println(shiftService.getTurnsByLineaIDMuleIDDateDirection(r.getRouteID(), muleId, r.getDate(), r.getDirection()));
         if(shiftService.getTurnsByLineaIDMuleIDDateDirection(r.getRouteID(), muleId, r.getDate(), r.getDirection()).size()>0) {
-            System.out.println(shiftService.getTurnsByLineaIDMuleIDDateDirection(r.getRouteID(), muleId, r.getDate(), r.getDirection()));
             // if (inplace = true) => fai partire messaggio
             logger.info("Change presence bambino " + childID + " data " + data + " stopID " + id_fermata + "from " + r.isInPlace() + " to " + !r.isInPlace());
             r.setInPlace(!r.isInPlace());

@@ -9,26 +9,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Entity del messaggio
+ */
 @Data
 @Builder
 @Document(collection = "message")
 public class Message {
     @Id
     ObjectId messageID;
-    ObjectId senderID;
-    ObjectId receiverID;
+    ObjectId senderID; //id del sender
+    ObjectId receiverID; // id del receiver
     String action; //eg: Richiesta turno, Accettazione/Rifiuto turno, Richiesta bimbo
-    private long date;
-    private long dateTurns; //per il messaggio di cancellazione
-    ObjectId shiftID;
+    private long date; //time dell'invio del messaggio
+    private long dateTurns; //per il messaggio di cancellazione di un turno
+    ObjectId shiftID; // id dello turno
     Integer route; // utilizzato solo quando ci sono other admin e cancellazione turno
-    ObjectId startID;
-    ObjectId stopID;
-    boolean direzione;
-    String muleName;
-    ObjectId reservationID;
-    ObjectId childID;
-    ObjectId userID;
+    ObjectId startID; // id della fermata di partenza, utilizzata per i messaggi che riguardano le prenotazioni e i turni
+    ObjectId stopID; // id della fermata di arrivo, utilizzata per i messaggi che riguardano le prenotazioni e i turni
+    boolean direzione; // direzione della prenotazione
+    String muleName; // utilizzato in caso di cancellazione prenotazione turno
+    ObjectId reservationID; // id della prenotazione, utilizzato per i messaggi che riguardano le prenotazioni
+    ObjectId childID; // id del child, utilizzato per messaggio creazione bimbo
+    ObjectId userID; //id dello user, utilizzato per avvertire quando lo user viene creato
     String nameChild; //utizzato solo quando il bambino viene cancellato e quindi il child id non mi permette più di trovarlo
     String familyName;// utizzato solo quando il bambino viene cancellato e quindi il child id non mi permette più di trovarlo
     Boolean messageShiftRequest;  //indica che è un messaggio relativo alla richiesta/disponibilità del turno

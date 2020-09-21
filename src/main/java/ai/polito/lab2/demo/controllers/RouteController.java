@@ -114,9 +114,7 @@ public class RouteController {
             adminVMList.addAll(routeVM.getUsernameAdmin());
             /*File myObj = new File(path.getFileName().toString());
             if (myObj.delete()) {
-                System.out.println("Deleted the file: " + myObj.getName());
             } else {
-                System.out.println("Failed to delete the file.");
             }*/
             Path result = null;
 

@@ -214,9 +214,7 @@ public class AuthController {
     public ResponseEntity processRecoverPassword(@PathVariable String randomUUID, @RequestBody RecoverVM vm) {
         if (userService.getVerificationPassToken(randomUUID)) {
 
-            System.out.println("RECOVER REQUEST");
             User user = userService.getUserByPassUUID(randomUUID);
-            System.out.println("Pass user prima " + user.getPassword());
             if (user == null) {
                 return new ResponseEntity<>(
                         "Errore 404 – Not found",//utente o token non validi",
@@ -228,12 +226,10 @@ public class AuthController {
                         HttpStatus.BAD_REQUEST);
             }
             if (!vm.getPass().matches(regex)) {
-                System.out.println("REGEX NOT MATCH");
                 return new ResponseEntity<>(
                         "Errore 404 – Not found",//la password non soddisfa i requisiti minimi",
                         HttpStatus.BAD_REQUEST);
             } else {
-                //System.out.println("REGEX PASS");
             }
             //System.out.println("prova ad impostare " + vm.getPass());
 

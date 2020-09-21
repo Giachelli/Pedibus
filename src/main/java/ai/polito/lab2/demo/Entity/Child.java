@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 
+/**
+ * Entity del child
+ */
 @Data
 @Builder
 @Document(collection = "child")

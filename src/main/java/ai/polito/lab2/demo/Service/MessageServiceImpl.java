@@ -43,6 +43,12 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private ReservationService reservationService;
 
+    /**
+     *
+     * @param receiverID id del receiver delle mail
+     * @return
+     */
+    @Override
     public ArrayList<Message> findMessagesByReceiverID(ObjectId receiverID) {
 
         ArrayList<Message> messages = messageRepo.findAllByReceiverID(receiverID);
@@ -50,20 +56,46 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
+    /**
+     * Metodo per ricercare il messaggio
+     * @param messageID id del messaggio da ricercare
+     * @return
+     */
+    @Override
     public Message findMessageByMessageID(ObjectId messageID) {
         return messageRepo.findMessageByMessageID(messageID);
     }
 
+    /**
+     * Metodo per aggiornare il messaggio
+     * @param message messaggio da salvare
+     */
+    @Override
     public void update(Message message) {
         messageRepo.save(message);
     }
 
+    /**
+     * Metodo per ricercare il messaggio in base all' id del child
+     * @param childID id del chilf
+     * @return
+     */
+    @Override
     public Message findMessageByChildID(ObjectId childID) {
         return messageRepo.findMessageByChildID(childID);
     }
 
 
-
+    /**
+     * Metodo per creare il messaggio relativo al turno
+     * @param senderID id del sender
+     * @param receiverID id del receiver
+     * @param action titolo del messaggio
+     * @param time tempo in cui invio il messaggio
+     * @param shiftID id del turno
+     * @param typeMessage tipo del messaggio
+     */
+    @Override
     public void createMessageShift(ObjectId senderID, ObjectId receiverID, String action, long time, ObjectId shiftID, String typeMessage) {
 
 
@@ -82,6 +114,17 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
+    /**
+     * Metodo per creare il messaggio relativo alla risposta (accettazione/rifiuto) turno
+     * @param senderID id del sender
+     * @param receivers lista di tutti i reciever del messaggio (gli admin di linea)
+     * @param action titolo del messaggio
+     * @param time tempo in cui il messaggio è stato inviato
+     * @param shiftID id del turno
+     * @param status stato del turno (accettato/rifiutato)
+     * @param typeMessage tipo del messaggio
+     */
+    @Override
     public void createMessageResponse(ObjectId senderID, ArrayList<String> receivers, String action, long time, ObjectId shiftID, String status, String typeMessage) {
 
         for (String s : receivers) {
@@ -102,6 +145,16 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    /**
+     * Metodo per la creazione del messaggio relativo alla creazione/cancellazione del bimbo
+     * @param senderID id del sender
+     * @param receiverID id del receiver
+     * @param childID id del bimbo che è stato creato/cancellato
+     * @param action titolo del messaggio
+     * @param time tempo in cui viene inviato il messaggio
+     * @param typeMessage tipo del messaggio
+     */
+    @Override
     public void createMessageResp(ObjectId senderID, ObjectId receiverID, ObjectId childID, String action, long time, String typeMessage) {
         Message message;
 
@@ -141,6 +194,16 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
+    /**
+     * Metodo per la creazione del messaggio relativo alla prenotazione
+     * @param senderID id del sender
+     * @param receivers lista dei receiver del messaggio (tutti gli accompagnatori registrati per quella linea)
+     * @param action titolo del messaggio
+     * @param time tempo in cui il messaggio viene inviato
+     * @param reservationID id della prenotazione
+     * @param typeMessage tipo del messaggio
+     */
+    @Override
     public void createMessageReservation(ObjectId senderID, ArrayList<String> receivers, String action, long time, ObjectId reservationID, String typeMessage) {
 
         for (String s : receivers) {
@@ -160,7 +223,15 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
-
+    /**
+     * Metodo per la creazione del messaggio relativo all'aggiornamento dei privilegi di uno user
+     * @param sender username di chi manda il messaggio
+     * @param receivers lista dei receivers (tutti gli admin di quella linea per cui i privilegi sono stati aggiornati)
+     * @param action titolo del messaggio
+     * @param time tempo dell'invio del messaggio
+     * @param routeID id della linea per cui sto aggiornando i privilegi
+     */
+    @Override
     public void createMessageNewRolesOtherAdmins(String sender, ArrayList<String> receivers, String action, long time, Integer routeID) {
         ObjectId senderID = userRepo.findByUsername(sender).get_id();
         for (String s : receivers) {
@@ -180,6 +251,15 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    /**
+     * Metodo per la creazione del messaggio relativo alla cancellazione di un turno
+     * @param senderID id del sender
+     * @param receiversID lista di id dei vari receivers ( tutti gli accompagnatori della linea)
+     * @param action titolo del messaggio
+     * @param time tempo in cui il messaggio viene inviato
+     * @param shiftID id del turno
+     */
+    @Override
     public void createMessageDeleteTurns(ObjectId senderID, ArrayList<ObjectId> receiversID, String action, long time, ObjectId shiftID) {
 
         Shift shift = shiftService.getTurnByID(shiftID);
@@ -214,6 +294,15 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    /**
+     * Metodo per la creazione del messaggio di cambio di disponibilità
+     * @param sender username del sender
+     * @param receivers lista di recivers ( tutti gli admin della linea)
+     * @param action titolo del messaggio
+     * @param time tempo del invio del messaggio
+     * @param routeID id della linea
+     */
+    @Override
     public void createMessageEditAvailability(String sender, ArrayList<String> receivers, String action, long time, Integer routeID) {
         ObjectId senderID = userRepo.findByUsername(sender).get_id();
         for (String s : receivers) {
@@ -233,6 +322,16 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    /**
+     * Metodo per la creazione del messaggio relativo all'impostazione di un nuovo ruolo/nuova disponiblità
+     * @param sender username del sender
+     * @param receiver id del receiver ( utente a cui è stato cambiato il ruolo/ le disponibilità)
+     * @param action titolo del messaggio
+     * @param time tempo in cui il messaggio viene inviato
+     * @param adminRoutes route per cui mi sono stati i cambiati i privilegi come admin
+     * @param muleRoutes route per cui mi sono stati cambiati i privilegi come mule
+     */
+    @Override
     public void createMessageNewRoles(String sender, ObjectId receiver, String action, long time, ArrayList<Integer> adminRoutes, ArrayList<Integer> muleRoutes) {
         ObjectId senderID = userRepo.findByUsername(sender).get_id();
 
@@ -250,6 +349,14 @@ public class MessageServiceImpl implements MessageService {
         messageRepo.save(message);
     }
 
+    /**
+     * Metodo per la crezione del messaggio relativo al nuovo user
+     * @param senderID
+     * @param receiverID
+     * @param action
+     * @param time
+     */
+    @Override
     public void createMessageNewUser(ObjectId senderID, ObjectId receiverID, String action, long time) {
         Message message = Message.builder()
                 .senderID(senderID)
@@ -265,6 +372,16 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
+    /**
+     * Metodo per la creazione del messaggio che il bambino che si trovava alla fermata è stato preso in consegna
+     * @param sender
+     * @param receiver
+     * @param action
+     * @param time
+     * @param childID
+     * @param reservationID
+     */
+    @Override
     public void createMessageChildinPlace(String sender, String receiver, String action, long time, ObjectId childID, ObjectId reservationID) {
         ObjectId senderID = userRepo.findByUsername(sender).get_id();
         ObjectId receiverID = userRepo.findByUsername(receiver).get_id();
@@ -286,14 +403,33 @@ public class MessageServiceImpl implements MessageService {
 
     }
 
+    /**
+     * Metodo per trovare il messaggio in base
+     * @param shiftID
+     * @return
+     */
+    @Override
     public Message findMessageByShiftID(ObjectId shiftID) {
         return messageRepo.findMessageByShiftID(shiftID);
     }
 
+    /**
+     * Metodo per trovare il messaggio dato uno shift e un receiver
+     * @param shiftID
+     * @param receiverID
+     * @return
+     */
+    @Override
     public Message findMessageByShiftIDAndReceiverID(ObjectId shiftID, ObjectId receiverID){
         return messageRepo.findMessageByShiftIDAndReceiverID(shiftID,receiverID);
     }
 
+    /**
+     * Metodo per cancellare un messaggio
+     * @param messageID
+     * @return
+     */
+    @Override
     public int deleteByMessageID(ObjectId messageID) {
         Message m = messageRepo.findMessageByMessageID(messageID);
 
@@ -309,6 +445,11 @@ public class MessageServiceImpl implements MessageService {
         return 1;
     }
 
+    /**
+     * Metodo per ricevere un messaggio
+     * @param username
+     * @return
+     */
     public ArrayList<MessageVM> getMessages(String username) {
         ObjectId receiverID = userService.getUserByUsername(username).get_id();
         ArrayList<Message> messages = findMessagesByReceiverID(receiverID);
@@ -366,7 +507,7 @@ public class MessageServiceImpl implements MessageService {
                                 .oraFermataDiscesa(stopService.findStopbyId(message.getStopID()).getTime())
                                 .shiftID(message.getShiftID().toString())
                                 .muleName(message.getMuleName())
-                                .messageDeleteTurn(true) //TODO: dopo aver parlato con gli altri
+                                .messageDeleteTurn(true)
                                 .dateShift(date)
                                 .direction(message.isDirezione())
                                 .nameLinea(routeService.getRoutesByID(message.getRoute()).getNameR())
@@ -394,7 +535,6 @@ public class MessageServiceImpl implements MessageService {
                     Reservation r = reservationService.findReservationById(message.getReservationID());
                     if (r != null) {
                         Boolean direction = ((r.getDirection().equals("andata")) ? true : false);
-                        System.out.println("stopService.findStopbyId(r.getStopID()).getNome()!!!" + stopService.findStopbyId(r.getStopID()).getNome());
                         MessageVM messageVM = MessageVM.builder()
                                 .sender(senderName)
                                 .messageID(message.getMessageID().toString())
@@ -512,7 +652,6 @@ public class MessageServiceImpl implements MessageService {
             } else if (message.getMessageChildPrenotation() != null) {
                 Reservation r = reservationService.findReservationById(message.getReservationID());
                 Boolean direction = ((r.getDirection().equals("andata")) ? true : false);
-                System.out.println("stopService.findStopbyId(r.getStopID()).getNome()!!!" + stopService.findStopbyId(r.getStopID()).getNome());
                 MessageVM messageVM = MessageVM.builder()
                         .sender(senderName)
                         .messageID(message.getMessageID().toString())
@@ -533,6 +672,11 @@ public class MessageServiceImpl implements MessageService {
         return messageVMS;
     }
 
+    /**
+     * Metodo per modificare lo stato del messaggio (se letto o meno)
+     * @param messageID
+     * @param read
+     */
     @Override
     public void readedUpdated(ObjectId messageID, Boolean read) {
         Message m = findMessageByMessageID(messageID);
@@ -540,6 +684,13 @@ public class MessageServiceImpl implements MessageService {
         update(m);
     }
 
+    /**
+     * metodo per modificare lo stato del messaggio (relativo ad un turno)
+     * @param messageID
+     * @param status
+     * @return
+     */
+    @Override
     public Message editStatus(ObjectId messageID, String status) {
         Message m = findMessageByMessageID(messageID);
         if (!m.getStatus().equals("pending"))

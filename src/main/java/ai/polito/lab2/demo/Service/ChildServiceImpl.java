@@ -44,6 +44,12 @@ public class ChildServiceImpl implements ChildService {
 
 
     // ricerca un Child tramite ID
+
+    /**
+     *
+     * @param childId id del child da trovare in db
+     * @return
+     */
     @Override
     public ChildDTO findChildDTObyID(ObjectId childId) {
         Child child = childRepo.findChildByChildID(childId);
@@ -51,14 +57,22 @@ public class ChildServiceImpl implements ChildService {
         return null;
     }
 
+    /**
+     *
+     * @param childId id del child da trovare in db
+     * @return child
+     */
     @Override
     public Child findChildbyID(ObjectId childId) {
         Child child = childRepo.findChildByChildID(childId);
         return child;
     }
 
-    // questa funzione ritorna tutti i figli per un utente specifico ( controllare nel caso
-    //ritorni zero figli) --> capiterà mai?
+    /**
+     *
+     * @param username email dello username genitore del child
+     * @return
+     */
     @Override
     public ArrayList<ChildDTO> findChildbyUsername(String username) {
         ArrayList<Child> childs = childRepo.findChildByUsername(username);
@@ -75,13 +89,21 @@ public class ChildServiceImpl implements ChildService {
         return childDTOS;
     }
 
-    // ritorna i figli in base al cognome: serve? Forse per velocizzare qualche ricerca?
+    /**
+     *
+     * @param familyName cognome della famiglia a cui il bimbo appartiene
+     * @return
+     */
     @Override
     public ChildDTO findChildbyFamilyName(String familyName) {
         return null;
     }
 
-    // salva un child sul db, trasformando prima il DTO in Entity
+    /**
+     *
+     * @param childDTO
+     * @param familyID
+     */
     @Override
     public void saveChild(ChildDTO childDTO, ObjectId familyID) {
         Child c = childDTO.convert(familyID);
@@ -89,6 +111,13 @@ public class ChildServiceImpl implements ChildService {
 
     }
 
+    /**
+     *
+     * @param nameChild nome del bimbo da ricercare
+     * @param username email dello username a cui il bimbo appartiene
+     * @return
+     */
+    @Override
     public Child findChildByNameChildAndUsername(String nameChild, String username){
         Query query = new Query();
         query.addCriteria(Criteria.where("nameChild").is(nameChild).and("username").is(username));
@@ -100,6 +129,12 @@ public class ChildServiceImpl implements ChildService {
             return null;
     }
 
+    /**
+     *
+     * @param data view model del child
+     * @return
+     */
+    @Override
     public ChildVM registerChild(ChildVM data){
         int routeID = 0;
         Child child;
@@ -305,6 +340,12 @@ public class ChildServiceImpl implements ChildService {
         return data_return;
     };
 
+    /**
+     *
+     * @param username email dello username di cui devo riprendere i figli
+     * @return
+     */
+    @Override
     public ArrayList<ChildVM> getMyChildren(String username){
 
         HashMap<Integer,ArrayList<String>> stopName = new HashMap<>();
@@ -320,7 +361,7 @@ public class ChildServiceImpl implements ChildService {
         }
         for (Child r : children) {
             stopName1.clear();
-            Reservation reservation= reservationService.findRecentReservation(r.getChildID(),new Date().getTime());
+            // Reservation reservation= reservationService.findRecentReservation(r.getChildID(),new Date().getTime());
             if (r.getStopID()!=null && r.getNameRoute()!=null && r.getDirection()!=null){
                 if ( r.getNameRoute().contains("")){
                     int i = 0;
@@ -348,7 +389,6 @@ public class ChildServiceImpl implements ChildService {
                                         .stopName(stopName.get(count_bimbi))
                                         .build()
                         );
-                        System.out.println("stop name del child" + childrenVM.get(count_bimbi).getStopName());
                     }
                 }else if(r.getDirection().equals("entrambi")){
                     for (int i = 0; i<r.getStopID().size(); i++){
@@ -389,11 +429,19 @@ public class ChildServiceImpl implements ChildService {
         return childrenVM;
     }
 
+    /**
+     * Metodo per richiamare il metodo della repo per la ricerca di tutti i bimbi
+     * @return
+     */
     @Override
     public ArrayList<Child> findAllChild() {
         return (ArrayList<Child>) childRepo.findAll();
     }
 
+    /**
+     * Metodo per richiamare il metodo della repo per la ricerca di tutti i bimbi
+     * @return array di childrenVM
+     */
     @Override
     public ArrayList<ChildAllVM> findAllChildren() {
         ArrayList<Child> children = childRepo.findAll();
@@ -413,6 +461,11 @@ public class ChildServiceImpl implements ChildService {
         return childrenVM;
     }
 
+    /**
+     * Metodo per cancellare il bimbo
+     * @param childID childId del bimbo da cancellare
+     */
+    @Override
     public void deleteChild(ObjectId childID){
         ArrayList<ObjectId> reservations_id = new ArrayList<>();
         for (Reservation r:reservationService.findReservationByChildID(childID)){
