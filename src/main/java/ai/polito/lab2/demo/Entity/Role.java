@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Classe che mostra tutti i ruoli assegnabili ad un utente
+ */
 @Data
 @Document(collection = "roles")
 public class Role {

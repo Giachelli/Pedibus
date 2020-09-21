@@ -47,6 +47,10 @@ public class UserService implements IUserService {
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
+    /**
+     * Salva uno user
+     * @param userDTO
+     */
     public void saveUser(UserDTO userDTO) {
 
         User user = User.builder().
@@ -64,16 +68,31 @@ public class UserService implements IUserService {
 
     }
 
+    /**
+     * Prende lo user dall'UUID
+     * @param UUID
+     * @return
+     */
     @Override
     public User getUserByUUID(String UUID) {
         return userRepo.findByToken(UUID);
     }
 
+    /**
+     * Prende lo user dal PassUUID
+     * @param UUID
+     * @return
+     */
     @Override
     public User getUserByPassUUID(String UUID) {
         return userRepo.findByPasstoken(UUID);
     }
 
+    /**
+     * UserDTO tramite L'id
+     * @param userID
+     * @return
+     */
     @Override
     public UserDTO getUserDTOBy_id(ObjectId userID) {
         User u = userRepo.findUserBy_id(userID);
@@ -81,12 +100,22 @@ public class UserService implements IUserService {
         return userDTO;
     }
 
+    /**
+     * User dall'id
+     * @param userID id dello user
+     * @return
+     */
     @Override
     public User getUserBy_id(ObjectId userID) {
         User u = userRepo.findUserBy_id(userID);
         return u;
     }
 
+    /**
+     * Cambio pwd
+     * @param user
+     * @param password
+     */
     @Override
     public void changePassword(User user, String password) {
 
@@ -98,16 +127,30 @@ public class UserService implements IUserService {
         userRepo.save(user);
     }
 
+    /**
+     * vede se l'utente è abilitato
+     * @param username
+     * @return
+     */
     @Override
     public boolean userEnabled(String username) {
         return userRepo.findByUsername(username).isEnabled();
     }
 
+    /**
+     * Salva un utente
+     * @param u
+     */
     @Override
     public void saveUser(User u) {
         userRepo.save(u);
     }
 
+    /**
+     * Controlla il token passato
+     * @param randomUUID
+     * @return
+     */
     @Override
     public boolean getVerificationToken(String randomUUID) {
         User user = this.getUserByUUID(randomUUID);
@@ -126,6 +169,11 @@ public class UserService implements IUserService {
         return true;
     }
 
+    /**
+     * Controlla il verification pass token
+     * @param randomUUID
+     * @return
+     */
     public boolean getVerificationPassToken(String randomUUID) {
         User user = this.getUserByPassUUID(randomUUID);
 
@@ -188,12 +236,21 @@ public class UserService implements IUserService {
         return userDTO;
     }
 
+    /**
+     * Ritorna lo user partendo dallo username
+     * @param name
+     * @return
+     */
     @Override
     public User getUserByUsername(String name) {
         User u = userRepo.findUserByUsername(name);
         return u;
     }
 
+    /**
+     * trova tutti gli utenti presenti nel db
+     * @return
+     */
     @Override
     public List<UserVM> getAllUser() {
 
@@ -246,6 +303,11 @@ public class UserService implements IUserService {
         this.saveUser(u);
     }
 
+    /**
+     * Ritorna tutte le routes collegate all'utente
+     * @param userID id dell'utente
+     * @return
+     */
     @Override
     public UserRouteVM getRoutesUser(ObjectId userID) {
 
@@ -310,6 +372,12 @@ public class UserService implements IUserService {
         return userVM;
     }
 
+    /**
+     * Modifica dell'utente
+     * @param userID userID dell'utente
+     * @param modifyRoleUser ruoli modificati
+     * @throws Exception
+     */
     @Override
     public void editUser(ObjectId userID, modifyRoleUserVM modifyRoleUser) throws Exception {
         User user = this.getUserBy_id(userID);
@@ -607,23 +675,6 @@ public class UserService implements IUserService {
 
     }
 
-    /*@Override
-    public ArrayList<UserDTO> findAll() {
-        ArrayList<User> users = userRepo.findAll();
-        ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
-        for (User user : users) {
-            UserDTO userDTO = user.convertToDTO();
-            userDTOArrayList.add(userDTO);
-        }
-        return userDTOArrayList;
-    }*/
-
-    @Override
-    public List<User> findAll() {
-
-        return userRepo.findAll();
-    }
-
     @Override
     public boolean deleteUserbyID(ObjectId userID) {
         userRepo.deleteById(userID);
@@ -641,20 +692,6 @@ public class UserService implements IUserService {
         this.userRepo.save(user);
 
     }
-
-    /*public void createPasswordResetTokenForUser(User user, String token) {
-
-        user.setPasstoken(token);
-        user.setExpiry_passToken(user.calculateExpiryDate(EXPIRATION));
-
-        String recipientAddress = user.getUsername();
-        String subject = "Request Change Password";
-        String confirmationUrl = "/recover/" + token;
-        String message = "Questa mail serve per cambiare password. Clicca sul token";
-
-        emailService.sendSimpleMessage(recipientAddress,subject, message + " " + "http://localhost:8080" + confirmationUrl); //non è troppo scalabile, vedere meglio come si fa
-        userRepo.save(user);
-    }*/
 
 
 }

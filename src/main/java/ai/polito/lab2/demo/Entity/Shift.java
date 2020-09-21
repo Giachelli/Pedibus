@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 @Builder
 @Document(collection = "shift")
 /**
- * Classe che rappresenta uno shift viene salvato su Mongo
+ * Classe che rappresenta uno shift salvato su Mongo
  */
 public class Shift {
     @Id

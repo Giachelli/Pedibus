@@ -58,56 +58,6 @@ public class UserController {
 
     }
 
-    /*
-    @RequestMapping(value = "/users/{userID}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addAdmin(@RequestBody int idLinea, @PathVariable final ObjectId userID, HttpServletRequest req) {
-        RouteDTO r = routeService.getRoutesDTOByID(idLinea);
-        if (r == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Route not found");
-
-
-        System.out.println(r.getNameR());
-        //User newAdmin = userService.getUserBy_id(userID);
-        User newAdmin = userService.getUserBy_id(userID);
-        if (newAdmin == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
-
-        String token = jwtTokenProvider.resolveToken(req);
-        String username = jwtTokenProvider.getUsername(token);
-        UserDTO u = userService.getUserDTOByUsername(username);
-        ArrayList<Integer> ids = new ArrayList<>();
-        ids.add(idLinea);
-
-        if (r.getUsernamesAdmin() != null)
-            if (r.getUsernamesAdmin().contains(newAdmin.getUsername()))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already admin of the selected route");
-
-
-        if (u.getRolesString().contains("ROLE_SYSTEM_ADMIN")) {
-            newAdmin.addRole(roleRepository.findByRole("ROLE_ADMIN"));
-            newAdmin.addAdminRoutesID(ids);
-            r.addAdmin(newAdmin.getUsername());
-        } else {
-            if (r.getUsernamesAdmin() != null) {
-                if (r.getUsernamesAdmin().contains(u.getEmail())) {
-                    newAdmin.addRole(roleRepository.findByRole("ROLE_ADMIN"));
-                    newAdmin.addAdminRoutesID(ids);
-                    r.addAdmin(newAdmin.getUsername());
-                }
-            } else
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized");
-
-        }
-
-        Route route = routeService.getRoutesByID(idLinea);
-        route.setUsernameAdmin(r.getUsernamesAdmin());
-        userService.saveUser(newAdmin);
-        routeService.saveRoute(route);
-
-
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-*/
     @Secured("ROLE_SYSTEM_ADMIN")
     @RequestMapping(value = "/users/{userID}/disabled", method = RequestMethod.PUT)
     public ResponseEntity disabledUser(@PathVariable ObjectId userID) {
@@ -162,7 +112,7 @@ public class UserController {
 
     @Secured({"ROLE_ADMIN","ROLE_SYSTEM_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/users/{userID}/getLines", method = RequestMethod.GET)
-    public ResponseEntity getUserLines(@PathVariable ObjectId userID) {
+    public ResponseEntity<UserRouteVM> getUserLines(@PathVariable ObjectId userID) {
         if (userService.getUserBy_id(userID) == null) {
             return new ResponseEntity("Errore User non presente nel db", HttpStatus.BAD_REQUEST);
         }
@@ -172,54 +122,5 @@ public class UserController {
         return new ResponseEntity(userVM, HttpStatus.OK);
     }
 
-
-/*
-    @Secured("ROLE_SYSTEM_ADMIN")
-    @ApiOperation("Restituisce al solo system admin le informazioni generali sdll'app, numero di bimbi iscritti, numero di utenti presenti")
-    @RequestMapping(value = "/users/info", method = RequestMethod.GET)
-    public ResponseEntity getInfoAboutPedibus() {
-
-        List<RouteVM> routes = routeService.getAllRoutes();
-        Set<String> admin = new HashSet<>();
-        Set<String> mule = new HashSet<>();
-        int numberRoutes = routes.size();
-
-        int numberMule = 0;
-        int numberAdmin = 0;
-
-        for (RouteVM r : routes)
-        {
-            for(int i =0; i< r.getUsernameAdmin().size(); i++)
-                admin.add(r.getUsernameAdmin().get(i).getUsername());
-
-
-            for(int i =0; i< r.getUsernameMule().size(); i++)
-                mule.add(r.getUsernameMule().get(i).getUsername());
-
-
-            }
-
-
-        int userNumber = userService.findAll().size() -1;
-        int childNumber = childService.findAllChild().size();
-
-        numberAdmin = admin.size();
-        numberMule = mule.size();
-
-        int reservationToday = reservationService.findNumberReservationToday();
-        int muleToday = shiftService.findNumberShiftToday();
-
-
-        DashboardVM dashboardVM = DashboardVM.builder()
-                .numberRoutes(numberRoutes)
-                .numberAdmin(numberAdmin).numberMules(numberMule)
-                .numberChild(childNumber)
-                .numberUser(userNumber)
-                .reservationToday(reservationToday)
-                .muleActiveToday(muleToday)
-                .build();
-        return new ResponseEntity<DashboardVM>(dashboardVM,HttpStatus.OK);
-    }
-*/
 
 }

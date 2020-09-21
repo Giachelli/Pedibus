@@ -8,12 +8,15 @@ import ai.polito.lab2.demo.Repositories.RouteRepo;
 import ai.polito.lab2.demo.Repositories.StopRepo;
 import ai.polito.lab2.demo.Entity.Route;
 import ai.polito.lab2.demo.Repositories.UserRepo;
+import ai.polito.lab2.demo.controllers.RouteController;
 import ai.polito.lab2.demo.viewmodels.RouteVM;
 import ai.polito.lab2.demo.viewmodels.StopVM;
 import ai.polito.lab2.demo.viewmodels.UserVM;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.json.JsonParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -51,6 +54,8 @@ public class RouteServiceImpl implements RouteService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    private final static Logger logger = LoggerFactory.getLogger(RouteServiceImpl.class);
+
     private int idR;
 
 
@@ -64,7 +69,7 @@ public class RouteServiceImpl implements RouteService {
 
 
     /**
-     *
+     * Funzione che ritorna tutte le route
      * @return ritorna tutte le route
      */
     public List<RouteVM> getAllRoutes() {
@@ -146,7 +151,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     /**
-     *
+     * prende una route in base al nome
      * @param NameR nome della route
      * @return ritorna la route in base al nome
      */
@@ -257,7 +262,7 @@ public class RouteServiceImpl implements RouteService {
     public void saveAll(ArrayList<Route> r) {
 
         for (Route route : r) {
-            System.out.println(route.getNameR());
+            logger.info("route.getNameR()");
             if ((routeRepo.findRouteByNameR(route.getNameR()) == null)) {
                 stopRepo.saveAll(route.getStopListA());
                 stopRepo.saveAll(route.getStopListB());

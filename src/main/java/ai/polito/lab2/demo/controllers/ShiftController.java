@@ -6,6 +6,8 @@ import ai.polito.lab2.demo.Service.*;
 import ai.polito.lab2.demo.viewmodels.ShiftCreateVM;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +48,13 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @ApiOperation("Creazione di vari shift")
     @RequestMapping(value = "/shift/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createShift( @RequestBody List<ShiftCreateVM> shiftVMList) {
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Richiesta non trovata")
+    })
+    public ResponseEntity<List<ShiftCreateVM>> createShift( @RequestBody List<ShiftCreateVM> shiftVMList) {
         List<ShiftCreateVM> returnedList = new ArrayList<>();
 
         if (controlDoubleShift(shiftVMList)){
@@ -113,7 +121,7 @@ public class ShiftController {
         }
 
         logger.info("Creazione shifts effettuata con successo per il mule ");
-        return new ResponseEntity<List<ShiftCreateVM>>(returnedList, HttpStatus.CREATED);
+        return new ResponseEntity<>(returnedList, HttpStatus.CREATED);
     }
 
     /**
@@ -143,18 +151,24 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/shift/{routeID}/{muleID}/history", method = RequestMethod.GET)
     @ApiOperation("get dei turni per una linea per un mule")
-    public ResponseEntity getMuleShifts(@ApiParam("id della linea") @PathVariable final int routeID,@ApiParam("id del mule")@PathVariable final ObjectId muleID){
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Richiesta non trovata")
+    })
+    public ResponseEntity<List<ShiftCreateVM>> getMuleShifts(@ApiParam("id della linea") @PathVariable final int routeID,@ApiParam("id del mule")@PathVariable final ObjectId muleID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
-            return new ResponseEntity<>("id della route errato",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("id della route errato",HttpStatus.BAD_REQUEST);
         }
 
         User u = userService.getUserBy_id(muleID);
         if(u == null)
         {
             logger.error("utente non esistente");
-            return new ResponseEntity<>("mule selezionato non esistente",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("mule selezionato non esistente",HttpStatus.BAD_REQUEST);
         }
 
         List<ShiftCreateVM> shifts = shiftService.getTurns(routeID, muleID);
@@ -176,12 +190,18 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/shift/{routeID}", method = RequestMethod.GET)
     @ApiOperation("get dei turni per una linea")
-    public ResponseEntity getRouteShifts(@ApiParam("id della linea")@PathVariable final int routeID){
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Turno per route non trovato")
+    })
+    public ResponseEntity<List<ShiftCreateVM>> getRouteShifts(@ApiParam("id della linea")@PathVariable final int routeID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
             logger.error("route con id "+routeID+" non esistente");
-            return new ResponseEntity<>("route non esistente",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("route non esistente",HttpStatus.BAD_REQUEST);
         }
 
         List<ShiftCreateVM> shifts = shiftService.getTurnsRoute(routeID);
@@ -200,19 +220,25 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN","ROLE_MULE"})
     @RequestMapping(value = "/shift/{routeID}/{muleID}", method = RequestMethod.GET)
     @ApiOperation("get dei turni recenti e futuri per una linea per un mule")
-    public ResponseEntity getMuleShiftsAfter(@ApiParam("id della linea")@PathVariable final int routeID,@ApiParam("id del mule")@PathVariable final ObjectId muleID){
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Turno non trovato")
+    })
+    public ResponseEntity<List<ShiftCreateVM>> getMuleShiftsAfter(@ApiParam("id della linea")@PathVariable final int routeID,@ApiParam("id del mule")@PathVariable final ObjectId muleID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
             logger.error("route non esistente con id "+routeID);
-            return new ResponseEntity<>("route non esistente",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("route non esistente",HttpStatus.BAD_REQUEST);
         }
 
         User u = userService.getUserBy_id(muleID);
         if(u == null)
         {
             logger.error("utente non esistente con id "+muleID);
-            return new ResponseEntity<>("utente non esistente",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("utente non esistente",HttpStatus.BAD_REQUEST);
         }
 
         List<ShiftCreateVM> shifts = shiftService.getTurnsDate(routeID, muleID);
@@ -232,12 +258,18 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN"})
     @RequestMapping(value = "/shift/present/{routeID}", method = RequestMethod.GET)
     @ApiOperation("prende tutte i turni recenti e future per una linea")
-    public ResponseEntity getShiftsAfter(@ApiParam("id della linea")@PathVariable final int routeID){
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Turno non trovato")
+    })
+    public ResponseEntity<List<ShiftCreateVM>> getShiftsAfter(@ApiParam("id della linea")@PathVariable final int routeID){
         Route r = routeService.getRoutesByID(routeID);
         if(r == null)
         {
             logger.error("route non esistente con id "+routeID);
-            return new ResponseEntity<>("route non esistente",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("route non esistente",HttpStatus.BAD_REQUEST);
         }
 
         List<ShiftCreateVM> shifts = shiftService.getAllTurnsDate(routeID);
@@ -253,6 +285,12 @@ public class ShiftController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @ApiOperation("Eliminazione di un turno")
     @RequestMapping(value = "/shift/{shiftID}/delete", method = RequestMethod.DELETE)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "turno cancellato"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Turno non trovato")
+    })
     public ResponseEntity deleteShift(@ApiParam("id dello shift")@PathVariable final ObjectId shiftID) {
 
         Shift s = shiftService.getTurnByID(shiftID);
@@ -282,6 +320,12 @@ public class ShiftController {
      */
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/shift/{shiftID}/{status}", method = RequestMethod.PUT)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "turno aggiornato"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Turno non trovato")
+    })
     public ResponseEntity editStatus(@ApiParam("id dello shift")@PathVariable final ObjectId shiftID, @ApiParam("status")@PathVariable String status) {
 
         Shift t = shiftService.getTurnByID(shiftID);

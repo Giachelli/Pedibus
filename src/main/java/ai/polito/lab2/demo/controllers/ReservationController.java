@@ -10,6 +10,8 @@ import ai.polito.lab2.demo.viewmodels.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,8 +68,13 @@ public class ReservationController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/reservations/{id_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("Prenotazione di un bimbo da parte del genitore")
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Prenotazione creata"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
     public ResponseEntity<ReservationCreatedVM> create(@ApiParam("id della linea selezionata") @PathVariable int id_linea,@ApiParam("timestamp della data selezionata") @PathVariable long data,@ApiParam("reservation creata lato fe") @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
-
 
         Reservation r = reservationService.findReservationByChildIDAndDataAndDirection(reservationVM.getChildID(), data, reservationVM.getDirection());
         if(r != null)
@@ -108,7 +115,13 @@ public class ReservationController {
     @Secured({"ROLE_MULE","ROLE_ADMIN"})
     @RequestMapping(value = "/reservations/add/{id_linea}/{data}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("RICHIESTA per aggiungere un bambino non prenotato ma presente alla fermata")
-    public ResponseEntity createNotBooked(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Prenotazione creata"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
+    public ResponseEntity<ChildReservationVM> createNotBooked(@PathVariable int id_linea, @PathVariable long data, @RequestBody ReservationVM reservationVM) throws JsonProcessingException, ParseException {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());
         long nowTimeStamp = getCurrentTimeStamp();
         Stop stop = stopService.findStopbyId(stopID);
@@ -119,12 +132,12 @@ public class ReservationController {
         }
 
         if (reservationService.controlName_RouteAndStop(id_linea,reservationVM.getStopID()))
-            return new ResponseEntity<>("Errore nel passaggiodi linea e stop",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Errore nel passaggiodi linea e stop",HttpStatus.BAD_REQUEST);
 
         ChildReservationVM childReservationVM = reservationService.createNotBookedRes(reservationVM,data,id_linea);
 
         if(childReservationVM == null){
-            return new ResponseEntity<>("Non sei abilitato in questo turno",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Non sei abilitato in questo turno",HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity(childReservationVM, HttpStatus.CREATED);
         }
@@ -143,7 +156,13 @@ public class ReservationController {
     @Secured({"ROLE_MULE","ROLE_ADMIN"})
     @RequestMapping(value = "/reservations/{id_fermata}/{data}", method = RequestMethod.PUT)
     @ApiOperation("RICHIESTA per confermare o meno presenza del bambino")
-    public ResponseEntity confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody childConfirmVM childConfirmVM) throws JsonProcessingException, ParseException {
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Prenotazione aggiornata"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
+    public ResponseEntity<ChildReservationVM> confirmPresence(@PathVariable final String id_fermata, @PathVariable long data, @RequestBody childConfirmVM childConfirmVM) throws JsonProcessingException, ParseException {
 
         Reservation r = null;
         try {
@@ -163,7 +182,7 @@ public class ReservationController {
 
         ChildReservationVM childReservationVM = reservationService.confirmPresence(r,data,childConfirmVM,id_fermata);
         if(childReservationVM == null){
-            return new ResponseEntity<>("Non sei abilitato in questo turno",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Non sei abilitato in questo turno",HttpStatus.BAD_REQUEST);
         }else {
             return new ResponseEntity(childReservationVM, HttpStatus.OK);
         }
@@ -180,6 +199,12 @@ public class ReservationController {
     @Secured({"ROLE_SYSTEM_ADMIN", "ROLE_ADMIN", "ROLE_MULE"})
     @RequestMapping(value = "/reservations/{id_linea}/{data}", method = RequestMethod.GET)
     @ApiOperation("Per una certa data ritorna tutti i bambini non prenotati più tutti quelli prenotati per quella linea")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Prenotazioni trovate"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
     public ResponseEntity<GetChildrenReservationVM> getPeople(@ApiParam("id della linea passata") @PathVariable int id_linea,@ApiParam("timestamp della data") @PathVariable long  data) throws JsonProcessingException, ParseException {
         logger.info("data richiesta "+data);
 
@@ -196,54 +221,6 @@ public class ReservationController {
 
     }
 
-    /**
-     *
-     * @param reservationVM nuova reservation da prendere in carico
-     * @param nome_linea nome della linea a cui appertiene la reservation
-     * @param data data della reservation in millisecondi
-     * @param reservation_id id reservation da aggiornare
-     * @return
-     */
-   /* @Secured("ROLE_USER")
-    @RequestMapping(value = "/reservations/{nome_linea}/{data}/{reservation_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation("Per aggiornare una reservation")
-    public ResponseEntity update(@RequestBody ReservationVM reservationVM, @PathVariable String nome_linea, @PathVariable long data, @PathVariable final ObjectId reservation_id) {
-
-        ObjectId stopID = new ObjectId(reservationVM.getStopID());
-        ObjectId childID = new ObjectId(reservationVM.getChildID());
-        Reservation updatedReservation = reservationService.findReservationById(reservation_id);
-        long nowTimeStamp = getCurrentTimeStamp();
-        Stop stop = stopService.findStopbyId(updatedReservation.getStopID());
-
-        if (checkTimestamp(nowTimeStamp,data,stop))
-        {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        if (data >= 0) {
-            updatedReservation.setDate(data);
-        }
-
-        if (!reservationVM.getChildID().toString().isEmpty()) {
-            updatedReservation.setChildID(childID);
-        }
-
-        if (!reservationVM.getDirection().isEmpty()) {
-            updatedReservation.setDirection(reservationVM.getDirection());
-        }
-        if (reservationVM.getStopID() != null) {
-            updatedReservation.setStopID(stopID);
-        }
-        if (nome_linea.isEmpty()) {
-            updatedReservation.setName_route(nome_linea);
-            updatedReservation.setRouteID(routeService.findIDRouteByNameR(nome_linea));
-        }
-
-        reservationService.save(updatedReservation);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-*/
     /**
      * Va a controllare se è possibile cambiare o eliminare la prenotazione
      * @param nowTimeStamp ora odierna
@@ -311,6 +288,12 @@ public class ReservationController {
     @Secured({"ROLE_USER"})
     @RequestMapping(value = "/reservations/{reservation_id}", method = RequestMethod.DELETE)
     @ApiOperation("Eliminazione della reservation")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Prenotazione correttamente cancellata"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
     public ResponseEntity delete(@ApiParam("Id della prenotazione da eliminare")@PathVariable ObjectId reservation_id) {
         Reservation updatedReservation = reservationService.findReservationById(reservation_id);
         long nowTimeStamp = getCurrentTimeStamp();
@@ -340,8 +323,14 @@ public class ReservationController {
      */
     @Secured({"ROLE_USER"})
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
-    public ResponseEntity getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
-        System.out.println("family_name :" + family_name);
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Prenotazione presa correttamente"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
+    public ResponseEntity<ArrayList<ReservationCalendarVM>> getChildReservation(@RequestParam (required = true) String family_name) throws JsonProcessingException {
+        //System.out.println("family_name :" + family_name);
         ArrayList<ReservationCalendarVM> reservationCalendarVMS = new ArrayList<>();
         reservationCalendarVMS = reservationService.reservationFamily(family_name);
         return ok().body(reservationCalendarVMS);
@@ -355,8 +344,14 @@ public class ReservationController {
      */
     @Secured({"ROLE_SYSTEM_ADMIN"})
     @RequestMapping(value = "/reservations/child/{childID}", method = RequestMethod.GET)
-    public ResponseEntity getChildListReservations(@PathVariable ObjectId childID) throws JsonProcessingException {
-        System.out.println("childID :" + childID);
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
+    public ResponseEntity<ArrayList<ReservationCalendarVM>>  getChildListReservations(@ApiParam("id del bimbo sul db")@PathVariable ObjectId childID) throws JsonProcessingException {
+        //System.out.println("childID :" + childID);
         ArrayList<ReservationCalendarVM> reservationCalendarVMS = new ArrayList<>();
         reservationCalendarVMS = reservationService.reservationsChild(childID);
         return ok().body(reservationCalendarVMS);
@@ -373,6 +368,12 @@ public class ReservationController {
      */
     @Secured({"ROLE_USER", "ROLE_MULE"})
     @RequestMapping(value = "/reservations", method = RequestMethod.DELETE)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Prenotazione correttamente cancellata"),
+            @ApiResponse(code = 400, message = "Errore nella richiesta"),
+            @ApiResponse(code = 401, message = "Non autorizzato"),
+            @ApiResponse(code = 403, message = "Richiesta non permessa"),
+            @ApiResponse(code = 404, message = "Reservation non trovata")
+    })
     public ResponseEntity deleteChildReservation(@RequestParam (required = true) ObjectId id) throws JsonProcessingException {
 
         Reservation updatedReservation = reservationService.findReservationById(id);

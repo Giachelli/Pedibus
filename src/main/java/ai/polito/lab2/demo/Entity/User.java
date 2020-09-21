@@ -17,6 +17,9 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Classe che rappresenta uno user sul db
+ */
 @Data
 @Builder
 @Document(collection = "user")

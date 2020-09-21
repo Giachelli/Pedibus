@@ -58,21 +58,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     Logger logger = LoggerFactory.getLogger(ReservationController.class);
 
-
-    /*
-    public Reservation createReservation(ReservationDTO r) throws JsonProcessingException {
-
-        Reservation res= Reservation.builder()
-                .alunno(r.getAlunno())
-                .data(r.getData())
-                .direzione(r.getDirezione())
-                .fermata(stopRepo.findStopByNome(r.getNomeFermata()).get_id())
-                .nome_linea(r.getNome_linea())
-                .linea(r.getRoute())
-                .build();
-        return  reservationRepo.save(res);
-    }*/
-
+    /**
+     * Trova tutte le reservation recenti per un bambino
+     * @param childID id del bambino
+     * @param data timestamp del giorno
+     * @return
+     */
     public Reservation findRecentReservation(ObjectId childID, long data) {
         Query query = new Query();
         query.addCriteria(Criteria.where("childID").is(childID).and("date").gt(data));
@@ -209,6 +200,12 @@ public class ReservationServiceImpl implements ReservationService {
                 .familyName(r.getFamilyName()).build();
     }
 
+    /**
+     * Trova le reservation per l'Andata per un giorno
+     * @param linea id della linea
+     * @param data timestamp della data richiesta
+     * @return
+     */
     public Map<String, List<ChildReservationVM>> findReservationAndata(int linea, long data) {
         logger.info("Entro in findReservationAndata con date " + data);
         int i = 0;
@@ -247,11 +244,23 @@ public class ReservationServiceImpl implements ReservationService {
         return mappa;
     }
 
+    /**
+     * Trova tutti i bambini per una linea non prenotati
+     * @param linea id della linea
+     * @param data timestamp della linea
+     * @return
+     */
     @Override
     public Map<String, List<ChildReservationVM>> findReservationAndataNotBooked(int linea, long data) {
         return null;
     }
 
+    /**
+     * Trova tutti i bambini per il ritorno per una linea per una data
+     * @param linea id della linea
+     * @param data timestamp della data
+     * @return lista dei bambini prenotati per una linea
+     */
     public Map<String, List<ChildReservationVM>> findReservationRitorno(int linea, long data) {
         int i = 0;
         Query query = new Query();
@@ -288,21 +297,41 @@ public class ReservationServiceImpl implements ReservationService {
         return mappa;
     }
 
+    /**
+     * trova tutti i bambaini non prenotati per quella linea per quella data
+     * @param linea id linea
+     * @param data timestamp data
+     * @return trova tutti i bambaini non prenotati per quella linea per quella data
+     */
     @Override
     public Map<String, List<ChildReservationVM>> findReservationRitornoNotBooked(int linea, long data) {
         return null;
     }
 
+    /**
+     * aggiorna la reservation
+     * @param reservation
+     * @return
+     */
     public Reservation update(Reservation reservation) {
         return reservationRepo.save(reservation);
     }
 
+    /**
+     * elimina una reservation
+     * @param reservatio_id
+     */
     public void delete(ObjectId reservatio_id) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(reservatio_id));
         mongoTemplate.remove(query, Reservation.class);
     }
 
+    /**
+     * Salva una reservation
+     * @param r reservation da salvare
+     * @return
+     */
     public Reservation save(Reservation r) {
         return reservationRepo.save(r);
     }
@@ -412,6 +441,13 @@ public class ReservationServiceImpl implements ReservationService {
         return rcvms;
     }
 
+    /**
+     * Trovare la prenotazione per un bambino per una data e direzione
+     * @param childIDString id del bambino
+     * @param data timestamp del giorno
+     * @param direction direzione
+     * @return
+     */
     @Override
     public Reservation findReservationByChildIDAndDataAndDirection(String childIDString, long data, String direction) {
 
@@ -447,6 +483,13 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    /**
+     * torna tutti i bambini prenotati e non per una linea
+     * @param id_linea id della linea
+     * @param data timestamp del giorno
+     * @return
+     * @throws Exception
+     */
     @Override
     public GetChildrenReservationVM returnChild(int id_linea, long data) throws Exception {
 
@@ -599,6 +642,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     }
 
+    /**
+     * Funzione che va a confermare o meno se il bimbo è preso in carico
+     * @param r reservation del bambino
+     * @param data timestamp della data
+     * @param childID id del bambino
+     * @param id_fermata id della fermata dove è stato preso in carico il bambino
+     * @return
+     */
     @Override
     public ChildReservationVM confirmPresence(Reservation r, long data, childConfirmVM childID, String id_fermata) {
         ObjectId muleId = userService.getUserByUsername(childID.getUsernameMule()).get_id();
@@ -634,6 +685,13 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    /**
+     * Creazione della prenotazione per un bimbo non prenotato
+     * @param reservationVM prenotazione passata dalla richiesta
+     * @param data timestamp della data
+     * @param id_linea id della linea
+     * @return
+     */
     @Override
     public ChildReservationVM createNotBookedRes(ReservationVM reservationVM, long data, int id_linea) {
         ObjectId stopID = new ObjectId(reservationVM.getStopID());

@@ -14,6 +14,12 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepo roleRepo;
 
+    /**
+     * converte i ruoli da stringa ad oggetto role
+     * @param roles stringa di ruoli
+     * @return
+     * @throws Exception
+     */
     @Override
     public ArrayList<Role> convertRoles(List<String> roles) throws Exception {
         ArrayList<Role> rolesDb = new ArrayList<>();
