@@ -112,12 +112,12 @@ public class AuthController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("Endpoin per effettuare il login")
-    public ResponseEntity signin(@RequestBody AuthenticationRequestVM data) {
+    public ResponseEntity<LoginUserVM> signin(@RequestBody AuthenticationRequestVM data) {
         try {
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
             if (!userService.userEnabled(username)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Disabled");
+                return new ResponseEntity("User disabled",HttpStatus.BAD_REQUEST);
             }
             String token = jwtTokenProvider.createToken(username, this.userRepo.findByUsername(username).getRolesString());
 
@@ -128,7 +128,7 @@ public class AuthController {
 
             return new ResponseEntity(u,HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username/password"); //deve restituire 401 Unauthorized, lo vedo io
+            return new ResponseEntity("Invalid username/password",HttpStatus.BAD_REQUEST); //deve restituire 401 Unauthorized, lo vedo io
         }
     }
 

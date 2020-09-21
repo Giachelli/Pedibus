@@ -5,6 +5,9 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Classe che rappresenta una fermata sul db
+ */
 
 @Document(collection = "stop")
 @Data

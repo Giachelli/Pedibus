@@ -81,6 +81,14 @@ public class ShiftServiceImpl implements ShiftService {
 
     }
 
+    /**
+     * Prende tutti i turni per un mule, data e direzione per una data routeID
+     * @param routeID id della route
+     * @param muleID id del mule
+     * @param date data del turno
+     * @param dir direzione
+     * @return
+     */
     @Override
     public List<Shift> getTurnsByLineaIDMuleIDDateDirection(int routeID, ObjectId muleID, long date, String dir){
         if(dir.equals("andata")){

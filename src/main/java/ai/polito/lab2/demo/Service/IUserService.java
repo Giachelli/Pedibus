@@ -34,7 +34,6 @@ public interface IUserService {
 
  //   ArrayList<UserDTO> findAll();
 
-    List<User> findAll();
 
     boolean deleteUserbyID(ObjectId userID);
 

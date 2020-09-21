@@ -8,6 +8,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
+/**
+ * Classe che rappresenta una reservation sul db
+ */
 @Document(collection = "reservation")
 @Data
 @Builder

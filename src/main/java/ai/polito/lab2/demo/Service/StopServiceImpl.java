@@ -18,6 +18,12 @@ public class StopServiceImpl implements StopService{
         return stopRepo.findStopBy_id(id);
     }
 
+    /**
+     * Ritorna lo stop data il nome della fermata e il numero di sequenza
+     * @param name
+     * @param nums
+     * @return
+     */
     @Override
     public Stop findStopbyNameAndNumS(String name, int nums) {
         return stopRepo.findStopByNomeAndNums(name,nums);

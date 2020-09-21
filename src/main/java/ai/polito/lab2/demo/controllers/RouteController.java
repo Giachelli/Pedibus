@@ -67,7 +67,7 @@ public class RouteController {
      */
     @RequestMapping(value = "/routes", method = RequestMethod.GET)
     @ApiOperation("ritorna tutte le linee presenti sul db")
-    public ResponseEntity getAllRoutes() throws JsonProcessingException {
+    public ResponseEntity<AllRoutesVM> getAllRoutes() throws JsonProcessingException {
         String user = Principal.class.getName();
         List<RouteVM> routeVMs = routeService.getAllRoutes();
 
@@ -100,9 +100,9 @@ public class RouteController {
     @Secured("ROLE_SYSTEM_ADMIN")
     @ApiOperation("aggiunta di una linea tramite file json")
     @RequestMapping(value = "/routes/addRoute", method = RequestMethod.POST)
-    public ResponseEntity createRoute(@RequestPart("file") MultipartFile file, WebRequest request) throws JsonProcessingException {
+    public ResponseEntity<RouteVM> createRoute(@RequestPart("file") MultipartFile file, WebRequest request) throws JsonProcessingException {
         if (null == file.getOriginalFilename()) {
-            return new ResponseEntity<>("File senza titolo",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("File senza titolo",HttpStatus.BAD_REQUEST);
         }
         List<UserVM> adminVMList = new ArrayList<>();
         RouteVM routeVM;
@@ -134,7 +134,7 @@ public class RouteController {
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Errore nel file passato",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Errore nel file passato",HttpStatus.BAD_REQUEST);
         }
 
         try {
