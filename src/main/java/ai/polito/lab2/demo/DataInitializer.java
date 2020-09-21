@@ -225,7 +225,6 @@ public class DataInitializer implements CommandLineRunner {
                 .family_name("Bubba")
                 .password(this.passwordEncoder.encode("1user@user"))
                 .roles(Arrays.asList(role))
-                .muleRoutesID(routeId)
                 .isEnabled(true)
                 .build()
         );
@@ -235,7 +234,6 @@ public class DataInitializer implements CommandLineRunner {
                 .family_name("Gump")
                 .password(this.passwordEncoder.encode("2user@user"))
                 .roles(Arrays.asList(role))
-                .muleRoutesID(routeId)
                 .isEnabled(true)
                 .build()
         );

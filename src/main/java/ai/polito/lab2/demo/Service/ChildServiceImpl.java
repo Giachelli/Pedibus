@@ -302,7 +302,6 @@ public class ChildServiceImpl implements ChildService {
 
         ChildVM data_return = data;
         data_return.setChildID(child.getChildID().toString());
-        System.out.println("Arrivo qui e ed esco");
         return data_return;
     };
 
