@@ -193,7 +193,6 @@ public class ChildServiceImpl implements ChildService {
                 }
             }else if(!data.getNameRoute().contains("") && data.getNameRoute().size()==2){
                 if (data.getDirection().equals("entrambi")) {
-                    System.out.println("COMUNQUE QUI ENTRO");
                     child = Child.builder()
                             .nameChild(data.getNameChild())
                             .username(data.getUsername())

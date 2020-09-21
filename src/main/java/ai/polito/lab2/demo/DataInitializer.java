@@ -60,6 +60,10 @@ public class DataInitializer implements CommandLineRunner {
         Set<Integer> routeId = new HashSet<>();
         routeId.add(1);
         routeId.add(2);
+        routeId.add(3);
+        routeId.add(4);
+        routeId.add(6);
+
         setRoleDb();
         if (users.findByUsername("giacomo.chelli4@gmail.com") != null) {
             addRouteId = false;
