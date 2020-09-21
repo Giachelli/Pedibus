@@ -362,8 +362,12 @@ public class RouteServiceImpl implements RouteService {
             route.setUsernameAdmin(new ArrayList<>());
             route.setUsernameMule(new ArrayList<>());
             List<String> addAdmin = new ArrayList<>();
+            ArrayList<Integer> addRoutesAdmin = new ArrayList<>();
             addAdmin.add(route.getEmails());
             route.setUsernameAdmin(addAdmin);
+            addRoutesAdmin.add(route.getId());
+            user.addAdminRoutesID(addRoutesAdmin);
+            userRepo.save(user);
             Date date= new Date();
             long time = date.getTime();
             route.setLastModified(time);
