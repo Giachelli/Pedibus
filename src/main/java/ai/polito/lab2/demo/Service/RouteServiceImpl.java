@@ -132,8 +132,29 @@ public class RouteServiceImpl implements RouteService {
                             .andataStop(mule.getUserVMMapStop(mule.getAndataStops()))
                             .ritornoStop(mule.getUserVMMapStop(mule.getRitornoStops()))
                             .build();
+
+                    List<UserVM> adminsss = new ArrayList<>();
+                    adminsss.addAll(adminVMList);
+                    int i= 0;
+                    for(UserVM user1 : adminsss)
+                    {
+                        if(user1.getUsername().equals(u))
+                        {
+                            UserVM userVM = adminVMList.get(i);
+                            adminVMList.remove(i);
+
+                            userVM.setAvailabilityVM(muleVM.getAvailabilityVM());
+                            userVM.setAndataStop(muleVM.getAndataStop());
+                            userVM.setRitornoStop(muleVM.getRitornoStop());
+                            adminVMList.add(userVM);
+
+                        }
+                        i++;
+                    }
+
                     muleVMList.add(muleVM);
                 }
+
 
             RouteVM r = RouteVM.builder()
                     .id(route.getId())
