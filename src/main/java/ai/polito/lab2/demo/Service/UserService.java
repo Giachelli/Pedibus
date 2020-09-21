@@ -506,7 +506,7 @@ public class UserService implements IUserService {
         /* seconda parte che riguarda lo user stesso */
         if (!(modifyRoleUser.getModifiedBy().equals(this.getUserBy_id(user.get_id()).getUsername()))) {
 
-            if((adminBefore == null)&&(!adminRoutes.isEmpty()))
+            if((adminBefore.isEmpty())&&(!adminRoutes.isEmpty()))
             {
                 differentRoutes = true;
             }else {
@@ -540,7 +540,7 @@ public class UserService implements IUserService {
                 }
             }}
 
-            if((muleBefore == null)&&(!muleRoutes.isEmpty())){
+            if((muleBefore.isEmpty())&&(!muleRoutes.isEmpty())){
                 differentRoutes=true;
             }else{
             if (muleBefore.size()>=muleRoutes.size()) {
