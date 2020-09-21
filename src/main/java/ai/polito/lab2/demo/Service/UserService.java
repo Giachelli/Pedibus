@@ -506,6 +506,10 @@ public class UserService implements IUserService {
         /* seconda parte che riguarda lo user stesso */
         if (!(modifyRoleUser.getModifiedBy().equals(this.getUserBy_id(user.get_id()).getUsername()))) {
 
+            if((adminBefore == null)&&(!adminRoutes.isEmpty()))
+            {
+                differentRoutes = true;
+            }else {
             if (adminBefore.size()>=adminRoutes.size()) {
                 for (int k = 0; k < adminBefore.size(); k++) {
 
@@ -534,8 +538,11 @@ public class UserService implements IUserService {
                         break;
                     }
                 }
-            }
+            }}
 
+            if((muleBefore == null)&&(!muleRoutes.isEmpty())){
+                differentRoutes=true;
+            }else{
             if (muleBefore.size()>=muleRoutes.size()) {
                 for (int k = 0; k < muleBefore.size(); k++) {
 
@@ -564,7 +571,7 @@ public class UserService implements IUserService {
                         break;
                     }
                 }
-            }
+            }}
 
             if(differentRoutes){
                 String action = "Privilegi aggiornati";
